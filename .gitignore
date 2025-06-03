@@ -1,0 +1,62 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pdb
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Django
+*.log
+*.pot
+*.pyc
+db.sqlite3
+media/
+staticfiles/         # collectstatic natijalari
+local_settings.py
+
+# Environments
+.env
+.env.*
+venv/
+.venv/
+ENV/
+env.bak/
+
+# MyPy / Pyright / Pytest
+.mypy_cache/
+.pytest_cache/
+.pyright/
+
+# VS Code / PyCharm
+.vscode/
+.idea/
+
+# macOS / Linux
+.DS_Store
+*.swp
+*.swo
+*.swn
+*.bak
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# Jupyter
+.ipynb_checkpoints/
+
+# System
+Thumbs.db
+ehthumbs.db
+Desktop.ini
