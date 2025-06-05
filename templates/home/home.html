@@ -1,0 +1,1309 @@
+{% load static %}
+
+<!doctype html>
+<html class="no-js" lang="zxx">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>{% block title %}Universitet Qabul Tizimi{% endblock %}</title>
+    <meta name="description" content="O'zbekiston universitetlariga onlayn qabul tizimi">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Place favicon.ico in the root directory -->
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/images/logo/favicon.svg' %}">
+
+    <!-- CSS here -->
+    <link rel="stylesheet" href="{% static 'assets/css/vendor/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/vendor/animate.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/plugins/swiper.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/vendor/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/vendor/fontawesome-pro.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/plugins/nouislider.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/vendor/icomoon.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/vendor/spacing.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/plugins/apexcharts.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/main.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+    <!-- preloader start -->
+    <div id="loading">
+        <div id="loading-center">
+            <div id="loading-center-absolute">
+                <div class="bd-preloader-content">
+                    <div class="bd-preloader-logo">
+                        <div class="bd-preloader-circle">
+                            <svg width="190" height="190" viewBox="0 0 380 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle stroke="#F5F5F5" cx="190" cy="190" r="180" stroke-width="6" stroke-linecap="round">
+                                </circle>
+                                <circle stroke="red" cx="190" cy="190" r="180" stroke-width="6" stroke-linecap="round">
+                                </circle>
+                            </svg>
+                        </div>
+                        <img src="{% static 'assets/images/logo/preloader-icon.png' %}" alt="">
+                    </div>
+                    <p class="bd-preloader-subtitle">Yuklanmoqda...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- preloader end -->
+
+    <!-- Header area start -->
+    <header>
+        <div class="bd-header-transparent-two">
+            <div class="bd-header-top style-three">
+                <div class="bd-header-top-left">
+                    <ul>
+                        <li><a href="tel:+8884467880"><span><i class="fa-solid fa-phone-volume"></i></span>(888) 446-7880</a></li>
+                        <li><a href="mailto:info@example.com"><span><i
+                            class="fa-sharp fa-light fa-envelope"></i></span>info@example.com</a></li>
+                    </ul>
+                </div>
+                <div class="bd-header-top-right text-md-end">
+                    <a href="#"><span><i class="fa-sharp fa-regular fa-location-dot"></i></span>Toshkent, O'zbekiston</a>
+                </div>
+            </div>
+            <div class="bd-header-area header-style-one" id="header-sticky">
+                <div class="bd-header-inner">
+                    <div class="bd-header-left">
+                        <div class="bd-header-logo">
+                            <a href="index.html"><img src="{% static 'assets/images/logo/logo.svg' %}" alt="logo"></a>
+                        </div>
+                        <div class="bd-header-category d-none d-lg-block">
+                            <div class="bd-category-btn">
+                                <i class="fa-solid fa-grid"></i> Kategoriya
+                            </div>
+                            <div class="bd-category-dropdown">
+                                <nav>
+                                    <ul>
+                                        <li><a href="courses.html">Dasturlash</a></li>
+                                        <li><a href="courses.html">Marketing</a></li>
+                                        <li><a href="courses.html">Fotografiya</a></li>
+                                        <li><a href="courses.html">Turmush tarzi</a></li>
+                                        <li><a href="courses.html">Salomatlik va Fitnes</a></li>
+                                        <li><a href="courses.html">Ma'lumotlar fani</a></li>
+                                        <li><a href="courses.html">Marketing</a></li>
+                                        <li><a href="courses.html">Fotografiya</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bd-header-menu">
+                        <nav class="main-menu bd-mobile-menu-active d-none d-xl-block">
+                            <ul>
+                                <li class="has-mega-menu">
+                                    <a href="index.html">Bosh sahifa</a>
+                                    <ul class="mega-menu home-menu-grid">
+                                        <li>
+                                            <a href="index-online-course.html" class="home-menu-item">
+                                                <div class="home-menu-thumb">
+                                                    <img src="{% static 'assets/images/menu/menu-home-1.webp' %}" alt="images">
+                                                </div>
+                                                <div class="home-menu-title">Onlayn kurslar</div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="index-university.html" class="home-menu-item">
+                                                <div class="home-menu-thumb">
+                                                    <img src="{% static 'assets/images/menu/menu-home-2.webp' %}" alt="images">
+                                                </div>
+                                                <div class="home-menu-title">Universitet</div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="index-modern-schooling.html" class="home-menu-item">
+                                                <div class="home-menu-thumb">
+                                                    <img src="{% static 'assets/images/menu/menu-home-3.webp' %}" alt="images">
+                                                </div>
+                                                <div class="home-menu-title">Zamonaviy ta'lim</div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="index-kindergarten.html" class="home-menu-item">
+                                                <div class="home-menu-thumb">
+                                                    <img src="{% static 'assets/images/menu/menu-home-4.webp' %}" alt="images">
+                                                </div>
+                                                <div class="home-menu-title">Bolalar bog'chasi</div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="index-quran-learning.html" class="home-menu-item">
+                                                <div class="home-menu-thumb">
+                                                    <img src="{% static 'assets/images/menu/menu-home-5.webp' %}" alt="images">
+                                                </div>
+                                                <div class="home-menu-title">Qur'on o'rganish</div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="index-shop.html" class="home-menu-item">
+                                                <div class="home-menu-thumb">
+                                                    <img src="{% static 'assets/images/menu/menu-home-6.webp' %}" alt="images">
+                                                </div>
+                                                <div class="home-menu-title">Kitob do'koni</div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="index-language-academy.html" class="home-menu-item">
+                                                <div class="home-menu-thumb">
+                                                    <img src="{% static 'assets/images/menu/menu-home-7.webp' %}" alt="images">
+                                                </div>
+                                                <div class="home-menu-title">Til akademiyasi</div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class="home-menu-item">
+                                                <div class="home-menu-thumb">
+                                                    <img src="{% static 'assets/images/menu/menu-home-soon.webp' %}" alt="images">
+                                                </div>
+                                                <div class="home-menu-title">Oshxona ustasi - Tez orada</div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class="home-menu-item">
+                                                <div class="home-menu-thumb">
+                                                    <img src="{% static 'assets/images/menu/menu-home-soon.webp' %}" alt="images">
+                                                </div>
+                                                <div class="home-menu-title">Bozor - Tez orada</div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class="home-menu-item">
+                                                <div class="home-menu-thumb">
+                                                    <img src="{% static 'assets/images/menu/menu-home-soon.webp' %}" alt="images">
+                                                </div>
+                                                <div class="home-menu-title">Kurs markazi - Tez orada</div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <!-- courses menu -->
+                                <li class="menu-item-has-children">
+                                    <a href="javascript:void(0)">Kurslar</a>
+                                    <ul class="submenu last-children">
+                                        <li class="menu-item-has-children has-arrow">
+                                            <a href="javascript:void(0)">Kengaytirilgan kurs filtri</a>
+                                            <ul class="submenu">
+                                                <li><a href="courses.html">Kurslar</a></li>
+                                                <li><a href="courses-filter-search.html">Kurslar qidiruv filtri</a></li>
+                                                <li><a href="courses-filter-category.html">Kurslar kategoriya filtri</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="menu-item-has-children has-arrow">
+                                            <a href="javascript:void(0)">Kurslar to'plami</a>
+                                            <ul class="submenu">
+                                                <li><a href="courses-grid.html">Kurslar to'plami</a></li>
+                                                <li><a href="courses-grid-two.html">Kurslar to'plami ikki</a></li>
+                                                <li><a href="courses-grid-three.html">Kurslar to'plami uch</a></li>
+                                                <li><a href="courses-grid-four.html">Kurslar to'plami to'rt</a></li>
+                                                <li><a href="courses-grid-five.html">Kurslar to'plami besh</a></li>
+                                                <li><a href="courses-grid-right.html">Kurslar to'plami o'ng yon panel</a></li>
+                                                <li><a href="courses-grid-left.html">Kurslar to'plami chap yon panel</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="menu-item-has-children has-arrow">
+                                            <a href="javascript:void(0)">Kurslar ro'yxati</a>
+                                            <ul class="submenu">
+                                                <li><a href="courses-list-one.html">Kurslar chap yon panel</a></li>
+                                                <li><a href="courses-list-two.html">Kurslar o'ng yon panel</a></li>
+                                                <li><a href="courses-list-three.html">Yon panelsiz</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="menu-item-has-children has-arrow">
+                                            <a href="javascript:void(0)">Kurs tafsilotlari</a>
+                                            <ul class="submenu">
+                                                <li><a href="courses-details.html">Kurs tafsilotlari</a></li>
+                                                <li><a href="courses-details-two.html">Kurs tafsilotlari ikki</a></li>
+                                                <li><a href="courses-details-three.html">Kurs tafsilotlari uch</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="menu-item-has-children has-arrow">
+                                            <a href="javascript:void(0)">Dastur tafsilotlari</a>
+                                            <ul class="submenu">
+                                                <li><a href="program-details.html">Universitet dasturi</a></li>
+                                                <li><a href="kindergarten-program-details.html">Bolalar bog'chasi dasturi</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="course-lesson.html">Kurs darslari</a></li>
+                                        <li><a href="create-course.html">Yangi kurs yaratish</a></li>
+                                    </ul>
+                                </li>
+
+                                <!-- page menu -->
+                                <li class="has-mega-menu">
+                                    <a href="javascript:void(0)">Sahifalar</a>
+                                    <ul class="mega-menu mega-grid-5">
+                                        <li>
+                                            <a href="javascript:void(0);" class="title">Sahifa shablon 1</a>
+                                            <ul>
+                                                <li><a href="contact.html">Biz bilan bog'lanish</a></li>
+                                                <li><a href="about-online-course.html">Onlayn kurs haqida</a></li>
+                                                <li><a href="about-university.html">Universitet haqida</a></li>
+                                                <li><a href="about-modern-schooling.html">Zamonaviy ta'lim haqida</a></li>
+                                                <li><a href="about-kindergarten.html">Bolalar bog'chasi haqida</a></li>
+                                                <li><a href="about-quran-learning.html">Qur'on o'rganish haqida</a></li>
+                                                <li><a href="history.html">Tarix</a></li>
+                                                <li><a href="mvs.html">Vizyon, missiya va strategiya</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" class="title">Sahifa shablon 2</a>
+                                            <ul>
+                                                <li><a href="campus.html">Kampus</a></li>
+                                                <li><a href="academic-calendar.html">Akademik kalendar</a></li>
+                                                <li><a href="apply-online.html">Onlayn ariza topshirish</a></li>
+                                                <li><a href="executive-leaders.html">Ijrochi rahbarlar</a></li>
+                                                <li><a href="faculty-members.html">Fakultet a'zolari</a></li>
+                                                <li><a href="tuition-fees.html">O'qish haqi va boshqa to'lovlar</a></li>
+                                                <li><a href="scholarships-financial-aid.html">Stipendiyalar va moliyaviy yordam</a></li>
+                                                <li><a href="scholarships-financial-aid-details.html">Stipendiya tafsilotlari</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" class="title">Sahifa shablon 3</a>
+                                            <ul>
+                                                <li><a href="instructor.html">O'qituvchi</a></li>
+                                                <li><a href="instructor-details.html">O'qituvchi tafsilotlari</a></li>
+                                                <li><a href="become-instructor.html">O'qituvchi bo'lish</a></li>
+                                                <li><a href="event.html">Tadbirlar to'plami</a></li>
+                                                <li><a href="event-list.html">Tadbirlar ro'yxati</a></li>
+                                                <li><a href="event-details.html">Tadbir tafsilotlari</a></li>
+                                                <li><a href="webinar-details.html">Vebinar tafsilotlari</a></li>
+                                                <li><a href="faq.html">Tez-tez so'raladigan savollar</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" class="title">Sahifa shablon 4</a>
+                                            <ul>
+                                                <li><a href="pricing-table.html">Narxlar jadvali</a></li>
+                                                <li><a href="shop.html">Do'kon</a></li>
+                                                <li><a href="shop-v2.html">Do'kon V2</a></li>
+                                                <li><a href="shop-details.html">Kitob tafsilotlari</a></li>
+                                                <li><a href="shop-details-two.html">Do'kon tafsilotlari</a></li>
+                                                <li><a href="checkout.html">To'lov</a></li>
+                                                <li><a href="cart.html">Savatcha</a></li>
+                                                <li><a href="wishlist.html">Istaklar ro'yxati</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" class="title">Sahifa shablon 5</a>
+                                            <ul>
+                                                <li><a href="sign-in.html">Kirish</a></li>
+                                                <li><a href="sign-up.html">Ro'yxatdan o'tish</a></li>
+                                                <li><a href="forgot.html">Parolni unutdim</a></li>
+                                                <li><a href="404.html">404 sahifa</a></li>
+                                                <li><a href="coming-soon.html">Tez orada</a></li>
+                                                <li><a href="under-maintenance.html">Texnik ishlar</a></li>
+                                                <li><a href="terms-conditions.html">Shartlar va qoidalar</a></li>
+                                                <li><a href="privacy-policy.html">Maxfiylik siyosati</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <!-- dashboard menu -->
+                                <li class="menu-item-has-children">
+                                    <a href="javascript:void(0)">Boshqaruv paneli</a>
+                                    <ul class="submenu last-children">
+                                        <li class="menu-item-has-children has-arrow">
+                                            <a href="javascript:void(0)">O'qituvchi paneli</a>
+                                            <ul class="submenu">
+                                                <li><a href="instructor-dashboard.html">O'qituvchi paneli</a></li>
+                                                <li><a href="instructor-profile.html">O'qituvchi profili</a></li>
+                                                <li><a href="instructor-enrolled-courses.html">Ro'yxatdan o'tgan kurslar</a></li>
+                                                <li><a href="instructor-my-quiz-attempts.html">O'qituvchi test urinishlari</a></li>
+                                                <li><a href="instructor-assignments.html">O'qituvchi vazifalari</a></li>
+                                                <li><a href="instructor-analytics.html">O'qituvchi analitika</a></li>
+                                                <li><a href="instructor-courses.html">Mening kurslarim</a></li>
+                                                <li><a href="instructor-books.html">O'qituvchi kitoblari</a></li>
+                                                <li><a href="instructor-wishlist.html">O'qituvchi istaklar ro'yxati</a></li>
+                                                <li><a href="instructor-reviews.html">O'qituvchi sharhlar</a></li>
+                                                <li><a href="instructor-purchase-history.html">O'qituvchi xarid tarixi</a></li>
+                                                <li><a href="instructor-announcements.html">O'qituvchi e'lonlar</a></li>
+                                                <li><a href="instructor-certificate.html">O'qituvchi sertifikat</a></li>
+                                                <li><a href="instructor-settings.html">O'qituvchi sozlamalar</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="menu-item-has-children has-arrow">
+                                            <a href="javascript:void(0)">Talaba paneli</a>
+                                            <ul class="submenu">
+                                                <li><a href="student-dashboard.html">Talaba paneli</a></li>
+                                                <li><a href="student-profile.html">Talaba profili</a></li>
+                                                <li><a href="student-enrolled-courses.html">Ro'yxatdan o'tgan kurslar</a></li>
+                                                <li><a href="student-my-quiz-attempts.html">Talaba test urinishlari</a></li>
+                                                <li><a href="student-assignments.html">Talaba vazifalari</a></li>
+                                                <li><a href="student-analytics.html">Talaba analitika</a></li>
+                                                <li><a href="student-books.html">Talaba kitoblari</a></li>
+                                                <li><a href="student-wishlist.html">Talaba istaklar ro'yxati</a></li>
+                                                <li><a href="student-reviews.html">Talaba sharhlar</a></li>
+                                                <li><a href="student-purchase-history.html">Talaba xarid tarixi</a></li>
+                                                <li><a href="student-announcements.html">Talaba e'lonlar</a></li>
+                                                <li><a href="student-certificate.html">Mening yutuqlarim</a></li>
+                                                <li><a href="student-settings.html">Talaba sozlamalar</a></li>
+                                            </ul>
+                                        </li>
+
+                                    </ul>
+                                </li>
+
+                                <!-- elements menu -->
+                                <li class="has-mega-menu">
+                                    <a href="javascript:void(0)">Elementlar</a>
+                                    <ul class="mega-menu mega-grid-4">
+                                        <li>
+                                            <a href="javascript:void(0);" class="title">Elementlar shablon 1</a>
+                                            <ul>
+                                                <li><a href="style-guide.html">Uslub qo'llanmasi</a></li>
+                                                <li><a href="element-accordion.html">Akkordeon</a></li>
+                                                <li><a href="element-advance-tab.html">Kengaytirilgan yorliq</a></li>
+                                                <li><a href="element-badge.html">Nishon</a></li>
+                                                <li><a href="element-blog.html">Blog</a></li>
+                                                <li><a href="element-brand.html">Brend</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" class="title">Elementlar shablon 2</a>
+                                            <ul>
+                                                <li><a href="element-button.html">Tugma</a></li>
+                                                <li><a href="element-categories.html">Kategoriyalar</a></li>
+                                                <li><a href="element-counter.html">Hisoblagich</a></li>
+                                                <li><a href="element-countdown.html">Teskari hisoblash</a></li>
+                                                <li><a href="element-courses.html">Kurslar</a></li>
+                                                <li><a href="#">+ Ko'proq kelmoqda</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" class="title">Elementlar shablon 3</a>
+                                            <ul>
+                                                <li><a href="element-cta.html">Harakatga chaqiriq</a></li>
+                                                <li><a href="element-event.html">Tadbir</a></li>
+                                                <li><a href="element-highlights.html">Asosiy ma'lumotlar</a></li>
+                                                <li><a href="element-instructor.html">O'qituvchi</a></li>
+                                                <li><a href="element-newsletter.html">Axborot byulleteni</a></li>
+                                                <li><a href="#">+ Ko'proq kelmoqda</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" class="title">Elementlar shablon 4</a>
+                                            <ul>
+                                                <li><a href="element-pricing.html">Narxlash</a></li>
+                                                <li><a href="element-progress-bar.html">Jarayon chizig'i</a></li>
+                                                <li><a href="element-social-icons.html">Ijtimoiy tarmoq ikonkalari</a></li>
+                                                <li><a href="element-testimonial.html">Guvohliklar</a></li>
+                                                <li><a href="elements-why-choose.html">Nima uchun tanlash</a></li>
+                                                <li><a href="#">+ Ko'proq kelmoqda</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <!-- blog menu -->
+                                <li class="menu-item-has-children">
+                                    <a href="javascript:void(0)">Blog</a>
+                                    <ul class="submenu last-children">
+                                        <li><a href="blog.html">Blog standart</a></li>
+                                        <li class="menu-item-has-children has-arrow">
+                                            <a href="javascript:void(0)">Kengaytirilgan blog</a>
+                                            <ul class="submenu">
+                                                <li><a href="blog-advanced.html">Blog filtri</a></li>
+                                                <li><a href="blog-list.html">Blog ro'yxati</a></li>
+                                                <li><a href="blog-list-two.html">Blog ro'yxati ikki</a></li>
+                                                <li><a href="blog-list-three.html">Blog ro'yxati uch</a></li>
+                                                <li><a href="blog-grid.html">Blog to'plami</a></li>
+                                                <li><a href="blog-grid-two.html">Blog to'plami ikki</a></li>
+                                                <li><a href="blog-grid-three.html">Blog to'plami uch</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="menu-item-has-children has-arrow">
+                                            <a href="javascript:void(0)">Blog tafsilotlari</a>
+                                            <ul class="submenu">
+                                                <li><a href="blog-details.html">O'ng yon panel</a></li>
+                                                <li><a href="blog-details-two.html">Chap yon panel</a></li>
+                                                <li><a href="blog-details-full.html">To'liq kenglik</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="bd-header-right">
+                        <div class="bd-header-meta">
+                            <button class="bd-search-open-btn meta-icon" type="button"><i
+                                class="fa-regular fa-magnifying-glass"></i></button>
+                            <button class="cartmini-open-btn meta-icon" type="button"><i
+                                class="fa-regular fa-cart-shopping"></i><span class="item-number">3</span></button>
+                        </div>
+                        <div class="bd-header-sign-btn">
+                            <a class="bd-btn btn-outline-primary h-40px" href="sign-in.html">Kirish</a>
+                            <a class="bd-btn btn-outline-border-primary h-40px" href="sign-up.html">Ro'yxatdan o'tish</a>
+                        </div>
+                        <div class="bd-header-hamburger">
+                            <div class="sidebar-toggle">
+                                <a class="bar-icon" href="javascript:void(0)">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Header area end -->
+
+    <!-- Offcanvas area start -->
+    <div class="fix">
+        <div class="bd-offcanvas-area">
+            <div class="bd-offcanvas-wrapper">
+                <div class="bd-offcanvas-content">
+                    <div class="bd-offcanvas-top d-flex justify-content-between align-items-center mb-30">
+                        <div class="bd-offcanvas-logo">
+                            <a href="index.html">
+                                <img src="{% static 'assets/images/logo/logo.svg' %}" alt="logo topilmadi">
+                            </a>
+                        </div>
+                        <div class="bd-offcanvas-close">
+                            <button class="bd-offcanvas-close-icon animation--flip">
+                                <span class="bd-offcanvas-m-lines">
+                                <span class="bd-offcanvas-m-line line--1"></span><span
+                                    class="bd-offcanvas-m-line line--2"></span><span
+                                    class="bd-offcanvas-m-line line--3"></span>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="bd-offcanvas-search mb-30">
+                        <form action="#">
+                            <input type="text" name="bd-offcanvasSearch" placeholder="Bu yerda qidiring">
+                            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </form>
+                    </div>
+                    <div class="bd-mobile-menu-smaller">
+                        <div class="bd-offcanvas-menu mb-30">
+                            <nav></nav>
+                        </div>
+                    </div>
+                    <div class="bd-offcanvas-about d-none d-lg-block mb-30">
+                        <h4 class="bd-offcanvas-title-meta">iStudy haqida</h4>
+                        <p>O'quvchilar va o'qituvchilarni an'anaviy va zamonaviy ta'lim o'rtasidagi bo'shliqni to'ldiruvchi keng qamrovli platforma bilan quvvatlash. iStudy ta'limda mukammallikka ilhom beradi va yorqin kelajak uchun o'sishni rag'batlantiradi.</p>
+                    </div>
+                    <div class="bd-offcanvas-contact mb-30">
+                        <h4 class="bd-offcanvas-title-meta">Aloqa ma'lumotlari</h4>
+                        <ul>
+                            <li class="d-flex align-items-center gap-10">
+                                <div class="bd-offcanvas-contact-icon">
+                                    <a target="_blank" href="#">
+                                        <i class="fal fa-map-marker-alt"></i></a>
+                                </div>
+                                <div class="bd-offcanvas-contact-text">
+                                    <a target="_blank" href="#">Chilonzor tumani, Qatortol ko'chasi 123, Toshkent, O'zbekiston</a>
+                                </div>
+                            </li>
+                            <li class="d-flex align-items-center gap-10">
+                                <div class="bd-offcanvas-contact-icon">
+                                    <a href="tel:+998901234567"><i class="far fa-phone"></i></a>
+                                </div>
+                                <div class="bd-offcanvas-contact-text">
+                                    <a href="tel:+998901234567">+998 90 123 45 67</a>
+                                </div>
+                            </li>
+                            <li class="d-flex align-items-center gap-10">
+                                <div class="bd-offcanvas-contact-icon">
+                                    <a href="mailto:info@istudy.uz"><i class="fal fa-envelope"></i></a>
+                                </div>
+                                <div class="bd-offcanvas-contact-text">
+                                    <a href="mailto:info@istudy.uz">info@istudy.uz</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bd-offcanvas-btn-wrap mb-30">
+                        <h4 class="bd-offcanvas-title-meta">Akkaunt</h4>
+                        <div class="bd-offcanvas-btn d-flex align-items-center gap-30">
+                            <a class="bd-btn btn-primary" href="sign-in.html">Kirish</a>
+                            <a class="bd-btn btn-outline-border-secondary" href="sign-up.html">Boshlash</a>
+                        </div>
+                    </div>
+                    <div class="bd-offcanvas-social">
+                        <h4 class="bd-offcanvas-title-meta">Bizni kuzatib boring</h4>
+                        <div class="theme-social">
+                            <ul class="social-icon-list">
+                                <li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
+                                <li><a href="#"><i class="fa-brands fa-x-twitter"></i></a></li>
+                                <li><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></li>
+                                <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bd-offcanvas-overlay"></div>
+    <div class="bd-offcanvas-overlay-white"></div>
+    <!-- Offcanvas area end -->
+
+    <!-- search popup area start here  -->
+    <div class="bd-search-popup-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="bd-search-popup">
+                        <div class="bd-search-form">
+                            <form action="#">
+                                <div class="bd-search-input">
+                                    <input type="search" name="search" placeholder="Qidirish uchun bu yerga yozing ...">
+                                    <div class="bd-search-submit">
+                                        <button type="submit"><i class="fa-regular fa-magnifying-glass"></i></button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="bd-search-close">
+                                <div class="bd-search-close-btn">
+                                    <button><i class="fa-thin fa-close"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- search popup overlay  -->
+    <div class="bd-search-overlay"></div>
+    <!-- search popup area end here  -->
+
+    <!-- search popup area start here  -->
+    <div class="bd-sidebar-cart-area">
+        <div class="bd-sidebar-cart-wrapper d-flex justify-content-between flex-column">
+            <div class="bd-sidebar-cart-top-wrapper">
+                <div class="bd-sidebar-cart-top p-relative">
+                    <div class="bd-sidebar-cart-top-title">
+                        <h5>Xarid savatchasi</h5>
+                    </div>
+                    <div class="bd-sidebar-cart-close">
+                        <button type="button" class="bd-sidebar-cart-close-btn cartmini-close-btn"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>
+                <div class="bd-sidebar-cart-widget">
+                    <div class="bd-sidebar-cart-widget-item">
+                        <div class="bd-sidebar-cart-thumb">
+                            <a href="shop-details.html">
+                                <img src="{% static 'assets/images/book/book-cover-2.webp' %}" alt="rasm">
+                            </a>
+                        </div>
+                        <div class="bd-sidebar-cart-content">
+                            <h5 class="bd-sidebar-cart-title"><a href="shop-details.html">Biz qotillarni topamiz</a></h5>
+                            <div class="bd-sidebar-cart-price-wrapper">
+                                <span class="bd-sidebar-cart-price">$30.00</span>
+                                <span class="bd-sidebar-cart-quantity">x1</span>
+                            </div>
+                        </div>
+                        <a href="#" class="bd-sidebar-cart-del"><i class="fa-regular fa-xmark"></i></a>
+                    </div>
+                    <div class="bd-sidebar-cart-widget-item">
+                        <div class="bd-sidebar-cart-thumb">
+                            <a href="shop-details.html">
+                                <img src="{% static 'assets/images/book/book-cover-3.webp' %}" alt="rasm">
+                            </a>
+                        </div>
+                        <div class="bd-sidebar-cart-content">
+                            <h5 class="bd-sidebar-cart-title"><a href="shop-details.html">Ayollar</a></h5>
+                            <div class="bd-sidebar-cart-price-wrapper">
+                                <span class="bd-sidebar-cart-price">$30.00</span>
+                                <span class="bd-sidebar-cart-quantity">x1</span>
+                            </div>
+                        </div>
+                        <a href="#" class="bd-sidebar-cart-del"><i class="fa-regular fa-xmark"></i></a>
+                    </div>
+                    <div class="bd-sidebar-cart-widget-item">
+                        <div class="bd-sidebar-cart-thumb">
+                            <a href="shop-details.html">
+                                <img src="{% static 'assets/images/book/book-cover-4.webp' %}" alt="rasm">
+                            </a>
+                        </div>
+                        <div class="bd-sidebar-cart-content">
+                            <h5 class="bd-sidebar-cart-title"><a href="shop-details.html">To'rtinchi qanot</a></h5>
+                            <div class="bd-sidebar-cart-price-wrapper">
+                                <span class="bd-sidebar-cart-price">$50.00</span>
+                                <span class="bd-sidebar-cart-quantity">x1</span>
+                            </div>
+                        </div>
+                        <a href="#" class="bd-sidebar-cart-del"><i class="fa-regular fa-xmark"></i></a>
+                    </div>
+                </div>
+
+                <!-- empty cart for wordpress -->
+                <div class="bd-sidebar-cart-empty text-center d-none">
+                    <img src="{% static 'assets/images/shop/empty-cart.webp' %}" alt="rasm">
+                    <p>Savatchangiz bo'sh</p>
+                    <a href="shop.html" class="bd-btn btn-primary">Do'konga o'tish</a>
+                </div>
+                <!-- empty cart for wordpress -->
+
+            </div>
+            <div class="bd-sidebar-cart-checkout">
+                <div class="bd-sidebar-cart-checkout-title mb-30">
+                    <h5>Jami summa:</h5>
+                    <span>$160.00</span>
+                </div>
+                <div class="bd-sidebar-cart-checkout-btn">
+                    <a class="bd-btn btn-primary mb-15 w-100" href="cart.html">Savatchani ko'rish</a>
+                    <a class="bd-btn btn-secondary w-100" href="checkout.html">To'lov</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="body-overlay"></div>
+    <!-- search popup area end here  -->
+
+    <!-- Body main wrapper start -->
+    <main class="main-area">
+
+        <!-- banner area start -->
+        <section class="bd-banner-area bd-banner-one p-relative fix image-bg" data-background="{% static 'assets/images/bg/home-one-bg.webp' %}">
+            <div class="container">
+                <div class="bd-banner-shape">
+                    <div class="shape-1">
+                        <img src="{% static 'assets/images/banner/banner-1/shape-1.webp' %}" alt="shakl">
+                    </div>
+                    <div class="shape-2">
+                        <img src="{% static 'assets/images/banner/banner-1/shape-2.webp' %}" alt="shakl">
+                    </div>
+                    <div class="shape-3">
+                        <img src="{% static 'assets/images/banner/banner-1/shape-3.webp' %}" alt="shakl">
+                    </div>
+                    <div class="shape-4">
+                        <img src="{% static 'assets/images/banner/banner-1/shape-4.webp' %}" alt="shakl">
+                    </div>
+                    <div class="shape-5">
+                        <img src="{% static 'assets/images/banner/banner-1/shape-5.webp' %}" alt="shakl">
+                    </div>
+                </div>
+                <div class="bd-banner-one-row-wrap">
+                    <div class="row gy-30 align-items-center justify-content-end">
+                        <div class="col-xxl-5 col-xl-6 col-lg-12">
+                            <span class="bd-banner-subtitle">iStudy ga xush kelibsiz</span>
+                            <h1 class="bd-banner-title small mb-20">Dunyoda mavjud bo'lgan <span class="bd-title-underline text-secondary">
+                           2700+
+                           <svg width="138" height="8" viewBox="0 0 138 8" fill="none"
+                              xmlns="http://www.w3.org/2000/svg">
+                              <path d="M1 7C28.2975 2.83975 94.8839 -1.83253 137 3.15976" stroke="#FFAF00"
+                                 stroke-width="2" />
+                           </svg>
+                        </span> onlayn kurslarni kashf eting</h1>
+                            <p class="bd-banner-description">Ular o'z vazifalarini bajarmaganlar uchun javobgar emaslar, agar bu beparvolik tufayli bo'lmasa.</p>
+                            <div class="bd-banner-btn d-flex-items flex-wrap gap-30">
+                                <a class="bd-btn btn-outline-border-primary" href="courses.html">Kurslar topish</a>
+                                <a class="bd-video-btn secondary popup-video" href="https://www.youtube.com/watch?v=HKk4oLIzhhM">
+                                    <span class="icon"><i class="fa-solid fa-play"></i></span>
+                                    Video ko'rish
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xxl-7 col-xl-6 col-lg-12">
+                            <div class="bd-banner-thumb-wrapper position-relative">
+                                <div class="bd-banner-thumb">
+                                    <img src="{% static 'assets/images/new/banner-img-uz.png' %}" alt="rasm">
+                                </div>
+                                <div class="bd-banner-tag-wrapper">
+                                    <div class="bd-banner-tag-one">
+                                        <div class="shape"><img src="{% static 'assets/images/shape/dot-shape.webp' %}" alt="shakl"></div>
+                                        <div class="inner">
+                                            <div class="icon">
+                                                <img src="{% static 'assets/images/shape/badge.webp' %}" alt="shakl">
+                                            </div>
+                                            <div class="content">
+                                                <div class="title">100%</div>
+                                                <div class="subtitle">
+                                                    Mamnun o'quvchi
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="bd-banner-tag-two">
+                                        <div class="inner">
+                                            <div class="icon">
+                                                <img src="{% static 'assets/images/shape/badge-img.webp' %}" alt="shakl">
+                                                <img src="{% static 'assets/images/shape/star-group.webp' %}" alt="shakl">
+                                            </div>
+                                            <div class="content">
+                                                <div class="title">30K+</div>
+                                                <div class="subtitle">
+                                                    Butun dunyo bo'ylab <br> baxtli talabalar
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- banner area end -->
+
+        <!-- feature area start -->
+        <div class="bd-feature-area theme-bg pt-40 pb-40 bd-noise-bg">
+            <div class="container">
+                <div class="row gy-30 justify-content-between align-items-center">
+                    <div class="col-xl-4 col-lg-4 col-md-6">
+                        <div class="bd-feature-wrapper style-one wow bdFadeInUp">
+                            <div class="bd-feature-item">
+                                <span class="icon"><svg width="49" height="49" viewBox="0 0 49 49" fill="none"
+                              xmlns="http://www.w3.org/2000/svg">
+                              <path d="M22.5 30.5H26.5" stroke="#07A169" stroke-width="3" stroke-linecap="round"
+                                 stroke-linejoin="round" />
+                              <path d="M24.5 36.5V44.5" stroke="#07A169" stroke-width="3" />
+                              <path d="M16.5 44.5H32.5" stroke="#07A169" stroke-width="3" stroke-linecap="round" />
+                              <path
+                                 d="M18.5 4.5C13.2491 4.5167 10.413 4.67256 8.33782 6.12562C7.47782 6.7278 6.7298 7.4758 6.12764 8.3358C4.5 10.6604 4.5 13.9396 4.5 20.498C4.5 27.0565 4.5 30.3357 6.12764 32.6603C6.7298 33.5203 7.47782 34.2682 8.33782 34.8704C10.6623 36.498 13.9415 36.4981 20.5 36.4981H28.5C35.0584 36.4981 38.3376 36.498 40.6622 34.8704C41.5222 34.2682 42.2702 33.5203 42.8724 32.6603C44.3254 30.5851 44.4812 27.7489 44.498 22.4981"
+                                 stroke="#07A169" stroke-width="3" stroke-linecap="round" />
+                              <path
+                                 d="M39.5 8.79262L39.626 8.70172C41.7416 7.1742 42.7996 6.41044 43.6498 6.77922C44.5 7.148 44.5 8.3706 44.5 10.8158V12.1842C44.5 14.6294 44.5 15.852 43.6498 16.2208C42.7996 16.5896 41.7416 15.8258 39.626 14.2983L39.5 14.2074M31.5 18.5H32.5C35.7998 18.5 37.4498 18.5 38.4748 17.603C39.5 16.706 39.5 15.2624 39.5 12.375V10.625C39.5 7.73764 39.5 6.29398 38.4748 5.39698C37.4498 4.5 35.7998 4.5 32.5 4.5H31.5C28.2002 4.5 26.5502 4.5 25.5252 5.39698C24.5 6.29398 24.5 7.73764 24.5 10.625V12.375C24.5 15.2624 24.5 16.706 25.5252 17.603C26.5502 18.5 28.2002 18.5 31.5 18.5Z"
+                                 stroke="#FFB800" stroke-width="3" stroke-linecap="round" />
+                           </svg>
+                        </span>
+                                <p class="description">24,000 dan ortiq video kurslar orqali tajriba to'plang.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6">
+                        <div class="bd-feature-wrapper style-one wow bdFadeInUp">
+                            <div class="bd-feature-item">
+                                <span class="icon"><svg width="49" height="49" viewBox="0 0 49 49" fill="none"
+                              xmlns="http://www.w3.org/2000/svg">
+                              <path d="M24.5 44.5L20.5 32.5H4.5L8.5 44.5H24.5ZM24.5 44.5H32.5" stroke="#07A169"
+                                 stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                              <path
+                                 d="M24.5 26.5V25.5C24.5 21.7288 24.5 19.8431 23.3284 18.6716C22.1568 17.5 20.2712 17.5 16.5 17.5C12.7288 17.5 10.8431 17.5 9.67158 18.6716C8.5 19.8431 8.5 21.7288 8.5 25.5V26.5"
+                                 stroke="#07A169" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                              <path
+                                 d="M38.5 26.5C38.5 28.7092 36.7092 30.5 34.5 30.5C32.2908 30.5 30.5 28.7092 30.5 26.5C30.5 24.2908 32.2908 22.5 34.5 22.5C36.7092 22.5 38.5 24.2908 38.5 26.5Z"
+                                 stroke="#FFB800" stroke-width="3" />
+                              <path
+                                 d="M20.5 8.5C20.5 10.7091 18.7091 12.5 16.5 12.5C14.2909 12.5 12.5 10.7091 12.5 8.5C12.5 6.29086 14.2909 4.5 16.5 4.5C18.7091 4.5 20.5 6.29086 20.5 8.5Z"
+                                 stroke="#07A169" stroke-width="3" />
+                              <path
+                                 d="M28.5 35.5H40.5C42.7092 35.5 44.5 37.2908 44.5 39.5V40.5C44.5 42.7092 42.7092 44.5 40.5 44.5H38.5"
+                                 stroke="#FFB800" stroke-width="3" stroke-linecap="round" />
+                           </svg>
+                        </span>
+                                <p class="description">Soha mutaxassislari tomonidan o'qitiladigan kurslardan o'rganing.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6">
+                        <div class="bd-feature-wrapper style-one wow bdFadeInUp">
+                            <div class="bd-feature-item">
+                                <span class="icon"><svg width="49" height="49" viewBox="0 0 49 49" fill="none"
+                              xmlns="http://www.w3.org/2000/svg">
+                              <path
+                                 d="M34 31.5V28C34 26.067 35.567 24.5 37.5 24.5C38.6562 24.5 39.6814 25.0606 40.3188 25.9248M44.5 37C44.5 34.6544 44.5 33.4816 43.88 32.6738C43.7204 32.4658 43.5342 32.2796 43.3262 32.12C42.5184 31.5 41.3456 31.5 39 31.5H36C33.6544 31.5 32.4816 31.5 31.6738 32.12C31.4658 32.2796 31.2796 32.4658 31.12 32.6738C30.5 33.4816 30.5 34.6544 30.5 37C30.5 39.3456 30.5 40.5184 31.12 41.3262C31.2796 41.5342 31.4658 41.7204 31.6738 41.88C32.4816 42.5 33.6544 42.5 36 42.5H39C41.3456 42.5 42.5184 42.5 43.3262 41.88C43.5342 41.7204 43.7204 41.5342 43.88 41.3262C44.5 40.5184 44.5 39.3456 44.5 37Z"
+                                 stroke="#07A169" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                              <path
+                                 d="M24.5054 42.5C15.0748 42.5 10.3595 42.5 7.42974 39.571C4.5 36.6422 4.5 31.928 4.5 22.5V16.3885C4.5 12.7556 4.5 10.9391 5.26084 9.57612C5.8032 8.60454 6.6051 7.80284 7.57696 7.26064C8.94034 6.5 10.7573 6.5 14.3912 6.5C16.7194 6.5 17.8834 6.5 18.9024 6.88202C21.229 7.75424 22.1884 9.86716 23.2382 11.9663L24.5054 14.5M16.5033 14.5H34.008C38.2226 14.5 40.3298 14.5 41.8436 15.5112C42.499 15.9489 43.0616 16.5114 43.4994 17.1666C44.2874 18.3456 44.4616 19.8849 44.5 22.5"
+                                 stroke="#FFB800" stroke-width="3" stroke-linecap="round" />
+                           </svg>
+                        </span>
+                                <p class="description">Istalgan vaqtda, istalgan joyda, har qanday qurilmada cheksiz kirish imkoniyati.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- feature area end -->
+
+        <!-- program area start -->
+        <section class="bd-program-area section-space">
+            <div class="container">
+                <div class="row gy-30 justify-content-between align-items-center section-title-space">
+                    <div class="col-xxl-6 col-xl-6 col-lg-6">
+                        <div class="bd-section-title-wrapper">
+                            <span class="bd-section-subtitle">Yetakchi dasturlar</span>
+                            <h2 class="bd-section-title">Top universitet <span class="down-mark-line">dasturlari</span>
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="col-xxl-5 col-xl-6 col-lg-6">
+                        <div class="course-item text-center d-flex flex-wrap gap-15 justify-content-lg-end justify-content-start">
+                            <button class="filter-item bd-btn btn-outline-primary active" data-filter=".cat1">Bakalavr</button>
+                            <button class="filter-item bd-btn btn-outline-primary" data-filter=".cat2">Magistr</button>
+                            <button class="filter-item bd-btn btn-outline-primary" data-filter=".cat3">Doktorantura</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-30 grid">
+                    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 grid-item cat1">
+                        <div class="bd-course-wrapper style-six">
+                            <a href="program-details.html" class="bd-course-thumb-wrapper bd-course-thumb-style-two p-relative">
+                                <div class="bd-course-thumb">
+                                    <img src="{% static 'assets/images/course/course-thumb-1.webp' %}" alt="rasm">
+                                </div>
+                                <div class="bd-course-shape"><img src="{% static 'assets/images/course/course-shape-1.webp' %}" alt="shakl"></div>
+                                <div class="bd-course-logo"><img src="{% static 'assets/images/course/csc.webp' %}" alt="logo"></div>
+                                <div class="bd-course-badge">
+                                    <span class="bd-badge badge-primary">TO'LIQ VAQT</span>
+                                </div>
+                            </a>
+                            <div class="bd-course-content">
+                                <h5 class="bd-course-title underline mb-15"><a href="program-details.html">Kompyuter fanlari bo'yicha bakalavr</a></h5>
+                                <div class="bd-course-content-body">
+                                    <p>Texnologiya kelajagini boshqarish uchun dasturlash, algoritmlar va hisoblash nazariyasini o'rganing.</p>
+                                </div>
+                                <div class="bd-course-divider"></div>
+                                <div class="bd-course-content-bottom d-flex-between flex-wrap gap-15">
+                                    <div class="bd-course-lesson">
+                                        <span><i class="fa-light fa-clock"></i> 4 yil</span>
+                                    </div>
+                                    <div class="bd-course-lesson">
+                                        <span><i class="fa-sharp fa-solid fa-list"></i> 12 kredit</span>
+                                    </div>
+                                    <a class="bd-btn btn-outline-primary" href="program-details.html">Hoziroq ariza topshiring</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 grid-item cat1">
+                        <div class="bd-course-wrapper style-six">
+                            <a href="program-details.html" class="bd-course-thumb-wrapper bd-course-thumb-style-two p-relative">
+                                <div class="bd-course-thumb">
+                                    <img src="{% static 'assets/images/course/course-thumb-2.webp' %}" alt="rasm">
+                                </div>
+                                <div class="bd-course-shape"><img src="{% static 'assets/images/course/course-shape-2.webp' %}" alt="shakl"></div>
+                                <div class="bd-course-logo"><img src="{% static 'assets/images/course/bap.webp' %}" alt="logo"></div>
+                                <div class="bd-course-badge">
+                                    <span class="bd-badge badge-primary">YARIM VAQT</span>
+                                </div>
+                            </a>
+                            <div class="bd-course-content">
+                                <h5 class="bd-course-title underline mb-15"><a href="program-details.html">Psixologiya bo'yicha san'at bakalavri</a></h5>
+                                <div class="bd-course-content-body">
+                                    <p>Psixologiyaning keng qamrovli o'rganishi orqali insoniy xatti-harakatlar va aqliy jarayonlarni tushunish.</p>
+                                </div>
+                                <div class="bd-course-divider"></div>
+                                <div class="bd-course-content-bottom d-flex-between flex-wrap gap-15">
+                                    <div class="bd-course-lesson">
+                                        <span><i class="fa-light fa-clock"></i> 3 yil</span>
+                                    </div>
+                                    <div class="bd-course-lesson">
+                                        <span><i class="fa-sharp fa-solid fa-list"></i> 10 kredit</span>
+                                    </div>
+                                    <a class="bd-btn btn-outline-primary" href="program-details.html">Hoziroq ariza topshiring</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 grid-item cat1">
+                        <div class="bd-course-wrapper style-six">
+                            <a href="program-details.html" class="bd-course-thumb-wrapper bd-course-thumb-style-two p-relative">
+                                <div class="bd-course-thumb">
+                                    <img src="{% static 'assets/images/course/course-thumb-3.webp' %}" alt="rasm">
+                                </div>
+                                <div class="bd-course-shape"><img src="{% static 'assets/images/course/course-shape-3.webp' %}" alt="shakl"></div>
+                                <div class="bd-course-logo"><img src="{% static 'assets/images/course/bba.webp' %}" alt="logo"></div>
+                                <div class="bd-course-badge">
+                                    <span class="bd-badge badge-primary">ONLAYN</span>
+                                </div>
+                            </a>
+                            <div class="bd-course-content">
+                                <h5 class="bd-course-title underline mb-15"><a href="program-details.html">Biznes boshqaruvi bakalavri</a></h5>
+                                <div class="bd-course-content-body">
+                                    <p>Dinamik bozor uchun ilg'or biznes strategiyalari va boshqaruv ko'nikmalari bilan o'zingizni jihozlang.</p>
+                                </div>
+                                <div class="bd-course-divider"></div>
+                                <div class="bd-course-content-bottom d-flex-between flex-wrap gap-15">
+                                    <div class="bd-course-lesson">
+                                        <span><i class="fa-light fa-clock"></i> 2 yil</span>
+                                    </div>
+                                    <div class="bd-course-lesson">
+                                        <span><i class="fa-sharp fa-solid fa-list"></i> 15 kredit</span>
+                                    </div>
+                                    <a class="bd-btn btn-outline-primary" href="program-details.html">Hoziroq ariza topshiring</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 grid-item cat2">
+                        <div class="bd-course-wrapper style-six">
+                            <a href="program-details.html" class="bd-course-thumb-wrapper bd-course-thumb-style-two p-relative">
+                                <div class="bd-course-thumb">
+                                    <img src="{% static 'assets/images/course/course-thumb-4.webp' %}" alt="rasm">
+                                </div>
+                                <div class="bd-course-shape"><img src="{% static 'assets/images/course/course-shape-4.webp' %}" alt="shakl"></div>
+                                <div class="bd-course-logo"><img src="{% static 'assets/images/course/mscds.webp' %}" alt="logo"></div>
+                                <div class="bd-course-badge">
+                                    <span class="bd-badge badge-primary">TO'LIQ VAQT</span>
+                                </div>
+                            </a>
+                            <div class="bd-course-content">
+                                <h5 class="bd-course-title underline mb-15"><a href="program-details.html">Ma'lumotlar fani bo'yicha fan magistri</a></h5>
+                                <div class="bd-course-content-body">
+                                    <p>Ma'lumotlarga asoslangan sohalarda tushunchalarni ochish uchun statistik usullar, mashinani o'rganish va katta ma'lumotlar tahlilini o'zlashtirishishing.</p>
+                                </div>
+                                <div class="bd-course-divider"></div>
+                                <div class="bd-course-content-bottom d-flex-between flex-wrap gap-15">
+                                    <div class="bd-course-lesson">
+                                        <span><i class="fa-light fa-clock"></i> 2 yil</span>
+                                    </div>
+                                    <div class="bd-course-lesson">
+                                        <span><i class="fa-sharp fa-solid fa-list"></i> 16 kredit</span>
+                                    </div>
+                                    <a class="bd-btn btn-outline-primary" href="program-details.html">Hoziroq ariza topshiring</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 grid-item cat2">
+                        <div class="bd-course-wrapper style-six">
+                            <a href="program-details.html" class="bd-course-thumb-wrapper bd-course-thumb-style-two p-relative">
+                                <div class="bd-course-thumb">
+                                    <img src="{% static 'assets/images/course/course-thumb-5.webp' %}" alt="rasm">
+                                </div>
+                                <div class="bd-course-shape"><img src="{% static 'assets/images/course/course-shape-5.webp' %}" alt="shakl"></div>
+                                <div class="bd-course-logo"><img src="{% static 'assets/images/course/mph.webp' %}" alt="logo"></div>
+                                <div class="bd-course-badge">
+                                    <span class="bd-badge badge-primary">YARIM VAQT</span>
+                                </div>
+                            </a>
+                            <div class="bd-course-content">
+                                <h5 class="bd-course-title underline mb-15"><a href="program-details.html">Jamoat salomatligi magistri (MPH)</a></h5>
+                                <div class="bd-course-content-body">
+                                    <p>Global sog'liqni saqlash muammolarini hal qilish va jamoat salomatligi strategiyalari orqali jamiyat farovonligini yaxshilash uchun ko'nikmalar rivojlantiring.</p>
+                                </div>
+                                <div class="bd-course-divider"></div>
+                                <div class="bd-course-content-bottom d-flex-between flex-wrap gap-15">
+                                    <div class="bd-course-lesson">
+                                        <span><i class="fa-light fa-clock"></i> 2 yil</span>
+                                    </div>
+                                    <div class="bd-course-lesson">
+                                        <span><i class="fa-sharp fa-solid fa-list"></i> 14 kredit</span>
+                                    </div>
+                                    <a class="bd-btn btn-outline-primary" href="program-details.html">Hoziroq ariza topshiring</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 grid-item cat3">
+                        <div class="bd-course-wrapper style-six">
+                            <a href="program-details.html" class="bd-course-thumb-wrapper bd-course-thumb-style-two p-relative">
+                                <div class="bd-course-thumb">
+                                    <img src="{% static 'assets/images/course/course-thumb-6.webp' %}" alt="rasm">
+                                </div>
+                                <div class="bd-course-shape"><img src="{% static 'assets/images/course/course-shape-6.webp' %}" alt="shakl"></div>
+                                <div class="bd-course-logo"><img src="{% static 'assets/images/course/ai.webp' %}" alt="logo"></div>
+                                <div class="bd-course-badge">
+                                    <span class="bd-badge badge-primary">TADQIQOT</span>
+                                </div>
+                            </a>
+                            <div class="bd-course-content">
+                                <h5 class="bd-course-title underline mb-15"><a href="program-details.html">Sun'iy intellekt bo'yicha PhD</a></h5>
+                                <div class="bd-course-content-body">
+                                    <p>Texnologiya va innovatsiya chegaralarini kengaytirish uchun AI, mashinani o'rganish va chuqur o'rganish bo'yicha pioner tadqiqotlar o'tkazing.</p>
+                                </div>
+                                <div class="bd-course-divider"></div>
+                                <div class="bd-course-content-bottom d-flex-between flex-wrap gap-15">
+                                    <div class="bd-course-lesson">
+                                        <span><i class="fa-light fa-clock"></i> 5 yil</span>
+                                    </div>
+                                    <div class="bd-course-lesson">
+                                        <span><i class="fa-sharp fa-solid fa-list"></i> 20 kredit</span>
+                                    </div>
+                                    <a class="bd-btn btn-outline-primary" href="program-details.html">Hoziroq ariza topshiring</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bd-program-btn d-flex justify-content-center mt-50">
+                    <a class="bd-btn btn-primary" href="courses-grid-two.html">Ko'proq universitet dasturlarini o'rganish</a>
+                </div>
+            </div>
+        </section>
+        <!-- program area end -->
+
+        <!-- about area start -->
+        <section class="bd-about-area section-space-top pb-200 primary-bg">
+            <div class="container">
+                <div class="row gy-30 align-items-center align-items-lg-start justify-content-between">
+                    <div class="col-12 col-xl-6 col-lg-6">
+                        <div class="bd-about-content text-center mb-30">
+                            <h5 class="bd-section-title mb-20">✅ Oliy ta'lim faoliyati uchun ruxsatnoma</h5>
+                        </div>
+                        <div class="bd-about-thumbnail">
+                            <img class="w-100" src="{% static 'assets/images/new/license-1.png' %}" alt="ruxsatnoma">
+                        </div>
+                    </div>
+                    <div class="col-12 col-xl-6 col-lg-6">
+                        <div class="bd-about-content text-center mb-30">
+                            <h5 class="bd-section-title mb-20">✅ Davlat akkreditatsiyasidan o'tganlik guvohnomasi</h5>
+                        </div>
+                        <div class="bd-about-thumbnail">
+                            <img class="w-100" src="{% static 'assets/images/new/license-2.jpg' %}" alt="akkreditatsiya-guvohnomasi">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- about area end -->
+
+        <!-- counter area start -->
+        <div class="bd-counter-area bd-counter-over-top p-relative section-space-bottom">
+            <div class="container">
+                <div class="bd-counter-wrapper bd-counter-border">
+                    <div class="p-relative fix">
+                        <div class="bd-counter-style-one">
+                            <div class="bd-counter-bg-2 theme-bg bd-noise-bg"></div>
+                            <div class="bd-counter-item">
+                                <div class="bd-counter-content">
+                                    <h2 class="bd-counter-title"><span data-purecounter-duration="1" data-purecounter-end="1009"
+                                 class="purecounter">0</span>+
+                                    </h2>
+                                    <p>Mavjud kurslar</p>
+                                </div>
+                            </div>
+                            <div class="bd-counter-item">
+                                <div class="bd-counter-content">
+                                    <h2 class="bd-counter-title"><span data-purecounter-duration="1" data-purecounter-end="9313"
+                                 class="purecounter">0</span>+
+                                    </h2>
+                                    <p>Faol o'quvchilar</p>
+                                </div>
+                            </div>
+                            <div class="bd-counter-item">
+                                <div class="bd-counter-content">
+                                    <h2 class="bd-counter-title"><span data-purecounter-duration="1" data-purecounter-end="2015"
+                                 class="purecounter">0</span>+
+                                    </h2>
+                                    <p>Malakali o'qituvchilar</p>
+                                </div>
+                            </div>
+                            <div class="bd-counter-item">
+                                <div class="bd-counter-content">
+                                    <h2 class="bd-counter-title"><span data-purecounter-duration="1" data-purecounter-end="1105"
+                                 class="purecounter">0</span>+
+                                    </h2>
+                                    <p>Olingan mukofotlar</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bd-counter-shape-wrap">
+                            <div class="shape-1"><img src="{% static 'assets/images/shape/counter-shape-1.webp' %}" alt="shakl"></div>
+                            <div class="shape-2"><img src="{% static 'assets/images/shape/counter-shape-2.webp' %}" alt="shakl"></div>
+                            <div class="shape-3"><img src="{% static 'assets/images/shape/counter-shape-6.webp' %}" alt="shakl"></div>
+                            <div class="shape-4"><img src="{% static 'assets/images/shape/counter-shape-4.webp' %}" alt="shakl"></div>
+                            <div class="shape-5"><img src="{% static 'assets/images/shape/counter-shape-5.webp' %}" alt="shakl"></div>
+                            <div class="shape-6"><img src="{% static 'assets/images/shape/counter-shape-3.webp' %}" alt="shakl"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- counter area end -->
+
+        <!-- partner area start -->
+        <div class="bd-partner-area section-space theme-bg-05 bd-partner-bg fix">
+            <div class="container">
+                <div class="row gy-30">
+                    <div class="col-xl-5 col-lg-5 col-md-12">
+                        <div class="bd-section-title-wrapper">
+                            <h2 class="bd-section-title mb-20">Bizning <span class="down-mark-line">Global</span> Hurmatli
+                                Hamkorlarimiz</h2>
+                            <p class="bd-section-paragraph">Global hamkorlar har doim o'zingiz xohlagan tarzda, o'zingiz xohlagan kursni nashr etish imkoniyatini beradi va nazoratni saqlaydi.</p>
+                            <p class="bd-section-paragraph">Butun dunyo bo'ylab <span class="text-primary fs-18 fw-6">9,500</span>+ bizneslar va talabalar</p>
+                        </div>
+                    </div>
+                    <div class="col-xl-7 col-lg-7 col-md-12">
+                        <div class="bd-brand-wrapper style-five">
+                            <div class="bd-brand-box">
+                                <div class="bd-brand-item">
+                                    <img src="{% static 'assets/images/partner/partner-01.webp' %}" alt="rasm">
+                                </div>
+                                <div class="bd-brand-item">
+                                    <img src="{% static 'assets/images/partner/partner-02.webp' %}" alt="rasm">
+                                </div>
+                                <div class="bd-brand-item">
+                                    <img src="{% static 'assets/images/partner/partner-03.webp' %}" alt="rasm">
+                                </div>
+                                <div class="bd-brand-item">
+                                    <img src="{% static 'assets/images/partner/partner-04.webp' %}" alt="rasm">
+                                </div>
+                                <div class="bd-brand-item">
+                                    <img src="{% static 'assets/images/partner/partner-05.webp' %}" alt="rasm">
+                                </div>
+                                <div class="bd-brand-item">
+                                    <img src="{% static 'assets/images/partner/partner-06.webp' %}" alt="rasm">
+                                </div>
+                                <div class="bd-brand-item">
+                                    <img src="{% static 'assets/images/partner/partner-07.webp' %}" alt="rasm">
+                                </div>
+                                <div class="bd-brand-item">
+                                    <img src="{% static 'assets/images/partner/partner-08.webp' %}" alt="rasm">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- partner area end -->
+
+    </main>
+    <!-- Body main wrapper end -->
+
+    <!-- footer area start -->
+    <footer>
+        <div class="bd-footer-area style-two has-footer-space theme-black fix">
+            <div class="container">
+                <div class="row gy-30 justify-content-between">
+                    <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                        <div class="bd-footer-widget footer-2-col-1">
+                            <div class="bd-footer-widget-logo">
+                                <a href="index.html">
+                                    <img src="{% static 'assets/images/logo/logo-white.svg' %}" alt="rasm">
+                                </a>
+                            </div>
+                            <div class="bd-footer-widget-content">
+                                <p class="bd-footer-widget-description">
+                                    Ta'limga qaratilgan veb-sayt yoki shablon tashrif buyuruvchilarga taklif etilayotgan dastur yoki xizmat haqida tushuncha beruvchi muhim qismdir.
+                                </p>
+                                <div class="bd-footer-social">
+                                    <div class="theme-social has-white">
+                                        <ul class="social-icon-list">
+                                            <li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
+                                            <li><a href="#"><i class="fa-brands fa-x-twitter"></i></a></li>
+                                            <li><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></li>
+                                            <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 col-sm-4">
+                        <div class="bd-footer-widget footer-2-col-2">
+                            <h6 class="bd-footer-widget-title ">Havolalar</h6>
+                            <div class="bd-footer-widget-links">
+                                <ul>
+                                    <li class="underline-two"><a href="about-online-course.html">Biz haqimizda</a></li>
+                                    <li class="underline-two"><a href="blog.html">Yangiliklar</a></li>
+                                    <li class="underline-two"><a href="event.html">Tadbirlar</a></li>
+                                    <li class="underline-two"><a href="shop.html">Do'kon</a></li>
+                                    <li class="underline-two"><a href="pricing-table.html">Narxlar jadvali</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 col-sm-4">
+                        <div class="bd-footer-widget footer-2-col-3">
+                            <h6 class="bd-footer-widget-title ">Ta'lim</h6>
+                            <div class="bd-footer-widget-links">
+                                <ul>
+                                    <li class="underline-two"><a href="courses.html">Kurslar</a></li>
+                                    <li class="underline-two"><a href="instructor.html">O'qituvchilar</a></li>
+                                    <li class="underline-two"><a href="instructor-details.html">O'qituvchi ma'lumotlari</a></li>
+                                    <li class="underline-two"><a href="become-instructor.html">O'qituvchi bo'lish</a></li>
+                                    <li class="underline-two"><a href="student-dashboard.html">Talaba paneli</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-4 col-sm-4">
+                        <div class="bd-footer-widget footer-2-col-4">
+                            <h6 class="bd-footer-widget-title ">Yordam</h6>
+                            <div class="bd-footer-widget-links">
+                                <ul>
+                                    <li class="underline-two"><a href="contact.html">Bog'lanish</a></li>
+                                    <li class="underline-two"><a href="faq.html">Savol-javob</a></li>
+                                    <li class="underline-two"><a href="purchase-guide.html">Xarid qo'llanmasi</a></li>
+                                    <li class="underline-two"><a href="terms-conditions.html">Shartlar</a></li>
+                                    <li class="underline-two"><a href="privacy-policy.html">Maxfiylik siyosati</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-8 col-sm-12">
+                        <div class="bd-footer-widget footer-2-col-5">
+                            <h6 class="bd-footer-widget-title">Yangiliklar</h6>
+                            <div class="bd-footer-from-content">
+                                <div class="bd-footer-widget-subscribe">
+                                    <p class="bd-footer-widget-description">So'nggi yangiliklar va yangiliklarni olish uchun bizning yangiliklarimizga obuna bo'ling.</p>
+                                    <form action="#">
+                                        <div class="bd-footer-subscribe-form style-two">
+                                            <input type="email" placeholder="Email manzili">
+                                            <button class="bd-btn btn-primary h-40px" type="submit">Obuna bo'lish</button>
+                                        </div>
+                                    </form>
+                                    <div class="checkout-agree">
+                                        <div class="checkout-option">
+                                            <input id="read_all" type="checkbox">
+                                            <label for="read_all">Men veb-sayt shartlarini o'qidim va roziman.</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bd-footer-copyright-area style-two theme-bg fix bd-noise-bg">
+            <div class="container">
+                <div class="row justify-content-between">
+                    <div class="col-xl-12">
+                        <div class="bd-footer-copyright-text text-center">
+                            <p class="underline-two">© Mualliflik huquqi <span id="year"></span> | iStudy tomonidan ishlab chiqilgan</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- footer area end -->
+
+    <!-- back to top -->
+    <div class="backtotop-wrap cursor-pointer">
+        <svg class="backtotop-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+            <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
+        </svg>
+    </div>
+    <!-- Backtotop end -->
+
+    <!-- JS here -->
+    <script src="{% static 'assets/js/vendor/jquery-3.7.1.min.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/waypoints.min.js' %}"></script>
+    <script src="{% static 'assets/js/vendor/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/swiper.min.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/wow.js' %}"></script>
+    <script src="{% static 'assets/js/vendor/magnific-popup.min.js' %}"></script>
+    <script src="{% static 'assets/js/vendor/isotope.pkgd.min.js' %}"></script>
+    <script src="{% static 'assets/js/vendor/imagesloaded.pkgd.min.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/nice-select.min.js' %}"></script>
+    <script src="{% static 'assets/js/vendor/ajax-form.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/easypie.js' %}"></script>
+    <script src="{% static 'assets/js/vendor/purecounter.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/nouislider.min.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/apexcharts.min.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/typed.js' %}"></script>
+    <script src="{% static 'assets/js/main.js' %}"></script>
+
+    {% block extra_js %}{% endblock %}
+
+    <script>
+        // Yil avtomatik o'zgarishi
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+
+</html>

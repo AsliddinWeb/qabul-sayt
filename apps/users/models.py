@@ -212,6 +212,7 @@ class MarketingProfile(BaseProfile):
         User,
         on_delete=models.CASCADE,
         related_name='marketing_profile',
+        limit_choices_to={'role': 'marketing'},
         verbose_name="Foydalanuvchi"
     )
 
@@ -235,6 +236,7 @@ class OperatorProfile(BaseProfile):
         User,
         on_delete=models.CASCADE,
         related_name='operator_profile',
+        limit_choices_to={'role': 'operator'},
         verbose_name="Foydalanuvchi"
     )
 
@@ -264,6 +266,7 @@ class MiniAdminProfile(BaseProfile):
         User,
         on_delete=models.CASCADE,
         related_name='mini_admin_profile',
+        limit_choices_to={'role': 'mini_admin'},
         verbose_name="Foydalanuvchi"
     )
 
@@ -279,6 +282,7 @@ class AdminProfile(BaseProfile):
         User,
         on_delete=models.CASCADE,
         related_name='admin_profile',
+        limit_choices_to={'role': 'admin'},
         verbose_name="Foydalanuvchi"
     )
 
@@ -323,6 +327,7 @@ class AbituriyentProfile(BaseProfile):
         User,
         on_delete=models.CASCADE,
         related_name='abituriyent_profile',
+        limit_choices_to={'role': 'abituriyent'},
         verbose_name="Foydalanuvchi"
     )
 
