@@ -10,7 +10,13 @@ urlpatterns = [
 
     # Home
     path('', include('apps.pages.urls')),
+
+    # Auth
+    path('auth/', include('apps.users.urls')),
+
+    # Dashboard
     path('dashboard/', include('apps.dashboards.urls')),
+
 ]
 
 

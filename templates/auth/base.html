@@ -55,11 +55,11 @@
         <section class="bd-authentication-cover-main ">
             <div class="row h100vh mx-0">
                 <div class="col-xxl-6 col-xl-5 col-lg-12 d-xl-block d-none px-0">
-                    <div class="bd-authentication-cover overflow-hidden" style="background-image: url('{% static 'assets/images/new/bg-xiu.jpg' %}');">
+                    <div class="bd-authentication-cover overflow-hidden" style="background-image: url('{% static 'assets/images/contact/sign-in-bg.webp' %}');">
                         <div class="bd-authentication-cover-content d-flex-center">
                             <div class="bd-section-title-wrapper">
-                                <h2 class="bd-section-title mb-20">Kirish!</h2>
-                                <p class="bd-section-paragraph">Qabul tizimiga kirish uchun ma'lumotlaringizni kiriting.</p>
+                                <h2 class="bd-section-title mb-20">Xush kelibsiz!</h2>
+                                <p class="bd-section-paragraph">Ta'lim tizimiga kirish uchun ma'lumotlaringizni kiriting.</p>
                             </div>
                         </div>
                     </div>
@@ -69,7 +69,7 @@
                         <div class="col-xxl-7 col-xl-9 col-lg-6 col-md-6 col-sm-8 col-12">
                             <div class="bd-authentication-form-wrapper">
                                 <div class="bd-authentication-form-logo">
-                                    <a href="/"><img src="{% static 'assets/images/logo/logo.svg' %}" alt="logo"></a>
+                                    <a href="{% url 'home' %}"><img src="{% static 'assets/images/logo/logo.svg' %}" alt="logo"></a>
                                 </div>
                                 <h3 class="title mb-10">Tizimga kirish</h3>
                                 <p class="subtitle">Telefon raqam va parol orqali kiring</p>
@@ -123,7 +123,7 @@
                                             <label for="rememberMe">Meni eslab qol</label>
                                         </div>
                                         <div class="sign-forgot underline">
-                                            <a href="#" class="sign-link">Parolni unutdingizmi?</a>
+                                            <a href="{% url 'users:forgot_password' %}" class="sign-link">Parolni unutdingizmi?</a>
                                         </div>
                                     </div>
 
@@ -132,7 +132,22 @@
                                     </div>
                                 </form>
 
-                                <div class="bd-sign-up-label underline-two text-center mt-3">
+                                <div class="bd-divider-wrapper">
+                                    <div class="bd-divider-line left-line"></div>
+                                    <span class="bd-divider-title">YOKI</span>
+                                    <div class="bd-divider-line"></div>
+                                </div>
+
+                                <div class="bd-alter-sign mb-20">
+                                    <a href="{% url 'users:phone_login' %}" class="bd-btn btn-outline-primary w-100">
+                                        <span class="thumb">
+                                            <i class="fa fa-mobile"></i>
+                                        </span>
+                                        SMS kod orqali kirish
+                                    </a>
+                                </div>
+
+                                <div class="bd-sign-up-label underline-two text-center">
                                     Hisobingiz yo'qmi? <a href="{% url 'users:register' %}" class="sign-link">Ro'yxatdan o'tish</a>
                                 </div>
                             </div>

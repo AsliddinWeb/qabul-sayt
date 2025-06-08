@@ -8,7 +8,6 @@
     <title>Kirish - Ta'lim Tizimi</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Place favicon.ico in the root directory -->
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/images/logo/favicon.svg' %}">
     <!-- CSS here -->
     <link rel="stylesheet" href="{% static 'assets/css/vendor/bootstrap.min.css' %}">
@@ -58,8 +57,8 @@
                     <div class="bd-authentication-cover overflow-hidden" style="background-image: url('{% static 'assets/images/new/bg-xiu.jpg' %}');">
                         <div class="bd-authentication-cover-content d-flex-center">
                             <div class="bd-section-title-wrapper">
-                                <h2 class="bd-section-title mb-20">Kirish!</h2>
-                                <p class="bd-section-paragraph">Qabul tizimiga kirish uchun ma'lumotlaringizni kiriting.</p>
+                                <h2 class="bd-section-title mb-20">Xush kelibsiz!</h2>
+                                <h5 class="bd-section-paragraph">Qabul tizimiga kirish uchun telefon raqamingizni kiriting.</h5>
                             </div>
                         </div>
                     </div>
@@ -72,7 +71,7 @@
                                     <a href="/"><img src="{% static 'assets/images/logo/logo.svg' %}" alt="logo"></a>
                                 </div>
                                 <h3 class="title mb-10">Tizimga kirish</h3>
-                                <p class="subtitle">Telefon raqam va parol orqali kiring</p>
+                                <p class="subtitle">Telefon raqamingizni kiriting</p>
 
                                 <!-- Django messages -->
                                 {% if messages %}
@@ -84,7 +83,16 @@
                                     {% endfor %}
                                 {% endif %}
 
-                                <form method="POST" action="{% url 'users:login' %}">
+                                <!-- Form errors -->
+                                {% if form.non_field_errors %}
+                                    <div class="alert alert-danger">
+                                        {% for error in form.non_field_errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+
+                                <form method="POST" action="{% url 'users:phone_auth' %}" id="phone-form">
                                     {% csrf_token %}
 
                                     <!-- Telefon raqami -->
@@ -100,40 +108,33 @@
                                                 </div>
                                             {% endif %}
                                         </div>
-                                    </div>
-
-                                    <!-- Parol -->
-                                    <div class="form-input-box mb-20">
-                                        <div class="form-input-title">
-                                            <label for="password">Parol <span>*</span></label>
-                                        </div>
-                                        <div class="form-input">
-                                            {{ form.password }}
-                                            {% if form.password.errors %}
-                                                <div class="text-danger small mt-1">
-                                                    {{ form.password.errors.0 }}
-                                                </div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-
-                                    <div class="d-flex-between mb-20">
-                                        <div class="checkout-option">
-                                            {{ form.remember_me }}
-                                            <label for="rememberMe">Meni eslab qol</label>
-                                        </div>
-                                        <div class="sign-forgot underline">
-                                            <a href="#" class="sign-link">Parolni unutdingizmi?</a>
-                                        </div>
+                                        <small class="text-muted">
+                                            Masalan: +998 90 123 45 67
+                                        </small>
                                     </div>
 
                                     <div class="bd-sign-btn">
-                                        <button type="submit" class="bd-btn btn-primary w-100">Kirish</button>
+                                        <button type="submit" class="bd-btn btn-primary w-100" id="submit-btn">
+                                            <span class="btn-text">
+                                                <i class="fa fa-paper-plane me-2"></i>
+                                                SMS kod yuborish
+                                            </span>
+                                            <span class="btn-loading" style="display: none;">
+                                                <i class="fa fa-spinner fa-spin me-2"></i>
+                                                Yuborilmoqda...
+                                            </span>
+                                        </button>
                                     </div>
                                 </form>
 
-                                <div class="bd-sign-up-label underline-two text-center mt-3">
-                                    Hisobingiz yo'qmi? <a href="{% url 'users:register' %}" class="sign-link">Ro'yxatdan o'tish</a>
+                                <div class="text-center mt-4 text-muted">
+                                    <p class="mb-2">
+                                        <i class="fa fa-info-circle"></i>
+                                        Telefon raqamingizga SMS kod yuboriladi
+                                    </p>
+                                    <p>
+                                        Agar ro'yxatdan o'tmagan bo'lsangiz, avtomatik ro'yxatdan o'tasiz
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -174,16 +175,109 @@
 
     <!-- Custom scripts -->
     <script>
-        // Telefon raqam formatlash
-        document.getElementById('phone').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (!value.startsWith('998')) {
-                value = '998' + value;
-            }
-            if (value.length > 12) {
-                value = value.slice(0, 12);
-            }
-            e.target.value = '+' + value;
+        $(document).ready(function() {
+            // Telefon input
+            const phoneInput = $('#phone');
+            const form = $('#phone-form');
+            const submitBtn = $('#submit-btn');
+
+            // Telefon raqam formatlash
+            phoneInput.on('input', function(e) {
+                let value = e.target.value;
+
+                // Avval barcha bo'sh joylarni olib tashlash
+                value = value.replace(/\s/g, '');
+
+                // + belgisini saqlab, faqat raqamlarni olish
+                let hasPlus = value.startsWith('+');
+                let numbers = value.replace(/\D/g, '');
+
+                // Agar + bo'lmasa va raqamlar bor bo'lsa
+                if (!hasPlus && numbers) {
+                    // 998 bilan boshlanmasa qo'shish
+                    if (!numbers.startsWith('998')) {
+                        numbers = '998' + numbers;
+                    }
+                }
+
+                // Maksimal uzunlik (998 + 9 raqam = 12)
+                if (numbers.length > 12) {
+                    numbers = numbers.slice(0, 12);
+                }
+
+                // Formatlash
+                let formatted = '';
+
+                if (numbers.length > 0) {
+                    // Format: +998 90 123 45 67
+                    formatted = '+' + numbers.slice(0, 3); // +998
+
+                    if (numbers.length > 3) {
+                        formatted += ' ' + numbers.slice(3, 5); // 90
+                    }
+
+                    if (numbers.length > 5) {
+                        formatted += ' ' + numbers.slice(5, 8); // 123
+                    }
+
+                    if (numbers.length > 8) {
+                        formatted += ' ' + numbers.slice(8, 10); // 45
+                    }
+
+                    if (numbers.length > 10) {
+                        formatted += ' ' + numbers.slice(10, 12); // 67
+                    }
+
+                    e.target.value = formatted;
+                } else if (hasPlus) {
+                    e.target.value = '+';
+                } else {
+                    e.target.value = '';
+                }
+            });
+
+            // Faqat raqam va + kiritish mumkin
+            phoneInput.on('keypress', function(e) {
+                const char = String.fromCharCode(e.which);
+                const currentValue = e.target.value;
+
+                // + faqat boshida bo'lishi mumkin
+                if (char === '+' && currentValue.length > 0) {
+                    e.preventDefault();
+                    return;
+                }
+
+                // Enter tugmasi
+                if (e.which === 13) {
+                    e.preventDefault();
+                    form.submit();
+                    return;
+                }
+
+                // Faqat raqamlar va +
+                if (!/[0-9+]/.test(char)) {
+                    e.preventDefault();
+                }
+            });
+
+            // Paste qilganda
+            phoneInput.on('paste', function(e) {
+                e.preventDefault();
+                const pasteData = (e.originalEvent.clipboardData || window.clipboardData).getData('text');
+                const cleaned = pasteData.replace(/[^\d+]/g, '');
+                phoneInput.val(cleaned).trigger('input');
+            });
+
+            // Form yuborilganda
+            form.on('submit', function(e) {
+                // Loading ko'rsatish
+                submitBtn.prop('disabled', true);
+                submitBtn.find('.btn-text').hide();
+                submitBtn.find('.btn-loading').show();
+            });
+
+            // Fokus
+            phoneInput.focus();
         });
     </script>
 </body>

@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Telefon raqamni tasdiqlash</title>
+    <title>SMS kodni tasdiqlash</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/images/logo/favicon.svg' %}">
@@ -70,6 +70,22 @@
             cursor: not-allowed;
             text-decoration: none;
         }
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+        .status-new {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status-existing {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
     </style>
 </head>
 
@@ -80,7 +96,19 @@
                 <a href="/"><img src="{% static 'assets/images/logo/logo.svg' %}" alt="logo" style="height: 50px;"></a>
             </div>
 
-            <h3 class="text-center mb-3">Telefon raqamni tasdiqlash</h3>
+            <div class="text-center">
+                {% if user_exists %}
+                    <span class="status-badge status-existing">
+                        <i class="fa fa-user-check"></i> Mavjud foydalanuvchi
+                    </span>
+                {% else %}
+                    <span class="status-badge status-new">
+                        <i class="fa fa-user-plus"></i> Yangi foydalanuvchi
+                    </span>
+                {% endif %}
+            </div>
+
+            <h3 class="text-center mb-3">SMS kodni kiriting</h3>
             <p class="text-center text-muted mb-4">
                 {{ masked_phone }} raqamiga yuborilgan 4 xonali kodni kiriting
             </p>
@@ -95,8 +123,9 @@
                 {% endfor %}
             {% endif %}
 
-            <form method="POST" action="{% url 'users:verify_phone' %}" id="verifyForm">
+            <form method="POST" action="{% url 'users:verify_code' %}" id="verifyForm">
                 {% csrf_token %}
+                {{ form.phone }}
                 <div class="code-inputs">
                     <input type="text" class="code-input" maxlength="1" data-index="0">
                     <input type="text" class="code-input" maxlength="1" data-index="1">
@@ -105,7 +134,9 @@
                 </div>
                 <input type="hidden" name="code" id="fullCode">
 
-                <button type="submit" class="bd-btn btn-primary w-100 mb-3">Tasdiqlash</button>
+                <button type="submit" class="bd-btn btn-primary w-100 mb-3">
+                    <i class="fa fa-check-circle me-2"></i>Tasdiqlash
+                </button>
             </form>
 
             <div class="timer" id="timer">
@@ -115,13 +146,16 @@
             <form method="POST" action="{% url 'users:resend_code' %}" class="text-center">
                 {% csrf_token %}
                 <button type="submit" class="resend-btn" id="resendBtn" disabled>
-                    Kodni qayta yuborish
+                    <i class="fa fa-redo"></i> Kodni qayta yuborish
                 </button>
             </form>
 
             <hr class="my-4">
 
             <div class="text-center">
+                <a href="{% url 'users:phone_auth' %}" class="text-muted me-3">
+                    <i class="fa fa-arrow-left"></i> Orqaga
+                </a>
                 <a href="{% url 'users:logout' %}" class="text-muted">
                     <i class="fa fa-sign-out"></i> Chiqish
                 </a>
@@ -172,6 +206,27 @@
                     e.preventDefault();
                 }
             });
+
+            // Paste qilganda ham ishlashi uchun
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const pasteData = e.clipboardData.getData('text');
+                const numbers = pasteData.replace(/\D/g, '').slice(0, 4);
+
+                for (let i = 0; i < numbers.length && i < inputs.length; i++) {
+                    inputs[i].value = numbers[i];
+                }
+
+                // To'liq kodni yig'ish
+                let code = '';
+                inputs.forEach(inp => code += inp.value);
+                fullCodeInput.value = code;
+
+                // 4 ta raqam bo'lsa avtomatik yuborish
+                if (code.length === 4) {
+                    form.submit();
+                }
+            });
         });
 
         // Birinchi inputga fokus
@@ -193,6 +248,13 @@
                 resendBtn.disabled = false;
             }
         }, 1000);
+
+        // Form yuborilganda loading ko'rsatish
+        form.addEventListener('submit', function(e) {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i>Tekshirilmoqda...';
+        });
     </script>
 </body>
 

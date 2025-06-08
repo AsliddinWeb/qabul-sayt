@@ -1,10 +1,1116 @@
-<!DOCTYPE html>
-<html lang="en">
+{% load static %}
+
+<!doctype html>
+<html class="no-js" lang="zxx">
+
+
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Student Dashboard</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/images/logo/favicon.svg' %}">
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'assets/css/vendor/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/vendor/animate.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/plugins/swiper.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/vendor/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/vendor/fontawesome-pro.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/plugins/nouislider.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/vendor/icomoon.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/vendor/spacing.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/plugins/apexcharts.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/main.css' %}">
 </head>
+
+
 <body>
 
+<!-- preloader start -->
+<div id="loading">
+    <div id="loading-center">
+        <div id="loading-center-absolute">
+            <div class="bd-preloader-content">
+                <div class="bd-preloader-logo">
+                    <div class="bd-preloader-circle">
+                        <svg width="190" height="190" viewBox="0 0 380 380" fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <circle stroke="#F5F5F5" cx="190" cy="190" r="180" stroke-width="6" stroke-linecap="round">
+                            </circle>
+                            <circle stroke="red" cx="190" cy="190" r="180" stroke-width="6" stroke-linecap="round">
+                            </circle>
+                        </svg>
+                    </div>
+                    <img src="assets/images/logo/preloader-icon.png" alt="">
+                </div>
+                <p class="bd-preloader-subtitle">Loading...</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- preloader end -->
+
+<!-- Header area start -->
+<header>
+    <div class="bd-header-top">
+        <div class="bd-header-top-left">
+            <ul>
+                <li><a href="tel:+8884467880"><span><i class="fa-solid fa-phone-volume"></i></span>(888) 446-7880</a>
+                </li>
+                <li><a href="https://html.topylo.com/cdn-cgi/l/email-protection#fd98859c908d9198bd948e89889984d39e9290"><span><i
+                        class="fa-sharp fa-light fa-envelope"></i></span><span class="__cf_email__"
+                                                                               data-cfemail="1d78657c706d71785d746e69687964337e7270">[email&#160;protected]</span></a>
+                </li>
+            </ul>
+        </div>
+        <div class="bd-header-top-right text-md-end">
+            <a href="student-dashboard.html#"><span><i class="fa-solid fa-phone-volume"></i></span>Brooklyn, NY 12207,
+                New York</a>
+        </div>
+    </div>
+    <div class="bd-header-area header-style-one" id="header-sticky">
+        <div class="bd-header-inner">
+            <div class="bd-header-left">
+                <div class="bd-header-logo">
+                    <a href="index.html"><img src="assets/images/logo/logo.svg" alt="logo"></a>
+                </div>
+                <div class="bd-header-category d-none d-lg-block">
+                    <div class="bd-category-btn">
+                        <i class="fa-solid fa-grid"></i> Category
+                    </div>
+                    <div class="bd-category-dropdown">
+                        <nav>
+                            <ul>
+                                <li><a href="courses.html">Development</a></li>
+                                <li><a href="courses.html">Marketing</a></li>
+                                <li><a href="courses.html">Photography</a></li>
+                                <li><a href="courses.html">Life Style</a></li>
+                                <li><a href="courses.html">Health &amp; Fitness</a></li>
+                                <li><a href="courses.html">Data Science</a></li>
+                                <li><a href="courses.html">Marketing</a></li>
+                                <li><a href="courses.html">Photography</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="bd-header-menu">
+                <nav class="main-menu bd-mobile-menu-active d-none d-xl-block">
+                    <ul>
+                        <li class="has-mega-menu">
+                            <a href="index.html">Home</a>
+                            <ul class="mega-menu home-menu-grid">
+                                <li>
+                                    <a href="index-online-course.html" class="home-menu-item">
+                                        <div class="home-menu-thumb">
+                                            <img src="assets/images/menu/menu-home-1.webp" alt="images">
+                                        </div>
+                                        <div class="home-menu-title">Online Course</div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="index-university.html" class="home-menu-item">
+                                        <div class="home-menu-thumb">
+                                            <img src="assets/images/menu/menu-home-2.webp" alt="images">
+                                        </div>
+                                        <div class="home-menu-title">University</div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="index-modern-schooling.html" class="home-menu-item">
+                                        <div class="home-menu-thumb">
+                                            <img src="assets/images/menu/menu-home-3.webp" alt="images">
+                                        </div>
+                                        <div class="home-menu-title">Modern Schooling</div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="index-kindergarten.html" class="home-menu-item">
+                                        <div class="home-menu-thumb">
+                                            <img src="assets/images/menu/menu-home-4.webp" alt="images">
+                                        </div>
+                                        <div class="home-menu-title">Kindergarten</div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="index-quran-learning.html" class="home-menu-item">
+                                        <div class="home-menu-thumb">
+                                            <img src="assets/images/menu/menu-home-5.webp" alt="images">
+                                        </div>
+                                        <div class="home-menu-title">Quran Learning</div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="index-shop.html" class="home-menu-item">
+                                        <div class="home-menu-thumb">
+                                            <img src="assets/images/menu/menu-home-6.webp" alt="images">
+                                        </div>
+                                        <div class="home-menu-title">Book Store</div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="index-language-academy.html" class="home-menu-item">
+                                        <div class="home-menu-thumb">
+                                            <img src="assets/images/menu/menu-home-7.webp" alt="images">
+                                        </div>
+                                        <div class="home-menu-title">Language Academy</div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="student-dashboard.html#" class="home-menu-item">
+                                        <div class="home-menu-thumb">
+                                            <img src="assets/images/menu/menu-home-soon.webp" alt="images">
+                                        </div>
+                                        <div class="home-menu-title">Kitchen Coach - Soon</div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="student-dashboard.html#" class="home-menu-item">
+                                        <div class="home-menu-thumb">
+                                            <img src="assets/images/menu/menu-home-soon.webp" alt="images">
+                                        </div>
+                                        <div class="home-menu-title">Marketplace - Soon</div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="student-dashboard.html#" class="home-menu-item">
+                                        <div class="home-menu-thumb">
+                                            <img src="assets/images/menu/menu-home-soon.webp" alt="images">
+                                        </div>
+                                        <div class="home-menu-title">Course Hub - Soon</div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- courses menu -->
+                        <li class="menu-item-has-children">
+                            <a href="javascript:void(0)">Courses</a>
+                            <ul class="submenu last-children">
+                                <li class="menu-item-has-children has-arrow">
+                                    <a href="javascript:void(0)">Advanced Course Filter</a>
+                                    <ul class="submenu">
+                                        <li><a href="courses.html">Courses</a></li>
+                                        <li><a href="courses-filter-search.html">Courses Search Filter</a></li>
+                                        <li><a href="courses-filter-category.html">Courses Filter Category</a></li>
+                                    </ul>
+                                </li>
+                                <li class="menu-item-has-children has-arrow">
+                                    <a href="javascript:void(0)">Courses Grid</a>
+                                    <ul class="submenu">
+                                        <li><a href="courses-grid.html">Courses Grid</a></li>
+                                        <li><a href="courses-grid-two.html">Courses Grid Two</a></li>
+                                        <li><a href="courses-grid-three.html">Courses Grid Three</a></li>
+                                        <li><a href="courses-grid-four.html">Courses Grid Four</a></li>
+                                        <li><a href="courses-grid-five.html">Courses Grid Five</a></li>
+                                        <li><a href="courses-grid-right.html">Courses Grid Right Sidebar</a></li>
+                                        <li><a href="courses-grid-left.html">Courses Grid Left Sidebar</a></li>
+                                    </ul>
+                                </li>
+                                <li class="menu-item-has-children has-arrow">
+                                    <a href="javascript:void(0)">Courses List</a>
+                                    <ul class="submenu">
+                                        <li><a href="courses-list-one.html">Courses Left Sidebar</a></li>
+                                        <li><a href="courses-list-two.html">Courses Right Sidebar</a></li>
+                                        <li><a href="courses-list-three.html">No Sidebar</a></li>
+                                    </ul>
+                                </li>
+                                <li class="menu-item-has-children has-arrow">
+                                    <a href="javascript:void(0)">Courses Details</a>
+                                    <ul class="submenu">
+                                        <li><a href="courses-details.html">Courses Details</a></li>
+                                        <li><a href="courses-details-two.html">Courses Details Two</a></li>
+                                        <li><a href="courses-details-three.html">Courses Details Three</a></li>
+                                    </ul>
+                                </li>
+                                <li class="menu-item-has-children has-arrow">
+                                    <a href="javascript:void(0)">Program Details</a>
+                                    <ul class="submenu">
+                                        <li><a href="program-details.html">University Program</a></li>
+                                        <li><a href="kindergarten-program-details.html">Kindergarten Program</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="course-lesson.html">Courses Lesson</a></li>
+                                <li><a href="create-course.html">Create New Course</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- page menu -->
+                        <li class="has-mega-menu">
+                            <a href="javascript:void(0)">Pages</a>
+                            <ul class="mega-menu mega-grid-5">
+                                <li>
+                                    <a href="javasript:void(0);" class="title">Page Layout 1</a>
+                                    <ul>
+                                        <li><a href="contact.html">Contact Us</a></li>
+                                        <li><a href="about-online-course.html">About Online Course</a></li>
+                                        <li><a href="about-university.html">About University</a></li>
+                                        <li><a href="about-modern-schooling.html">About Modern Schooling</a></li>
+                                        <li><a href="about-kindergarten.html">About Kindergarten</a></li>
+                                        <li><a href="about-quran-learning.html">About Quran Learning</a></li>
+                                        <li><a href="history.html">History</a></li>
+                                        <li><a href="mvs.html">Vision, Mission & Strategy</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="javasript:void(0);" class="title">Page Layout 2</a>
+                                    <ul>
+                                        <li><a href="campus.html">Campus</a></li>
+                                        <li><a href="academic-calendar.html">Academic Calendar</a></li>
+                                        <li><a href="apply-online.html">Apply Online</a></li>
+                                        <li><a href="executive-leaders.html">Executive Leaders</a></li>
+                                        <li><a href="faculty-members.html">Faculty Members</a></li>
+                                        <li><a href="tuition-fees.html">Tuition and Other Fees</a></li>
+                                        <li><a href="scholarships-financial-aid.html">Scholarships & Financial Aid</a>
+                                        </li>
+                                        <li><a href="scholarships-financial-aid-details.html">Scholarships Details</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="javasript:void(0);" class="title">Page Layout 3</a>
+                                    <ul>
+                                        <li><a href="instructor.html">Instructor</a></li>
+                                        <li><a href="instructor-details.html">Instructor Details</a></li>
+                                        <li><a href="become-instructor.html">Become Instructor</a></li>
+                                        <li><a href="event.html">Event Grid</a></li>
+                                        <li><a href="event-list.html">Event List</a></li>
+                                        <li><a href="event-details.html">Event Details</a></li>
+                                        <li><a href="webinar-details.html">Webinar Details</a></li>
+                                        <li><a href="faq.html">Faq's</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="javasript:void(0);" class="title">Page Layout 4</a>
+                                    <ul>
+                                        <li><a href="pricing-table.html">Pricing Table</a></li>
+                                        <li><a href="shop.html">Shop</a></li>
+                                        <li><a href="shop-v2.html">Shop V2</a></li>
+                                        <li><a href="shop-details.html">Book Details </a></li>
+                                        <li><a href="shop-details-two.html">Shop Details</a></li>
+                                        <li><a href="checkout.html">Checkout</a></li>
+                                        <li><a href="cart.html">Cart</a></li>
+                                        <li><a href="wishlist.html">Wishlist</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="javasript:void(0);" class="title">Page Layout 5</a>
+                                    <ul>
+                                        <li><a href="sign-in.html">Sign In</a></li>
+                                        <li><a href="sign-up.html">Sign Up</a></li>
+                                        <li><a href="forgot.html">Forgot Password</a></li>
+                                        <li><a href="404.html">404 Page</a></li>
+                                        <li><a href="coming-soon.html">Coming Soon</a></li>
+                                        <li><a href="under-maintenance.html">Under Maintenance</a></li>
+                                        <li><a href="terms-conditions.html">Terms and Conditions</a></li>
+                                        <li><a href="privacy-policy.html">Privacy & Policy</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- dashboard menu -->
+                        <li class="menu-item-has-children">
+                            <a href="javascript:void(0)">Dashboard</a>
+                            <ul class="submenu last-children">
+                                <li class="menu-item-has-children has-arrow">
+                                    <a href="javascript:void(0)">Instructor Dashboard</a>
+                                    <ul class="submenu">
+                                        <li><a href="instructor-dashboard.html">Instructor Dashboard</a></li>
+                                        <li><a href="instructor-profile.html">Instructor Profile</a></li>
+                                        <li><a href="instructor-enrolled-courses.html">Enrolled Courses</a></li>
+                                        <li><a href="instructor-my-quiz-attempts.html">Instructor Quiz Attempts</a></li>
+                                        <li><a href="instructor-assignments.html">Instructor Assignments</a></li>
+                                        <li><a href="instructor-analytics.html">Instructor Analytics</a></li>
+                                        <li><a href="instructor-courses.html">My Courses</a></li>
+                                        <li><a href="instructor-books.html">Instructor Books</a></li>
+                                        <li><a href="instructor-wishlist.html">Instructor Wishlist</a></li>
+                                        <li><a href="instructor-reviews.html">Instructor Reviews</a></li>
+                                        <li><a href="instructor-purchase-history.html">Instructor Purchase History</a>
+                                        </li>
+                                        <li><a href="instructor-announcements.html">Instructor Announcements</a></li>
+                                        <li><a href="instructor-certificate.html">Instructor Certificate</a></li>
+                                        <li><a href="instructor-settings.html">Instructor Settings</a></li>
+                                    </ul>
+                                </li>
+                                <li class="menu-item-has-children has-arrow">
+                                    <a href="javascript:void(0)">Student Dashboard</a>
+                                    <ul class="submenu">
+                                        <li><a href="student-dashboard.html">Student Dashboard</a></li>
+                                        <li><a href="student-profile.html">Student Profile</a></li>
+                                        <li><a href="student-enrolled-courses.html">Enrolled Courses</a></li>
+                                        <li><a href="student-my-quiz-attempts.html">Student Quiz Attempts</a></li>
+                                        <li><a href="student-assignments.html">Student Assignments</a></li>
+                                        <li><a href="student-analytics.html">Student Analytics</a></li>
+                                        <li><a href="student-books.html">Student Books</a></li>
+                                        <li><a href="student-wishlist.html">Student Wishlist</a></li>
+                                        <li><a href="student-reviews.html">Student Reviews</a></li>
+                                        <li><a href="student-purchase-history.html">Student Purchase History</a></li>
+                                        <li><a href="student-announcements.html">Student Announcements</a></li>
+                                        <li><a href="student-certificate.html">My Achievement</a></li>
+                                        <li><a href="student-settings.html">Student Settings</a></li>
+                                    </ul>
+                                </li>
+
+                            </ul>
+                        </li>
+
+                        <!-- elements menu -->
+                        <li class="has-mega-menu">
+                            <a href="javascript:void(0)">Elements</a>
+                            <ul class="mega-menu mega-grid-4">
+                                <li>
+                                    <a href="javasript:void(0);" class="title">Elements Layout 1</a>
+                                    <ul>
+                                        <li><a href="style-guide.html">Style Guide</a></li>
+                                        <li><a href="element-accordion.html">Accordion</a></li>
+                                        <li><a href="element-advance-tab.html">Advance Tab</a></li>
+                                        <li><a href="element-badge.html">Badge</a></li>
+                                        <li><a href="element-blog.html">Blog</a></li>
+                                        <li><a href="element-brand.html">Brand</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="javasript:void(0);" class="title">Elements Layout 2</a>
+                                    <ul>
+                                        <li><a href="element-button.html">Button</a></li>
+                                        <li><a href="element-categories.html">Categories</a></li>
+                                        <li><a href="element-counter.html">Counter</a></li>
+                                        <li><a href="element-countdown.html">Countdown</a></li>
+                                        <li><a href="element-courses.html">Courses</a></li>
+                                        <li><a href="student-dashboard.html#">+ More Coming</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="javasript:void(0);" class="title">Elements Layout 3</a>
+                                    <ul>
+                                        <li><a href="element-cta.html">Call To Action</a></li>
+                                        <li><a href="element-event.html">Event</a></li>
+                                        <li><a href="element-highlights.html">Highlights</a></li>
+                                        <li><a href="element-instructor.html">Instructor</a></li>
+                                        <li><a href="element-newsletter.html">Newsletter</a></li>
+                                        <li><a href="student-dashboard.html#">+ More Coming</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="javasript:void(0);" class="title">Elements Layout 4</a>
+                                    <ul>
+                                        <li><a href="element-pricing.html">Pricing</a></li>
+                                        <li><a href="element-progress-bar.html">Progress bar</a></li>
+                                        <li><a href="element-social-icons.html">Social Icons</a></li>
+                                        <li><a href="element-testimonial.html">Testimonial</a></li>
+                                        <li><a href="elements-why-choose.html">Why Choose</a></li>
+                                        <li><a href="student-dashboard.html#">+ More Coming</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- blog menu -->
+                        <li class="menu-item-has-children">
+                            <a href="javascript:void(0)">Blog</a>
+                            <ul class="submenu last-children">
+                                <li><a href="blog.html">Blog Standard</a></li>
+                                <li class="menu-item-has-children has-arrow">
+                                    <a href="javascript:void(0)">Blog Advanced</a>
+                                    <ul class="submenu">
+                                        <li><a href="blog-advanced.html">Blog Filter</a></li>
+                                        <li><a href="blog-list.html">Blog List</a></li>
+                                        <li><a href="blog-list-two.html">Blog List Two</a></li>
+                                        <li><a href="blog-list-three.html">Blog List Three</a></li>
+                                        <li><a href="blog-grid.html">Blog Grid</a></li>
+                                        <li><a href="blog-grid-two.html">Blog Grid Two</a></li>
+                                        <li><a href="blog-grid-three.html">Blog Grid Three</a></li>
+                                    </ul>
+                                </li>
+                                <li class="menu-item-has-children has-arrow">
+                                    <a href="javascript:void(0)">Blog Details</a>
+                                    <ul class="submenu">
+                                        <li><a href="blog-details.html">Right Sidebar</a></li>
+                                        <li><a href="blog-details-two.html">Left Sidebar</a></li>
+                                        <li><a href="blog-details-full.html">Full Width</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="bd-header-right">
+                <div class="bd-header-meta">
+                    <button class="bd-search-open-btn meta-icon" type="button"><i
+                            class="fa-regular fa-magnifying-glass"></i></button>
+                    <button class="cartmini-open-btn meta-icon" type="button"><i
+                            class="fa-regular fa-cart-shopping"></i><span
+                            class="item-number">3</span></button>
+                </div>
+                <div class="bd-header-sign-btn">
+                    <a class="bd-btn btn-outline-primary h-40px" href="sign-in.html">Login</a>
+                    <a class="bd-btn btn-outline-border-primary h-40px" href="sign-up.html">Register</a>
+                </div>
+                <div class="bd-header-hamburger">
+                    <div class="sidebar-toggle">
+                        <a class="bar-icon" href="javascript:void(0)">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Header area end -->
+
+<!-- Offcanvas area start -->
+<div class="fix">
+    <div class="bd-offcanvas-area">
+        <div class="bd-offcanvas-wrapper">
+            <div class="bd-offcanvas-content">
+                <div class="bd-offcanvas-top d-flex justify-content-between align-items-center mb-30">
+                    <div class="bd-offcanvas-logo">
+                        <a href="index.html">
+                            <img src="assets/images/logo/logo.svg" alt="logo not found">
+                        </a>
+                    </div>
+                    <div class="bd-offcanvas-close">
+                        <button class="bd-offcanvas-close-icon animation--flip">
+                                <span class="bd-offcanvas-m-lines">
+                                <span class="bd-offcanvas-m-line line--1"></span><span
+                                        class="bd-offcanvas-m-line line--2"></span><span
+                                        class="bd-offcanvas-m-line line--3"></span>
+                                </span>
+                        </button>
+                    </div>
+                </div>
+                <div class="bd-offcanvas-search mb-30">
+                    <form action="student-dashboard.html#">
+                        <input type="text" name="bd-offcanvasSearch" placeholder="Search here">
+                        <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </form>
+                </div>
+                <div class="bd-mobile-menu-smaller">
+                    <div class="bd-offcanvas-menu mb-30">
+                        <nav></nav>
+                    </div>
+                </div>
+                <div class="bd-offcanvas-about d-none d-lg-block mb-30">
+                    <h4 class="bd-offcanvas-title-meta">About iStudy</h4>
+                    <p>Empowering learners and educators with a comprehensive platform that bridges the gap between
+                        traditional and modern education. iStudy inspires excellence in education and fosters growth for
+                        a brighter future.</p>
+                </div>
+                <div class="bd-offcanvas-contact mb-30">
+                    <h4 class="bd-offcanvas-title-meta">Contact Info</h4>
+                    <ul>
+                        <li class="d-flex align-items-center gap-10">
+                            <div class="bd-offcanvas-contact-icon">
+                                <a target="_blank" href="student-dashboard.html#">
+                                    <i class="fal fa-map-marker-alt"></i></a>
+                            </div>
+                            <div class="bd-offcanvas-contact-text">
+                                <a target="_blank" href="student-dashboard.html#">123 Knowledge Lane, Learnville, 54321,
+                                    USA</a>
+                            </div>
+                        </li>
+                        <li class="d-flex align-items-center gap-10">
+                            <div class="bd-offcanvas-contact-icon">
+                                <a href="tel:+1234567890"><i class="far fa-phone"></i></a>
+                            </div>
+                            <div class="bd-offcanvas-contact-text">
+                                <a href="tel:+1234567890">+1-234-567-890</a>
+                            </div>
+                        </li>
+                        <li class="d-flex align-items-center gap-10">
+                            <div class="bd-offcanvas-contact-icon">
+                                <a href="https://html.topylo.com/cdn-cgi/l/email-protection#e38a8d858ca38a909796879acd808c8e"><i
+                                        class="fal fa-envelope"></i></a>
+                            </div>
+                            <div class="bd-offcanvas-contact-text">
+                                <a href="https://html.topylo.com/cdn-cgi/l/email-protection#0861666e6748617b7c7d6c71266b6765"><span
+                                        class="__cf_email__" data-cfemail="d8b1b6beb798b1abacadbca1f6bbb7b5">[email&#160;protected]</span></a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bd-offcanvas-btn-wrap mb-30">
+                    <h4 class="bd-offcanvas-title-meta">Account</h4>
+                    <div class="bd-offcanvas-btn d-flex align-items-center gap-30">
+                        <a class="bd-btn btn-primary" href="sign-in.html">Log In</a>
+                        <a class="bd-btn btn-outline-border-secondary" href="sign-up.html">Get Started</a>
+                    </div>
+                </div>
+                <div class="bd-offcanvas-social">
+                    <h4 class="bd-offcanvas-title-meta">Follow Us</h4>
+                    <div class="theme-social">
+                        <ul class="social-icon-list">
+                            <li><a href="student-dashboard.html#"><i class="fa-brands fa-facebook-f"></i></a></li>
+                            <li><a href="student-dashboard.html#"><i class="fa-brands fa-x-twitter"></i></a></li>
+                            <li><a href="student-dashboard.html#"><i class="fa-brands fa-linkedin-in"></i></a></li>
+                            <li><a href="student-dashboard.html#"><i class="fa-brands fa-instagram"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="bd-offcanvas-overlay"></div>
+<div class="bd-offcanvas-overlay-white"></div>
+<!-- Offcanvas area start -->
+
+<!-- search popup area start here  -->
+<div class="bd-search-popup-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="bd-search-popup">
+                    <div class="bd-search-form">
+                        <form action="student-dashboard.html#">
+                            <div class="bd-search-input">
+                                <input type="search" name="search" placeholder="Type here to search ...">
+                                <div class="bd-search-submit">
+                                    <button type="submit"><i class="fa-regular fa-magnifying-glass"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="bd-search-close">
+                            <div class="bd-search-close-btn">
+                                <button><i class="fa-thin fa-close"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- search popup overlay  -->
+<div class="bd-search-overlay"></div>
+<!-- search popup area end here  -->
+
+<!-- search popup area start here  -->
+<div class="bd-sidebar-cart-area">
+    <div class="bd-sidebar-cart-wrapper d-flex justify-content-between flex-column">
+        <div class="bd-sidebar-cart-top-wrapper">
+            <div class="bd-sidebar-cart-top p-relative">
+                <div class="bd-sidebar-cart-top-title">
+                    <h5>Shopping cart</h5>
+                </div>
+                <div class="bd-sidebar-cart-close">
+                    <button type="button" class="bd-sidebar-cart-close-btn cartmini-close-btn"><i
+                            class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+            <div class="bd-sidebar-cart-widget">
+                <div class="bd-sidebar-cart-widget-item">
+                    <div class="bd-sidebar-cart-thumb">
+                        <a href="shop-details.html">
+                            <img src="assets/images/book/book-cover-2.webp" alt="image">
+                        </a>
+                    </div>
+                    <div class="bd-sidebar-cart-content">
+                        <h5 class="bd-sidebar-cart-title"><a href="shop-details.html">We Solve Murders</a></h5>
+                        <div class="bd-sidebar-cart-price-wrapper">
+                            <span class="bd-sidebar-cart-price">$30.00</span>
+                            <span class="bd-sidebar-cart-quantity">x1</span>
+                        </div>
+                    </div>
+                    <a href="student-dashboard.html#" class="bd-sidebar-cart-del"><i
+                            class="fa-regular fa-xmark"></i></a>
+                </div>
+                <div class="bd-sidebar-cart-widget-item">
+                    <div class="bd-sidebar-cart-thumb">
+                        <a href="shop-details.html">
+                            <img src="assets/images/book/book-cover-3.webp" alt="image">
+                        </a>
+                    </div>
+                    <div class="bd-sidebar-cart-content">
+                        <h5 class="bd-sidebar-cart-title"><a href="shop-details.html">The Women</a></h5>
+                        <div class="bd-sidebar-cart-price-wrapper">
+                            <span class="bd-sidebar-cart-price">$30.00</span>
+                            <span class="bd-sidebar-cart-quantity">x1</span>
+                        </div>
+                    </div>
+                    <a href="student-dashboard.html#" class="bd-sidebar-cart-del"><i
+                            class="fa-regular fa-xmark"></i></a>
+                </div>
+                <div class="bd-sidebar-cart-widget-item">
+                    <div class="bd-sidebar-cart-thumb">
+                        <a href="shop-details.html">
+                            <img src="assets/images/book/book-cover-4.webp" alt="image">
+                        </a>
+                    </div>
+                    <div class="bd-sidebar-cart-content">
+                        <h5 class="bd-sidebar-cart-title"><a href="shop-details.html">Fourth Wing</a></h5>
+                        <div class="bd-sidebar-cart-price-wrapper">
+                            <span class="bd-sidebar-cart-price">$50.00</span>
+                            <span class="bd-sidebar-cart-quantity">x1</span>
+                        </div>
+                    </div>
+                    <a href="student-dashboard.html#" class="bd-sidebar-cart-del"><i
+                            class="fa-regular fa-xmark"></i></a>
+                </div>
+            </div>
+
+            <!-- empty cart for wordpress -->
+            <div class="bd-sidebar-cart-empty text-center d-none">
+                <img src="assets/images/shop/empty-cart.webp" alt="image">
+                <p>Your Cart is empty</p>
+                <a href="shop.html" class="bd-btn btn-primary">Go to Shop</a>
+            </div>
+            <!-- empty cart for wordpress -->
+
+        </div>
+        <div class="bd-sidebar-cart-checkout">
+            <div class="bd-sidebar-cart-checkout-title mb-30">
+                <h5>Subtotal:</h5>
+                <span>$160.00</span>
+            </div>
+            <div class="bd-sidebar-cart-checkout-btn">
+                <a class="bd-btn btn-primary mb-15 w-100" href="cart.html">View Cart</a>
+                <a class="bd-btn btn-secondary w-100" href="checkout.html">Checkout</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="body-overlay"></div>
+<!-- search popup area end here  -->
+
+<!-- Body main wrapper start -->
+<main>
+
+    <!-- dashboard breadcrumb start -->
+    <div class="bd-dashboard-breadcrumb section-space-small-top">
+        <div class="container custom-container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="bd-dashboard-breadcrumb-wrapper p-relative">
+                        <div class="bd-dashboard-breadcrumb-bg image-bg"
+                             data-background="assets/images/bg/profile-bg.webp">
+                        </div>
+                        <div class="bd-dashboard-profile">
+                            <div class="bd-dashboard-profile-user">
+                                <div class="thumb"><img src="assets/images/avatar/avatar7.webp" alt="image"></div>
+                                <div class="content">
+                                    <h3 class="name">Michael Smith</h3>
+                                    <span class="designation d-block">Web App Development</span>
+                                    <div class="bd-dashboard-profile-meta">
+                                        <div class="enrolled-course" data-title="enrolled">
+                                            <span class="icon"><i class="fa-light fa-book"></i></span> 5 Courses
+                                            Enrolled
+                                        </div>
+                                        <div class="complete-course" data-title="completed">
+                                            <span class="icon"><i class="fa-solid fa-badge-check"></i></span> 2 Courses
+                                            Complete
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bd-dashboard-profile-btn">
+                                <a href="become-instructor.html" class="bd-btn btn-secondary-white">Become
+                                    Instructor</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- dashboard breadcrumb end -->
+
+    <!-- Start student Dashboard Area -->
+    <div class="bd-dashboard-area section-space-bottom">
+        <div class="container">
+            <div class="bd-dashboard-main">
+                <div class="row gy-30">
+                    <div class="col-xl-3 col-lg-3 col-md-4">
+                        <div class="bd-dashboard-menu">
+                            <h6 class="bd-dashboard-menu-title mt-0">Hush kelibsiz!</h6>
+                            <ul>
+                                <li>
+                                    <a href="dashboard.html" class="active">
+                                        <span><i class="fa-light fa-gauge-high"></i></span> Bosh sahifa
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="passport-malumotlari.html">
+                                        <span><i class="fa-light fa-id-card"></i></span> Pasport ma’lumotlari
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="diplom-malumotlari.html">
+                                        <span><i class="fa-light fa-graduation-cap"></i></span> Diplom ma’lumotlari
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="ariza-topshirish.html">
+                                        <span><i class="fa-light fa-file-circle-plus"></i></span> Ariza topshirish
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="ariza-holati.html">
+                                        <span><i class="fa-light fa-timeline-arrow"></i></span> Ariza holati
+                                    </a>
+                                </li>
+                            </ul>
+
+                            <h6 class="bd-dashboard-menu-title">Foydalanuvchi</h6>
+                            <ul>
+                                <li>
+                                    <a href="student-settings.html"><span><i class="fa-light fa-sliders"></i></span>Sozlamalar</a>
+                                </li>
+                                <li>
+                                    <a href="index.html"><span><i class="fa-light fa-sign-out-alt"></i></span>Tizimdan
+                                        chiqish</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-xl-9 col-lg-9 col-md-8">
+                        <div class="bd-dashboard-inner">
+                            <div class="bd-dashboard-status-box mb-30">
+                                <div class="bd-dashboard-title-inner">
+                                    <h4 class="bd-dashboard-title">Hujjatlar holati</h4>
+                                </div>
+                                <div class="container p-0">
+                                    <div class="row gy-30 justify-content-center">
+                                        <!-- Passport -->
+                                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
+                                            <div class="bd-counter-wrapper bd-counter-style-six">
+                                                <div class="bd-counter-item">
+                                                    <div class="bd-counter-content">
+                            <span class="bd-counter-icon bg-two">
+                                <i class="fa-solid fa-id-card"></i>
+                            </span>
+                                                        <h4 class="text-success">Passport</h4>
+                                                        <p class="text-danger">To'ldirilmagan</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Diplom -->
+                                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
+                                            <div class="bd-counter-wrapper bd-counter-style-six">
+                                                <div class="bd-counter-item">
+                                                    <div class="bd-counter-content">
+                            <span class="bd-counter-icon bg-two">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                            </span>
+                                                        <h4 class="text-success">Diplom</h4>
+                                                        <p class="text-danger">To'ldirilmagan</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Ariza -->
+                                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
+                                            <div class="bd-counter-wrapper bd-counter-style-six">
+                                                <div class="bd-counter-item">
+                                                    <div class="bd-counter-content">
+                            <span class="bd-counter-icon bg-two">
+                                <i class="fa-solid fa-file-signature"></i>
+                            </span>
+                                                        <h4 class="text-success">Ariza</h4>
+                                                        <p class="text-danger">To'ldirilmagan</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="bd-dashboard-inner">
+                            <div class="bd-dashboard-reviews-wrapper">
+                                <div class="bd-dashboard-review-item mb-30">
+                                    <h5 class="title underline"><a href="courses-details.html">Passport ma'lumotlari</a></h5>
+                                    <div class="course-info d-flex align-content-center justify-content-between flex-wrap gap-2 mb-10">
+                                        <div class="bd-course-rating-wrap d-flex align-items-center gap-10">
+                                            <div class="bd-course-rating-icon fs-14 d-flex rating-color">
+                                                <i class="fa-solid fa-star"></i>
+                                                <i class="fa-solid fa-star"></i>
+                                                <i class="fa-solid fa-star"></i>
+                                                <i class="fa-solid fa-star"></i>
+                                                <i class="fa-solid fa-star"></i>
+                                            </div>
+                                            <div class="bd-course-rating-text">
+                                                <span>4.8 (258)</span>
+                                            </div>
+                                        </div>
+                                        <div class="bd-button-action">
+                                            <a class="bd-default-tooltip edit" href="student-reviews.html#"><span><i
+                                                    class="fa-light fa-pen-to-square"></i></span></a>
+                                            <a class="bd-default-tooltip view" href="student-reviews.html#"><span><i
+                                                    class="fa-sharp fa-light fa-eye"></i></span></a>
+                                            <a class="bd-default-tooltip delete" href="student-reviews.html#"><span><i
+                                                    class="fa-light fa-trash-can"></i></span></a>
+                                        </div>
+                                    </div>
+                                    <p>So I said lurgy dropped a clanger Jeffrey bugger cuppa gosh David blatant
+                                        have
+                                        it, standard A bit of how's your father my lady absolutely.</p>
+                                </div>
+                                <div class="bd-dashboard-review-item mb-30">
+                                    <h5 class="title underline"><a href="courses-details.html">Diplom ma'lumotlari</a></h5>
+                                    <div class="course-info d-flex align-content-center justify-content-between flex-wrap gap-2 mb-10">
+                                        <div class="bd-course-rating-wrap d-flex align-items-center gap-10">
+                                            <div class="bd-course-rating-icon fs-14 d-flex rating-color">
+                                                <i class="fa-solid fa-star"></i>
+                                                <i class="fa-solid fa-star"></i>
+                                                <i class="fa-solid fa-star"></i>
+                                                <i class="fa-solid fa-star"></i>
+                                                <i class="fa-solid fa-star"></i>
+                                            </div>
+                                            <div class="bd-course-rating-text">
+                                                <span>4.8 (258)</span>
+                                            </div>
+                                        </div>
+                                        <div class="bd-button-action">
+                                            <a class="bd-default-tooltip edit" href="student-reviews.html#"><span><i
+                                                    class="fa-light fa-pen-to-square"></i></span></a>
+                                            <a class="bd-default-tooltip view" href="student-reviews.html#"><span><i
+                                                    class="fa-sharp fa-light fa-eye"></i></span></a>
+                                            <a class="bd-default-tooltip delete" href="student-reviews.html#"><span><i
+                                                    class="fa-light fa-trash-can"></i></span></a>
+                                        </div>
+                                    </div>
+                                    <p>So I said lurgy dropped a clanger Jeffrey bugger cuppa gosh David blatant
+                                        have
+                                        it, standard A bit of how's your father my lady absolutely.</p>
+                                </div>
+                                <div class="bd-dashboard-review-item mb-30">
+                                    <h5 class="title underline"><a href="courses-details.html">Ariza holati</a></h5>
+                                    <div class="course-info d-flex align-content-center justify-content-between flex-wrap gap-2 mb-10">
+                                        <div class="bd-course-rating-wrap d-flex align-items-center gap-10">
+                                            <div class="bd-course-rating-icon fs-14 d-flex rating-color">
+                                                <i class="fa-solid fa-star"></i>
+                                                <i class="fa-solid fa-star"></i>
+                                                <i class="fa-solid fa-star"></i>
+                                                <i class="fa-solid fa-star"></i>
+                                                <i class="fa-solid fa-star"></i>
+                                            </div>
+                                            <div class="bd-course-rating-text">
+                                                <span>4.8 (258)</span>
+                                            </div>
+                                        </div>
+                                        <div class="bd-button-action">
+                                            <a class="bd-default-tooltip edit" href="student-reviews.html#"><span><i
+                                                    class="fa-light fa-pen-to-square"></i></span></a>
+                                            <a class="bd-default-tooltip view" href="student-reviews.html#"><span><i
+                                                    class="fa-sharp fa-light fa-eye"></i></span></a>
+                                            <a class="bd-default-tooltip delete" href="student-reviews.html#"><span><i
+                                                    class="fa-light fa-trash-can"></i></span></a>
+                                        </div>
+                                    </div>
+                                    <p>So I said lurgy dropped a clanger Jeffrey bugger cuppa gosh David blatant
+                                        have
+                                        it, standard A bit of how's your father my lady absolutely.</p>
+                                </div>
+                                <div class="bd-dashboard-review-item mb-30">
+                                    <h5 class="title underline"><a href="courses-details.html">Test natijalari</a></h5>
+                                    <div class="course-info d-flex align-content-center justify-content-between flex-wrap gap-2 mb-10">
+                                        <div class="bd-course-rating-wrap d-flex align-items-center gap-10">
+                                            <div class="bd-course-rating-icon fs-14 d-flex rating-color">
+                                                <i class="fa-solid fa-star"></i>
+                                                <i class="fa-solid fa-star"></i>
+                                                <i class="fa-solid fa-star"></i>
+                                                <i class="fa-solid fa-star"></i>
+                                                <i class="fa-solid fa-star"></i>
+                                            </div>
+                                            <div class="bd-course-rating-text">
+                                                <span>4.8 (258)</span>
+                                            </div>
+                                        </div>
+                                        <div class="bd-button-action">
+                                            <a class="bd-default-tooltip edit" href="student-reviews.html#"><span><i
+                                                    class="fa-light fa-pen-to-square"></i></span></a>
+                                            <a class="bd-default-tooltip view" href="student-reviews.html#"><span><i
+                                                    class="fa-sharp fa-light fa-eye"></i></span></a>
+                                            <a class="bd-default-tooltip delete" href="student-reviews.html#"><span><i
+                                                    class="fa-light fa-trash-can"></i></span></a>
+                                        </div>
+                                    </div>
+                                    <p>So I said lurgy dropped a clanger Jeffrey bugger cuppa gosh David blatant
+                                        have
+                                        it, standard A bit of how's your father my lady absolutely.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bd-more-button text-center mt-30">
+                            <a href="courses-list-one.html" class="bd-btn btn-primary">Browse All Course</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End student Dashboard Area -->
+
+</main>
+
+<!-- footer area start -->
+<footer class="bd-footer-area fix">
+    <div class="bd-footer-area-main-content section-space theme-bg-05">
+        <div class="container">
+            <div class="row gy-30 justify-content-between">
+                <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-8 col-sm-12">
+                    <div class="bd-footer-widget footer-1-col-1">
+                        <div class="bd-footer-widget-content">
+                            <div class="bd-footer-widget-logo">
+                                <a href="index.html">
+                                    <img src="assets/images/logo/logo.svg" alt="image">
+                                </a>
+                            </div>
+                            <p class="bd-footer-widget-description">Education focused website or template is an
+                                essential part that provides visitors with insights into the program. </p>
+                            <div class="bd-footer-widget-contact-info">
+                                <div class="bd-footer-widget-contact-item">
+                                    <span>Phone:</span>
+                                    <a href="tell:123456789">
+                                        +123-4567-8900</a>
+                                </div>
+                                <div class="bd-footer-widget-contact-item">
+                                    <span>Email:</span>
+                                    <a href="https://html.topylo.com/cdn-cgi/l/email-protection#b0d9c3c4c5d4c9f0ddd1d9dc9ed3dfdd">
+                                        <span class="__cf_email__" data-cfemail="ec859f98998895ac818d8580c28f8381">[email&#160;protected]</span></a>
+                                </div>
+                                <div class="bd-footer-widget-contact-item">
+                                    <span>Address:</span>
+                                    <a href="student-dashboard.html#"> 27 Division St, New York</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                    <div class="bd-footer-widget footer-1-col-2">
+                        <h6 class="bd-footer-widget-title">Online Platform</h6>
+                        <div class="bd-footer-widget-links list-none">
+                            <ul>
+                                <li class="underline"><a href="about-university.html">About Us</a></li>
+                                <li class="underline"><a href="courses-grid-right.html">Our Programs</a></li>
+                                <li class="underline"><a href="event.html">Events</a></li>
+                                <li class="underline"><a href="instructor.html">Instructor</a></li>
+                                <li class="underline"><a href="instructor-details.html">Instructor Details</a></li>
+                                <li class="underline"><a href="apply-online.html">Admission</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                    <div class="bd-footer-widget footer-1-col-3">
+                        <h6 class="bd-footer-widget-title">Useful Links</h6>
+                        <div class="bd-footer-widget-links list-none">
+                            <ul>
+                                <li class="underline"><a href="contact.html">Contact Us</a></li>
+                                <li class="underline"><a href="blog.html">Latest News</a></li>
+                                <li class="underline"><a href="faq.html">FAQ’s</a></li>
+                                <li class="underline"><a href="gallery.html">Gallery</a></li>
+                                <li class="underline"><a href="mvs.html">Vision & Mission</a></li>
+                                <li class="underline"><a href="sign-in.html">Sign In</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-8 col-sm-12">
+                    <div class="bd-footer-widget footer-1-col-4">
+                        <h6 class="bd-footer-widget-title mb-20">Stay Connected</h6>
+                        <div class="bd-footer-from-content mb-20">
+                            <div class="bd-footer-social">
+                                <div class="theme-social social-brand-color">
+                                    <ul class="social-icon-list">
+                                        <li><a class="facebook" href="student-dashboard.html#"><i
+                                                class="fa-brands fa-facebook-f"></i></a>
+                                        </li>
+                                        <li><a class="twitter" href="student-dashboard.html#"><i
+                                                class="fa-brands fa-x-twitter"></i></a>
+                                        </li>
+                                        <li><a class="linkedin" href="student-dashboard.html#"><i
+                                                class="fa-brands fa-linkedin-in"></i></a>
+                                        </li>
+                                        <li><a class="instagram" href="student-dashboard.html#"><i
+                                                class="fa-brands fa-instagram"></i></a>
+                                        </li>
+                                        <li><a class="youtube" href="student-dashboard.html#"><i
+                                                class="fa-brands fa-youtube"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h6 class="bd-footer-widget-title mb-20">Download App</h6>
+                        <div class="bd-footer-from-content">
+                            <div class="bd-footer-app-btn d-flex align-items-center gap-15">
+                                <a class="bd-app-btn" href="student-dashboard.html#"><img
+                                        src="assets/images/icon/play-store.webp" alt="play-store"></a>
+                                <a class="bd-app-btn" href="student-dashboard.html#"><img
+                                        src="assets/images/icon/app-store.webp" alt="app-store"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bd-footer-copyright-area pt-25 pb-20">
+        <div class="container">
+            <div class="row gy-30 align-items-center justify-content-lg-between justify-content-center">
+                <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-8">
+                    <div class="bd-footer-copyright text-lg-start text-center">
+                        <p class="underline">© Copyright <span id="year"></span> | Developed By iStudy</p>
+                    </div>
+                </div>
+                <div class="col-xxl-5 col-xl-7 col-lg-7 col-md-12">
+                    <div class="bd-footer-copyright-list">
+                        <ul class="justify-content-lg-end justify-content-center">
+                            <li class="underline"><a href="terms-conditions.html">Terms and Conditions</a></li>
+                            <li class="underline"><a href="privacy-policy.html">Privacy and Policy</a></li>
+                            <li class="underline"><a href="purchase-guide.html">Purchase Guide</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- footer area end -->
+
+<!-- back to top -->
+<div class="backtotop-wrap cursor-pointer">
+    <svg class="backtotop-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
+    </svg>
+</div>
+<!-- Backtotop end -->
+
+<!-- JS here -->
+<script src="{% static 'assets/js/vendor/jquery-3.7.1.min.js' %}"></script>
+<script src="{% static 'assets/js/plugins/waypoints.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'assets/js/plugins/swiper.min.js' %}"></script>
+<script src="{% static 'assets/js/plugins/wow.js' %}"></script>
+<script src="{% static 'assets/js/vendor/magnific-popup.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/isotope.pkgd.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/imagesloaded.pkgd.min.js' %}"></script>
+<script src="{% static 'assets/js/plugins/nice-select.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/ajax-form.js' %}"></script>
+<script src="{% static 'assets/js/plugins/easypie.js' %}"></script>
+<script src="{% static 'assets/js/vendor/purecounter.js' %}"></script>
+<script src="{% static 'assets/js/plugins/nouislider.min.js' %}"></script>
+<script src="{% static 'assets/js/plugins/apexcharts.min.js' %}"></script>
+<script src="{% static 'assets/js/plugins/typed.js' %}"></script>
+<script src="{% static 'assets/js/main.js' %}"></script>
+
 </body>
+
 </html>

@@ -40,6 +40,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # Custom middleware'lar (order muhim!)
+    'apps.users.middleware.SecurityMiddleware',
+    'apps.users.middleware.PhoneVerificationMiddleware',
+    'apps.users.middleware.RoleBasedAccessMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -101,7 +106,53 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-# Login/Logout URLs
-LOGIN_URL = 'users:login'
-LOGIN_REDIRECT_URL = 'users:dashboard'
-LOGOUT_REDIRECT_URL = 'users:login'
+# Login URL ni o'zgartirish
+LOGIN_URL = 'users:phone_auth'
+LOGIN_REDIRECT_URL = 'users:home'
+LOGOUT_REDIRECT_URL = 'users:phone_auth'
+
+# Messages framework sozlamalari
+from django.contrib.messages import constants as messages
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'debug',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',
+}
+
+# SMS xizmati sozlamalari (agar kerak bo'lsa)
+# SMS_API_KEY = 'your_sms_api_key'
+# SMS_API_URL = 'your_sms_provider_url'
+
+# Cache sozlamalari (agar kerak bo'lsa)
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
+# Telefon raqam validatsiya sozlamalari
+PHONE_VALIDATION = {
+    'COUNTRY_CODE': '+998',
+    'MIN_LENGTH': 13,
+    'MAX_LENGTH': 13,
+    'ALLOWED_OPERATORS': ['90', '91', '93', '94', '95', '97', '98', '99'],
+}
+
+# SMS kod sozlamalari
+SMS_VERIFICATION = {
+    'CODE_LENGTH': 4,
+    'EXPIRY_MINUTES': 5,
+    'MAX_ATTEMPTS': 3,
+    'RATE_LIMIT_MINUTES': 1,
+    'HOURLY_LIMIT': 5,
+}
+
+# Eskiz.uz sozlamalari
+ESKIZ_EMAIL = config('ESKIZ_EMAIL')
+ESKIZ_PASSWORD = config('ESKIZ_PASSWORD')
+ESKIZ_FROM = config('ESKIZ_FROM')
+ESKIZ_CALLBACK_URL = config('ESKIZ_CALLBACK_URL')

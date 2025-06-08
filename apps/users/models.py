@@ -533,11 +533,36 @@ class PhoneVerification(models.Model):
 
     @classmethod
     def can_send_code(cls, phone):
-        """Yangi kod yuborish mumkinligini tekshirish"""
-        latest = cls.objects.filter(phone=phone).order_by('-created_at').first()
-        if latest and not latest.is_expired():
-            return False, "Kod allaqachon yuborilgan, kutib turing"
-        return True, "Kod yuborish mumkin"
+        """SMS yuborish mumkinligini tekshirish"""
+        from django.utils import timezone
+        from datetime import timedelta
+
+        # Oxirgi 1 daqiqada yuborilgan kodlar soni
+        one_minute_ago = timezone.now() - timedelta(minutes=1)
+        recent_codes = cls.objects.filter(
+            phone=phone,
+            created_at__gte=one_minute_ago
+        ).count()
+
+        # 1 daqiqada 3 tadan ko'p yuborish mumkin emas
+        if recent_codes >= 3:
+            return False, "Juda ko'p urinish! 1 daqiqa kutib turing."
+
+        # Oxirgi aktiv kod bormi tekshirish
+        last_active_code = cls.objects.filter(
+            phone=phone,
+            is_used=False,
+            created_at__gte=timezone.now() - timedelta(minutes=5)
+        ).first()
+
+        # Agar oxirgi kod 30 soniyadan kam vaqt oldin yuborilgan bo'lsa
+        if last_active_code:
+            time_passed = timezone.now() - last_active_code.created_at
+            if time_passed.total_seconds() < 30:
+                wait_time = 30 - int(time_passed.total_seconds())
+                return False, f"Kod allaqachon yuborilgan, {wait_time} soniya kutib turing."
+
+        return True, "OK"
 
     @classmethod
     def verify_code(cls, phone, code):
