@@ -25,7 +25,18 @@ class HomeView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect('dashboard:main')
+            # Login qilgan foydalanuvchini rolga qarab yo'naltirish
+            user = request.user
+            if user.is_admin_role:
+                return redirect('admin:index')
+            elif user.is_mini_admin:
+                return render(request, 'dashboard/mini_admin.html')
+            elif user.is_operator:
+                return render(request, 'dashboard/operator.html')
+            elif user.is_marketing:
+                return render(request, 'dashboard/marketing.html')
+            elif user.is_abituriyent:
+                return render(request, 'dashboard/abituriyent.html')
         return super().get(request, *args, **kwargs)
 
 
@@ -127,14 +138,23 @@ class VerifyCodeView(FormView):
             return self.form_invalid(form)
 
         # Foydalanuvchini olish yoki yaratish
-        user, created = User.objects.get_or_create(
-            phone=phone,
-            defaults={
-                'is_verified': True,
-                'role': 'abituriyent',
-                'is_active': True
-            }
-        )
+        try:
+            user = User.objects.get(phone=phone)
+            created = False
+
+            # Agar user mavjud bo'lsa va tasdiqlanmagan bo'lsa
+            if not user.is_verified:
+                user.is_verified = True
+                user.save()
+        except User.DoesNotExist:
+            # Yangi user yaratish
+            user = User.objects.create_user(
+                phone=phone,
+                is_verified=True,
+                role='abituriyent',
+                is_active=True
+            )
+            created = True
 
         # Agar yangi yaratilgan bo'lmasa, verifikatsiya qilish
         if not created and not user.is_verified:

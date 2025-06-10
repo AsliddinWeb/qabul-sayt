@@ -1,137 +1,11 @@
+# apps/users/managers.py
+
 from django.contrib.auth.models import BaseUserManager
 from django.core.exceptions import ValidationError
-
 from django.utils import timezone
 from datetime import timedelta
-import re
 from django.db import models
-
-
-class UserManager(BaseUserManager):
-    """Custom User Manager"""
-
-    def _validate_phone(self, phone):
-        """Telefon raqam formatini tekshirish"""
-        phone_pattern = r'^\+998\d{9}$'
-        if not re.match(phone_pattern, phone):
-            raise ValidationError("Telefon raqam +998XXXXXXXXX formatida bo'lishi kerak")
-        return phone
-
-    def _create_user(self, phone, password=None, **extra_fields):
-        """Asosiy user yaratish funksiyasi"""
-        if not phone:
-            raise ValueError("Telefon raqam kiritilishi shart")
-
-        # Telefon raqamni validatsiya qilish
-        phone = self._validate_phone(phone)
-
-        # User yaratish
-        user = self.model(phone=phone, **extra_fields)
-
-        if password:
-            user.set_password(password)
-        else:
-            user.set_unusable_password()
-
-        user.save(using=self._db)
-        return user
-
-    def create_user(self, phone, password=None, **extra_fields):
-        """Oddiy foydalanuvchi yaratish"""
-        extra_fields.setdefault('is_staff', False)
-        extra_fields.setdefault('is_superuser', False)
-        extra_fields.setdefault('is_active', True)
-        extra_fields.setdefault('role', 'abituriyent')
-
-        return self._create_user(phone, password, **extra_fields)
-
-    def create_superuser(self, phone, password=None, **extra_fields):
-        """Superuser yaratish"""
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_active', True)
-        extra_fields.setdefault('role', 'admin')
-        extra_fields.setdefault('is_verified', True)
-
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Superuser is_staff=True bo\'lishi kerak.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser is_superuser=True bo\'lishi kerak.')
-        if not password:
-            raise ValueError('Superuser uchun parol kiritilishi shart.')
-
-        return self._create_user(phone, password, **extra_fields)
-
-    def create_abituriyent(self, phone, full_name=None, **extra_fields):
-        """Abituriyent yaratish"""
-        extra_fields.setdefault('role', 'abituriyent')
-        extra_fields.setdefault('is_staff', False)
-        extra_fields.setdefault('is_superuser', False)
-
-        if full_name:
-            extra_fields['full_name'] = full_name
-
-        return self.create_user(phone, **extra_fields)
-
-    def create_operator(self, phone, full_name, password, **extra_fields):
-        """Operator yaratish"""
-        if not full_name:
-            raise ValueError("Operator uchun to'liq ism kiritilishi shart")
-        if not password:
-            raise ValueError("Operator uchun parol kiritilishi shart")
-
-        extra_fields.setdefault('role', 'operator')
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', False)
-        extra_fields.setdefault('is_verified', True)
-        extra_fields['full_name'] = full_name
-
-        return self._create_user(phone, password, **extra_fields)
-
-    def create_marketing(self, phone, full_name, password, **extra_fields):
-        """Marketing xodimi yaratish"""
-        if not full_name:
-            raise ValueError("Marketing xodimi uchun to'liq ism kiritilishi shart")
-        if not password:
-            raise ValueError("Marketing xodimi uchun parol kiritilishi shart")
-
-        extra_fields.setdefault('role', 'marketing')
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', False)
-        extra_fields.setdefault('is_verified', True)
-        extra_fields['full_name'] = full_name
-
-        return self._create_user(phone, password, **extra_fields)
-
-    def create_mini_admin(self, phone, full_name, password, **extra_fields):
-        """Mini admin yaratish"""
-        if not full_name:
-            raise ValueError("Mini admin uchun to'liq ism kiritilishi shart")
-        if not password:
-            raise ValueError("Mini admin uchun parol kiritilishi shart")
-
-        extra_fields.setdefault('role', 'mini_admin')
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', False)
-        extra_fields.setdefault('is_verified', True)
-        extra_fields['full_name'] = full_name
-
-        return self._create_user(phone, password, **extra_fields)
-
-    def create_admin(self, phone, full_name, password, **extra_fields):
-        """Admin yaratish"""
-        if not full_name:
-            raise ValueError("Admin uchun to'liq ism kiritilishi shart")
-        if not password:
-            raise ValueError("Admin uchun parol kiritilishi shart")
-
-        extra_fields.setdefault('role', 'admin')
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_verified', True)
-        extra_fields['full_name'] = full_name
-
-        return self._create_user(phone, password, **extra_fields)
+import re
 
 
 class UserQuerySet(models.QuerySet):
@@ -223,31 +97,6 @@ class UserQuerySet(models.QuerySet):
         )
 
 
-class ActiveUserManager(BaseUserManager):
-    """Faqat faol foydalanuvchilar uchun manager"""
-
-    def get_queryset(self):
-        return UserQuerySet(self.model, using=self._db).active()
-
-
-class VerifiedUserManager(BaseUserManager):
-    """Faqat tasdiqlangan foydalanuvchilar uchun manager"""
-
-    def get_queryset(self):
-        return UserQuerySet(self.model, using=self._db).verified()
-
-
-class StaffUserManager(BaseUserManager):
-    """Faqat xodimlar uchun manager"""
-
-    def get_queryset(self):
-        return UserQuerySet(self.model, using=self._db).staff_members()
-
-
-# User model uchun asosiy manager
-from django.db import models
-
-
 class UserManager(BaseUserManager):
     """User model uchun asosiy manager"""
 
@@ -272,6 +121,7 @@ class UserManager(BaseUserManager):
         # User yaratish
         user = self.model(phone=phone, **extra_fields)
 
+        # Parol bo'lsa set qilish, bo'lmasa unusable qilish
         if password:
             user.set_password(password)
         else:
@@ -281,7 +131,7 @@ class UserManager(BaseUserManager):
         return user
 
     def create_user(self, phone, password=None, **extra_fields):
-        """Oddiy foydalanuvchi yaratish"""
+        """Oddiy foydalanuvchi yaratish (parolsiz ham ishlaydi)"""
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
         extra_fields.setdefault('is_active', True)
@@ -290,7 +140,7 @@ class UserManager(BaseUserManager):
         return self._create_user(phone, password, **extra_fields)
 
     def create_superuser(self, phone, password=None, **extra_fields):
-        """Superuser yaratish"""
+        """Superuser yaratish (parol majburiy)"""
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
@@ -307,7 +157,7 @@ class UserManager(BaseUserManager):
         return self._create_user(phone, password, **extra_fields)
 
     def create_abituriyent(self, phone, full_name=None, **extra_fields):
-        """Abituriyent yaratish"""
+        """Abituriyent yaratish (parolsiz)"""
         extra_fields.setdefault('role', 'abituriyent')
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
@@ -315,10 +165,10 @@ class UserManager(BaseUserManager):
         if full_name:
             extra_fields['full_name'] = full_name
 
-        return self.create_user(phone, **extra_fields)
+        return self.create_user(phone, None, **extra_fields)
 
     def create_operator(self, phone, full_name, password, **extra_fields):
-        """Operator yaratish"""
+        """Operator yaratish (parol majburiy)"""
         if not full_name:
             raise ValueError("Operator uchun to'liq ism kiritilishi shart")
         if not password:
@@ -333,7 +183,7 @@ class UserManager(BaseUserManager):
         return self._create_user(phone, password, **extra_fields)
 
     def create_marketing(self, phone, full_name, password, **extra_fields):
-        """Marketing xodimi yaratish"""
+        """Marketing xodimi yaratish (parol majburiy)"""
         if not full_name:
             raise ValueError("Marketing xodimi uchun to'liq ism kiritilishi shart")
         if not password:
@@ -348,7 +198,7 @@ class UserManager(BaseUserManager):
         return self._create_user(phone, password, **extra_fields)
 
     def create_mini_admin(self, phone, full_name, password, **extra_fields):
-        """Mini admin yaratish"""
+        """Mini admin yaratish (parol majburiy)"""
         if not full_name:
             raise ValueError("Mini admin uchun to'liq ism kiritilishi shart")
         if not password:
@@ -363,7 +213,7 @@ class UserManager(BaseUserManager):
         return self._create_user(phone, password, **extra_fields)
 
     def create_admin(self, phone, full_name, password, **extra_fields):
-        """Admin yaratish"""
+        """Admin yaratish (parol majburiy)"""
         if not full_name:
             raise ValueError("Admin uchun to'liq ism kiritilishi shart")
         if not password:
@@ -377,7 +227,7 @@ class UserManager(BaseUserManager):
 
         return self._create_user(phone, password, **extra_fields)
 
-    # QuerySet metodlarini manager'ga qo'shish
+    # QuerySet metodlarini manager'ga qo'shish (shortcut)
     def active(self):
         return self.get_queryset().active()
 
@@ -437,3 +287,24 @@ class UserManager(BaseUserManager):
 
     def search(self, query):
         return self.get_queryset().search(query)
+
+
+class ActiveUserManager(UserManager):
+    """Faqat faol foydalanuvchilar uchun manager"""
+
+    def get_queryset(self):
+        return super().get_queryset().active()
+
+
+class VerifiedUserManager(UserManager):
+    """Faqat tasdiqlangan foydalanuvchilar uchun manager"""
+
+    def get_queryset(self):
+        return super().get_queryset().verified()
+
+
+class StaffUserManager(UserManager):
+    """Faqat xodimlar uchun manager"""
+
+    def get_queryset(self):
+        return super().get_queryset().staff_members()
