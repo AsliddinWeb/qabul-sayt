@@ -24,19 +24,21 @@ class HomeView(TemplateView):
     template_name = 'home/home.html'
 
     def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            # Login qilgan foydalanuvchini rolga qarab yo'naltirish
-            user = request.user
-            if user.is_admin_role:
-                return redirect('admin:index')
-            elif user.is_mini_admin:
-                return render(request, 'dashboard/mini_admin.html')
-            elif user.is_operator:
-                return render(request, 'dashboard/operator.html')
-            elif user.is_marketing:
-                return render(request, 'dashboard/marketing.html')
-            elif user.is_abituriyent:
-                return render(request, 'dashboard/abituriyent.html')
+        if not request.user.is_authenticated:
+            return redirect('users:phone_auth')
+
+        user = request.user
+        if user.is_admin_role:
+            return redirect('admin:index')
+        elif user.is_mini_admin:
+            return render(request, 'dashboard/mini_admin.html')
+        elif user.is_operator:
+            return render(request, 'dashboard/operator.html')
+        elif user.is_marketing:
+            return render(request, 'dashboard/marketing.html')
+        elif user.is_abituriyent:
+            return render(request, 'dashboard/abituriyent/home.html')
+
         return super().get(request, *args, **kwargs)
 
 
@@ -172,23 +174,20 @@ class VerifyCodeView(FormView):
             del self.request.session['user_exists']
 
         if created:
-            # Yangi foydalanuvchiga xush kelibsiz SMS yuborish
-            send_notification_sms(phone, 'welcome')
-
             messages.success(
                 self.request,
                 "Tabriklaymiz! Ro'yxatdan muvaffaqiyatli o'tdingiz. Profilingizni to'ldiring."
             )
             # Yangi foydalanuvchi - profil to'ldirish sahifasiga
             if user.is_abituriyent:
-                return redirect('users:complete_profile')
+                return redirect('dashboard:main')
         else:
             # Login haqida bildirishnoma
             send_notification_sms(phone, 'login_alert')
 
             messages.success(self.request, f"Xush kelibsiz, {user.full_name or user.phone}!")
 
-        return redirect('users:home')
+        return redirect('dashboard:main')
 
     def _mask_phone(self, phone):
         """Telefon raqamni maskalash: +998901234567 -> +998 90 *** ** 67"""

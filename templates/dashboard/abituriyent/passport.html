@@ -1,0 +1,322 @@
+{% extends 'dashboard/abituriyent/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    .form-group label {
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .form-control[readonly] {
+        background-color: #f8f9fa;
+    }
+
+    #alertContainer {
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        z-index: 9999;
+        max-width: 400px;
+    }
+</style>
+{% endblock extra_css %}
+
+{% block main_content %}
+<div class="col-xl-9 col-lg-9 col-md-8">
+    <div class="bd-dashboard-inner">
+        <div class="bd-dashboard-title-inner">
+            <div class="d-flex justify-content-between">
+                <h4 class="bd-dashboard-title">Passport Ma'lumotlari</h4>
+            </div>
+        </div>
+
+        <!-- Passport Search Section -->
+        <div class="dashboard-profile-info mb-4">
+            <div class="dashboard-profile-inner">
+                <h5 class="mb-3">Passport ma'lumotlarini qidirish</h5>
+                <form id="searchPassportForm">
+                    {% csrf_token %}
+                    <div class="row gy-30">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="searchPassportSeries">Passport seriya va raqami *</label>
+                                <input name="passport_series" id="searchPassportSeries" type="text"
+                                       placeholder="AA1234567" maxlength="9" class="form-control" required>
+                                <small class="form-text text-muted">Masalan: AA1234567</small>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="searchBirthDate">Tug'ilgan sana *</label>
+                                <input name="birth_date" id="searchBirthDate" type="date"
+                                       class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <button type="submit" class="bd-btn btn-primary" id="searchBtn">
+                                <i class="fas fa-search me-2"></i>Qidirish
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Passport Data Display Section -->
+        <div class="dashboard-profile-info" id="passportDataSection" style="display: none;">
+            <div class="dashboard-profile-inner">
+                <h5 class="mb-3">Shaxsiy ma'lumotlar</h5>
+                <form id="passportDataForm">
+                    {% csrf_token %}
+                    <div class="row gy-30">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="lastName">Familiya *</label>
+                                <input name="last_name" id="lastName" type="text"
+                                       class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="firstName">Ism *</label>
+                                <input name="first_name" id="firstName" type="text"
+                                       class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="otherName">Otasining ismi *</label>
+                                <input name="other_name" id="otherName" type="text"
+                                       class="form-control" readonly>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="birthDate">Tug'ilgan sana *</label>
+                                <input name="birth_date" id="birthDate" type="date"
+                                       class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="passportSeries">Passport seriya va raqami *</label>
+                                <input name="passport_series" id="passportSeries" type="text"
+                                       class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="pinfl">PINFL *</label>
+                                <input name="pinfl" id="pinfl" type="text"
+                                       class="form-control" readonly>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="gender">Jinsi *</label>
+                                <select name="gender" id="gender" class="form-control" disabled>
+                                    <option value="">Tanlang</option>
+                                    <option value="erkak">Erkak</option>
+                                    <option value="ayol">Ayol</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="passportGivenDate">Passport berilgan sana</label>
+                                <input name="passport_given_date" id="passportGivenDate" type="date"
+                                       class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="passportExpiresDate">Passport amal qilish muddati</label>
+                                <input name="passport_expires_date" id="passportExpiresDate" type="date"
+                                       class="form-control" readonly>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="passportGivenBy">Passport kim tomonidan berilgan</label>
+                                <input name="passport_given_by" id="passportGivenBy" type="text"
+                                       class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="birthPlace">Tug'ilgan joy</label>
+                                <input name="birth_place" id="birthPlace" type="text"
+                                       class="form-control" readonly>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <button type="submit" class="bd-btn btn-primary" id="saveBtn">
+                                <i class="fas fa-save me-2"></i>Saqlash
+                            </button>
+                            <button type="button" class="bd-btn btn-secondary ms-2" id="newSearchBtn">
+                                <i class="fas fa-search me-2"></i>Yangi qidiruv
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Alert Messages -->
+        <div id="alertContainer"></div>
+
+    </div>
+</div>
+{% endblock main_content %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchForm = document.getElementById('searchPassportForm');
+        const dataForm = document.getElementById('passportDataForm');
+        const searchSection = document.querySelector('.dashboard-profile-info.mb-4');
+        const dataSection = document.getElementById('passportDataSection');
+        const newSearchBtn = document.getElementById('newSearchBtn');
+
+        // Alert ko'rsatish
+        function showAlert(message, type = 'success') {
+            const alertHtml = `
+                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            document.getElementById('alertContainer').innerHTML = alertHtml;
+
+            // 5 sekunddan keyin o'chirish
+            setTimeout(() => {
+                const alert = document.querySelector('.alert');
+                if (alert) {
+                    alert.classList.remove('show');
+                    setTimeout(() => alert.remove(), 150);
+                }
+            }, 5000);
+        }
+
+        // Passport seriyani formatlash
+        document.getElementById('searchPassportSeries').addEventListener('input', function(e) {
+            let value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+
+            if (value.length > 2) {
+                value = value.slice(0, 2) + value.slice(2);
+            }
+
+            e.target.value = value;
+        });
+
+        // Passport ma'lumotlarini qidirish
+        searchForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const searchBtn = document.getElementById('searchBtn');
+            const originalText = searchBtn.innerHTML;
+            searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Qidirilmoqda...';
+            searchBtn.disabled = true;
+
+            try {
+                const formData = new FormData(searchForm);
+                const response = await fetch('{% url "dashboard:search_passport_data" %}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Ma'lumotlarni forma ga to'ldirish
+                    fillPassportData(data.data);
+
+                    // Sectionlarni almashtirish
+                    searchSection.style.display = 'none';
+                    dataSection.style.display = 'block';
+
+                    showAlert('Ma\'lumotlar topildi!', 'success');
+                } else {
+                    showAlert(data.error || 'Ma\'lumotlar topilmadi', 'danger');
+                }
+            } catch (error) {
+                showAlert('Xatolik yuz berdi. Qaytadan urinib ko\'ring.', 'danger');
+            } finally {
+                searchBtn.innerHTML = originalText;
+                searchBtn.disabled = false;
+            }
+        });
+
+        // Ma'lumotlarni formaga to'ldirish
+        function fillPassportData(data) {
+            document.getElementById('lastName').value = data.last_name || '';
+            document.getElementById('firstName').value = data.first_name || '';
+            document.getElementById('otherName').value = data.other_name || '';
+            document.getElementById('birthDate').value = data.birth_date || '';
+            document.getElementById('passportSeries').value = data.passport_series || '';
+            document.getElementById('pinfl').value = data.pinfl || '';
+            document.getElementById('gender').value = data.gender || '';
+            document.getElementById('passportGivenDate').value = data.passport_given_date || '';
+            document.getElementById('passportExpiresDate').value = data.passport_expires_date || '';
+            document.getElementById('passportGivenBy').value = data.passport_given_by || '';
+            document.getElementById('birthPlace').value = data.birth_place || '';
+        }
+
+        // Ma'lumotlarni saqlash
+        dataForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const saveBtn = document.getElementById('saveBtn');
+            const originalText = saveBtn.innerHTML;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saqlanmoqda...';
+            saveBtn.disabled = true;
+
+            try {
+                const formData = new FormData(dataForm);
+                const response = await fetch('{% url "dashboard:save_passport_data" %}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert(data.message || 'Ma\'lumotlar saqlandi!', 'success');
+
+                    // 2 sekunddan keyin bosh sahifaga o'tish
+                    setTimeout(() => {
+                        window.location.href = '{% url "dashboard:abituriyent" %}';
+                    }, 2000);
+                } else {
+                    showAlert(data.error || 'Saqlashda xatolik yuz berdi', 'danger');
+                }
+            } catch (error) {
+                showAlert('Xatolik yuz berdi. Qaytadan urinib ko\'ring.', 'danger');
+            } finally {
+                saveBtn.innerHTML = originalText;
+                saveBtn.disabled = false;
+            }
+        });
+
+        // Yangi qidiruv
+        newSearchBtn.addEventListener('click', function() {
+            dataSection.style.display = 'none';
+            searchSection.style.display = 'block';
+            searchForm.reset();
+        });
+    });
+</script>
+{% endblock extra_js %}

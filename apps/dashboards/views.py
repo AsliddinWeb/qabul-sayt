@@ -77,7 +77,7 @@ def abituriyent_dashboard(request):
         'quick_stats': get_abituriyent_stats(user)
     }
 
-    return render(request, 'dashboard/abituriyent.html', context)
+    return render(request, 'dashboard/abituriyent/home.html', context)
 
 
 def get_user_applications(user):

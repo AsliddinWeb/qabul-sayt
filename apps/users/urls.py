@@ -7,10 +7,10 @@ app_name = 'users'
 
 urlpatterns = [
     # Home page
-    path('', views.HomeView.as_view(), name='home'),
+    path('me/', views.HomeView.as_view(), name='home'),
 
     # Authentication URLs
-    path('auth/', views.PhoneAuthView.as_view(), name='phone_auth'),
+    path('', views.PhoneAuthView.as_view(), name='phone_auth'),
     path('verify/', views.VerifyCodeView.as_view(), name='verify_code'),
     path('resend/', views.ResendCodeView.as_view(), name='resend_code'),
     path('logout/', views.LogoutView.as_view(), name='logout'),

@@ -10238,7 +10238,7 @@ code {
   }
 }
 .bd-header-logo img {
-  max-width: 158px;
+  max-width: 108px;
 }
 
 .logo-black {
@@ -11879,7 +11879,7 @@ code {
 }
 @media only screen and (min-width: 1400px) and (max-width: 1599px) {
   .main-menu > ul {
-    gap: 0 15px;
+    gap: 0 20px;
   }
 }
 @media only screen and (min-width: 1200px) and (max-width: 1399px) {
@@ -12280,7 +12280,7 @@ code {
 }
 
 .main-menu > ul > li > a::after {
-  content: "\f107";
+
   font-family: var(--ff-fontawesome);
   margin-left: 5px;
   font-weight: 500;
