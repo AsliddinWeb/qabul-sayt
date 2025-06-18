@@ -10,44 +10,61 @@
             </div>
             <div class="container p-0">
                 <div class="row gy-30 justify-content-center">
-                    <!-- Passport -->
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
                         <div class="bd-counter-wrapper bd-counter-style-six">
                             <div class="bd-counter-item">
                                 <div class="bd-counter-content">
-                            <span class="bd-counter-icon bg-two">
-                                <i class="fa-solid fa-id-card"></i>
-                            </span>
-                                    <h4 class="text-success">Passport</h4>
-                                    <p class="text-danger">To'ldirilmagan</p>
+                                    <span class="bd-counter-icon bg-two"><i class="fa-solid fa-id-card"></i></span>
+                                    <h4>
+                                        <span>Passport</span>
+                                    </h4>
+                                    {% if profile %}
+                                        <p class="text-success">{{ profile.passport_series }}</p>
+                                    {% else %}
+                                        <p class="text-warning">Passport kiritilmagan</p>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Diplom -->
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
                         <div class="bd-counter-wrapper bd-counter-style-six">
                             <div class="bd-counter-item">
                                 <div class="bd-counter-content">
-                            <span class="bd-counter-icon bg-two">
-                                <i class="fa-solid fa-graduation-cap"></i>
-                            </span>
-                                    <h4 class="text-success">Diplom</h4>
-                                    <p class="text-danger">To'ldirilmagan</p>
+                                    <span class="bd-counter-icon bg-two"><i
+                                            class="fa-solid fa-graduation-cap"></i></span>
+
+                                    <h4>
+                                        <span>Diplom</span>
+                                    </h4>
+                                    {% if profile and user.diplom or profile and user.transfer_diplom %}
+                                        {% if user.diplom %}
+                                            <p>{{ user.diplom.university_name }}</p>
+                                        {% elif user.transfer_diplom %}
+                                            <p>{{ user.transfer_diplom.university_name }}</p>
+                                        {% endif %}
+                                    {% else %}
+                                        <p class="text-warning">Diplom ma'lumotlari topilmadi</p>
+                                    {% endif %}
+
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Ariza -->
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
                         <div class="bd-counter-wrapper bd-counter-style-six">
                             <div class="bd-counter-item">
                                 <div class="bd-counter-content">
-                            <span class="bd-counter-icon bg-two">
-                                <i class="fa-solid fa-file-signature"></i>
-                            </span>
-                                    <h4 class="text-success">Ariza</h4>
-                                    <p class="text-danger">To'ldirilmagan</p>
+                                    <span class="bd-counter-icon bg-two"><i
+                                            class="fa-solid fa-clipboard-check"></i></span>
+                                    <h4>
+                                        <span>Ariza</span>
+                                    </h4>
+                                    {% if profile and user.application %}
+                                        <p>{{ user.application.status }}</p>
+                                    {% else %}
+                                        <p class="text-warning">Ariza topshirilmagan</p>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -55,128 +72,72 @@
                 </div>
             </div>
         </div>
-
-
     </div>
+
     <div class="bd-dashboard-inner">
         <div class="bd-dashboard-reviews-wrapper">
             <div class="bd-dashboard-review-item mb-30">
-                <h5 class="title underline"><a href="courses-details.html">Passport ma'lumotlari</a></h5>
+                <h5 class="title underline"><a href="{% url 'dashboard:abituriyent_passport' %}">Passport ma'lumotlari</a></h5>
                 <div class="course-info d-flex align-content-center justify-content-between flex-wrap gap-2 mb-10">
                     <div class="bd-course-rating-wrap d-flex align-items-center gap-10">
-                        <div class="bd-course-rating-icon fs-14 d-flex rating-color">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                        </div>
                         <div class="bd-course-rating-text">
-                            <span>4.8 (258)</span>
+                            {% if profile %}
+                                <span>{{ profile.get_full_name }}</span>
+                            {% else %}
+                                <span class="text-warning">Passport ma'lumotlari kiritilmagan</span>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="bd-button-action">
-                        <a class="bd-default-tooltip edit" href="student-reviews.html#"><span><i
-                                class="fa-light fa-pen-to-square"></i></span></a>
-                        <a class="bd-default-tooltip view" href="student-reviews.html#"><span><i
-                                class="fa-sharp fa-light fa-eye"></i></span></a>
-                        <a class="bd-default-tooltip delete" href="student-reviews.html#"><span><i
-                                class="fa-light fa-trash-can"></i></span></a>
+                        <a class="bd-default-tooltip view" href="{% url 'dashboard:abituriyent_passport' %}"><span><i
+                                class="fas fa-arrow-right"></i></span></a>
                     </div>
                 </div>
-                <p>So I said lurgy dropped a clanger Jeffrey bugger cuppa gosh David blatant
-                    have
-                    it, standard A bit of how's your father my lady absolutely.</p>
             </div>
-            <div class="bd-dashboard-review-item mb-30">
-                <h5 class="title underline"><a href="courses-details.html">Diplom ma'lumotlari</a></h5>
-                <div class="course-info d-flex align-content-center justify-content-between flex-wrap gap-2 mb-10">
-                    <div class="bd-course-rating-wrap d-flex align-items-center gap-10">
-                        <div class="bd-course-rating-icon fs-14 d-flex rating-color">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                        </div>
-                        <div class="bd-course-rating-text">
-                            <span>4.8 (258)</span>
-                        </div>
-                    </div>
-                    <div class="bd-button-action">
-                        <a class="bd-default-tooltip edit" href="student-reviews.html#"><span><i
-                                class="fa-light fa-pen-to-square"></i></span></a>
-                        <a class="bd-default-tooltip view" href="student-reviews.html#"><span><i
-                                class="fa-sharp fa-light fa-eye"></i></span></a>
-                        <a class="bd-default-tooltip delete" href="student-reviews.html#"><span><i
-                                class="fa-light fa-trash-can"></i></span></a>
-                    </div>
-                </div>
-                <p>So I said lurgy dropped a clanger Jeffrey bugger cuppa gosh David blatant
-                    have
-                    it, standard A bit of how's your father my lady absolutely.</p>
-            </div>
-            <div class="bd-dashboard-review-item mb-30">
-                <h5 class="title underline"><a href="courses-details.html">Ariza holati</a></h5>
-                <div class="course-info d-flex align-content-center justify-content-between flex-wrap gap-2 mb-10">
-                    <div class="bd-course-rating-wrap d-flex align-items-center gap-10">
-                        <div class="bd-course-rating-icon fs-14 d-flex rating-color">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                        </div>
-                        <div class="bd-course-rating-text">
-                            <span>4.8 (258)</span>
-                        </div>
-                    </div>
-                    <div class="bd-button-action">
-                        <a class="bd-default-tooltip edit" href="student-reviews.html#"><span><i
-                                class="fa-light fa-pen-to-square"></i></span></a>
-                        <a class="bd-default-tooltip view" href="student-reviews.html#"><span><i
-                                class="fa-sharp fa-light fa-eye"></i></span></a>
-                        <a class="bd-default-tooltip delete" href="student-reviews.html#"><span><i
-                                class="fa-light fa-trash-can"></i></span></a>
-                    </div>
-                </div>
-                <p>So I said lurgy dropped a clanger Jeffrey bugger cuppa gosh David blatant
-                    have
-                    it, standard A bit of how's your father my lady absolutely.</p>
-            </div>
-            <div class="bd-dashboard-review-item mb-30">
-                <h5 class="title underline"><a href="courses-details.html">Test natijalari</a></h5>
-                <div class="course-info d-flex align-content-center justify-content-between flex-wrap gap-2 mb-10">
-                    <div class="bd-course-rating-wrap d-flex align-items-center gap-10">
-                        <div class="bd-course-rating-icon fs-14 d-flex rating-color">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                        </div>
-                        <div class="bd-course-rating-text">
-                            <span>4.8 (258)</span>
-                        </div>
-                    </div>
-                    <div class="bd-button-action">
-                        <a class="bd-default-tooltip edit" href="student-reviews.html#"><span><i
-                                class="fa-light fa-pen-to-square"></i></span></a>
-                        <a class="bd-default-tooltip view" href="student-reviews.html#"><span><i
-                                class="fa-sharp fa-light fa-eye"></i></span></a>
-                        <a class="bd-default-tooltip delete" href="student-reviews.html#"><span><i
-                                class="fa-light fa-trash-can"></i></span></a>
-                    </div>
-                </div>
-                <p>So I said lurgy dropped a clanger Jeffrey bugger cuppa gosh David blatant
-                    have
-                    it, standard A bit of how's your father my lady absolutely.</p>
-            </div>
-        </div>
-    </div>
 
-    <div class="bd-more-button text-center mt-30">
-        <a href="courses-list-one.html" class="bd-btn btn-primary">Browse All Course</a>
+            <div class="bd-dashboard-review-item mb-30">
+                <h5 class="title underline"><a href="#">Diplom ma'lumotlari</a></h5>
+                <div class="course-info d-flex align-content-center justify-content-between flex-wrap gap-2 mb-10">
+                    <div class="bd-course-rating-wrap d-flex align-items-center gap-10">
+                        <div class="bd-course-rating-text">
+                            {% if profile and user.diplom or profile and user.transfer_diplom %}
+                                {% if user.diplom %}
+                                    <span>{{ user.diplom.university_name }}</span>
+                                {% elif user.transfer_diplom %}
+                                    <span>{{ user.transfer_diplom.university_name }}</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="text-warning">Diplom ma'lumotlari topilmadi</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="bd-button-action">
+                        <a class="bd-default-tooltip view" href="#"><span><i
+                                class="fas fa-arrow-right"></i></span></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bd-dashboard-review-item mb-30">
+                <h5 class="title underline"><a href="#">Ariza holati</a></h5>
+                <div class="course-info d-flex align-content-center justify-content-between flex-wrap gap-2 mb-10">
+                    <div class="bd-course-rating-wrap d-flex align-items-center gap-10">
+                        <div class="bd-course-rating-text">
+                            {% if profile and user.application %}
+                                <p>{{ user.application.status }}</p>
+                            {% else %}
+                                <p class="text-warning">Ariza topshirilmagan</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="bd-button-action">
+                        <a class="bd-default-tooltip view" href="#"><span><i
+                                class="fas fa-arrow-right"></i></span></a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>
 {% endblock main_content %}

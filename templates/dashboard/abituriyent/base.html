@@ -7,12 +7,12 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Student Dashboard</title>
+    <title>Abituriyent Sahifasi | Xalqaro innovatsion universitet</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/images/logo/favicon.svg' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/images/new/logo-one.png' %}">
 
     <!-- CSS Files -->
     <link rel="stylesheet" href="{% static 'assets/css/vendor/bootstrap.min.css' %}">
@@ -25,6 +25,76 @@
     <link rel="stylesheet" href="{% static 'assets/css/vendor/spacing.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/plugins/apexcharts.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/main.css' %}">
+
+    <style>
+        /* Additional CSS for better UX */
+        .bd-dashboard-menu a.disabled {
+            color: #6c757d !important;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .bd-dashboard-menu a.disabled:hover {
+            background-color: transparent !important;
+            color: #6c757d !important;
+        }
+
+        .badge {
+            font-size: 0.7em;
+            padding: 0.25em 0.5em;
+            border-radius: 0.375rem;
+        }
+
+        .thumb img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border: 1px solid #fff;
+        }
+
+        .bd-dashboard-profile-meta .complete-course {
+            background: rgba(255,255,255,0.1);
+            padding: 8px 15px;
+            border-radius: 25px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .bd-dashboard-profile-meta .complete-course .icon {
+            margin-right: 8px;
+        }
+
+        /* Progress indicator */
+        .profile-progress {
+            margin-top: 10px;
+        }
+
+        .progress {
+            height: 8px;
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .thumb img {
+                width: 60px;
+                height: 60px;
+            }
+
+            .bd-dashboard-profile-user .content h3 {
+                font-size: 1.2rem;
+            }
+
+            .badge {
+                display: none;
+            }
+        }
+    </style>
 
     {% block extra_css %}{% endblock extra_css %}
 </head>
@@ -76,7 +146,7 @@
         <div class="bd-header-inner">
             <div class="bd-header-left">
                 <div class="bd-header-logo">
-                    <a href="/"><img src="{% static 'assets/images/new/logo-header.png' %}" alt="logo"></a>
+                    <a href="/dashboard"><img src="{% static 'assets/images/new/logo-header.png' %}" alt="logo"></a>
                 </div>
 
             </div>
@@ -257,23 +327,58 @@
                         </div>
                         <div class="bd-dashboard-profile">
                             <div class="bd-dashboard-profile-user">
-                                <div class="thumb"><img src="{% static 'assets/images/new/no-image.png' %}" alt="image">
+                                <div class="thumb">
+                                    {% if profile and profile.image %}
+                                    <img src="{{ profile.image.url }}" alt="Profile rasmi">
+                                    {% else %}
+                                    <img src="{% static 'assets/images/new/no-image.png' %}" alt="Default rasm">
+                                    {% endif %}
                                 </div>
                                 <div class="content">
-                                    <h3 class="name">Abituriyent</h3>
-                                    <span class="designation d-block">Manzil uchun joy</span>
+                                    <h3 class="name">
+                                        {% if profile and profile.get_full_name %}
+                                        {{ profile.get_full_name }}
+                                        {% else %}
+                                        {{ user.first_name|default:"Abituriyent" }}
+                                        {% endif %}
+                                    </h3>
+                                    <span class="designation d-block">
+                                        {% if profile and profile.region and profile.district %}
+                                            {{ profile.region.name }}, {{ profile.district.name }}
+                                        {% elif profile and profile.region %}
+                                            {{ profile.region.name }}
+                                        {% else %}
+                                            Manzil kiritilmagan
+                                        {% endif %}
+                                    </span>
                                     <div class="bd-dashboard-profile-meta">
                                         <div class="complete-course" data-title="completed">
-                                            <span class="icon"><i class="fa-solid fa-badge-check"></i></span> Yo'nalish
-                                            kutilmoqda
+                                            <span class="icon">
+                                                {% if profile and profile.check_profile_completion %}
+                                                    <i class="fa-solid fa-badge-check text-success"></i>
+                                                {% else %}
+                                                    <i class="fa-solid fa-clock text-warning"></i>
+                                                {% endif %}
+                                            </span>
+                                            {% if profile and profile.check_profile_completion %}
+                                            Profil to'ldirilgan
+                                            {% else %}
+                                            Profil to'ldirilmagan
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="bd-dashboard-profile-btn">
-                                <a href="/dashboard" class="bd-btn btn-secondary-white">
-                                    Davom etish <i class="fas fa-arrow-right"></i>
+                                {% if profile and profile.check_profile_completion %}
+                                <a href="#" class="bd-btn btn-primary">
+                                    Ariza topshirish <i class="fas fa-arrow-right"></i>
                                 </a>
+                                {% else %}
+                                <a href="#" class="bd-btn btn-secondary-white">
+                                    Profilni to'ldirish <i class="fas fa-arrow-right"></i>
+                                </a>
+                                {% endif %}
                             </div>
 
                         </div>
@@ -294,27 +399,46 @@
                             <h6 class="bd-dashboard-menu-title mt-0">Hush kelibsiz!</h6>
                             <ul>
                                 <li>
-                                    <a href="/dashboard" class="active">
+                                    <a href="/dashboard"
+                                       class="{% if active_class == 'abituriyent_home' %}active{% endif %}">
                                         <span><i class="fa-light fa-gauge-high"></i></span> Bosh sahifa
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/dashboard/abituriyent/passport">
-                                        <span><i class="fa-light fa-id-card"></i></span> Passport ma’lumotlari
+                                    <a href="{% url 'dashboard:abituriyent_passport' %}"
+                                       class="{% if active_class == 'abituriyent_passport' %}active{% endif %}">
+                                        <span><i class="fa-light fa-id-card"></i></span> Passport ma'lumotlari
+                                        {% if not profile %}
+                                        <span class="badge bg-warning text-dark ms-2">!</span>
+                                        {% else %}
+                                        <span class="badge bg-success ms-2">✓</span>
+                                        {% endif %}
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="diplom-malumotlari.html">
-                                        <span><i class="fa-light fa-graduation-cap"></i></span> Diplom ma’lumotlari
+                                    <a href="{% url 'dashboard:abituriyent_diplom' %}"
+                                       class="{% if active_class == 'abituriyent_diplom' %}active{% endif %}">
+                                        <span><i class="fa-light fa-graduation-cap"></i></span> Diplom ma'lumotlari
+                                        {% if user.diplom or user.transfer_diplom %}
+                                            <span class="badge bg-success ms-2">✓</span>
+                                        {% else %}
+                                            <span class="badge bg-warning text-dark ms-2">!</span>
+                                        {% endif %}
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="ariza-topshirish.html">
+                                    <a href="#"
+                                       class="{% if request.resolver_match.url_name == 'ariza_topshirish' %}active{% endif %}
+                                              {% if not profile or not profile.check_profile_completion %}disabled{% endif %}">
                                         <span><i class="fa-light fa-file-circle-plus"></i></span> Ariza topshirish
+                                        {% if not profile or not profile.check_profile_completion %}
+                                        <span class="badge bg-secondary ms-2">🔒</span>
+                                        {% endif %}
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="ariza-holati.html">
+                                    <a href="#"
+                                       class="{% if request.resolver_match.url_name == 'ariza_holati' %}active{% endif %}">
                                         <span><i class="fa-light fa-timeline-arrow"></i></span> Ariza holati
                                     </a>
                                 </li>
@@ -323,11 +447,14 @@
                             <h6 class="bd-dashboard-menu-title">Foydalanuvchi</h6>
                             <ul>
                                 <li>
-                                    <a href="student-settings.html"><span><i class="fa-light fa-sliders"></i></span>Sozlamalar</a>
+                                    <a href="#">
+                                        <span><i class="fa-light fa-sliders"></i></span>Sozlamalar
+                                    </a>
                                 </li>
                                 <li>
-                                    <a href="/"><span><i class="fa-light fa-sign-out-alt"></i></span>Tizimdan
-                                        chiqish</a>
+                                    <a href="{% url 'users:logout' %}" class="text-danger">
+                                        <span><i class="fa-light fa-sign-out-alt"></i></span>Chiqish
+                                    </a>
                                 </li>
                             </ul>
                         </div>
@@ -341,6 +468,55 @@
     <!-- End student Dashboard Area -->
 
 </main>
+
+<!-- Profile completion progress modal -->
+{% if not profile or not profile.check_profile_completion %}
+<div class="modal fade" id="profileCompletionModal" tabindex="-1" aria-labelledby="profileCompletionModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="profileCompletionModalLabel">
+                    <i class="fas fa-info-circle text-primary"></i> Profilni to'ldiring
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <h6><i class="fas fa-exclamation-triangle"></i> Diqqat!</h6>
+                    <p class="mb-2">Ariza topshirish uchun avval profilingizni to'ldiring:</p>
+                    <ul class="list-unstyled mb-0">
+                        {% if not profile or not profile.passport_series %}
+                        <li><i class="fas fa-times text-danger"></i> Passport ma'lumotlari</li>
+                        {% else %}
+                        <li><i class="fas fa-check text-success"></i> Passport ma'lumotlari</li>
+                        {% endif %}
+
+                        {% if not profile or not profile.image %}
+                        <li><i class="fas fa-times text-danger"></i> 3x4 rasm</li>
+                        {% else %}
+                        <li><i class="fas fa-check text-success"></i> 3x4 rasm</li>
+                        {% endif %}
+
+                        {% if not profile or not profile.region or not profile.district %}
+                        <li><i class="fas fa-times text-danger"></i> Manzil ma'lumotlari</li>
+                        {% else %}
+                        <li><i class="fas fa-check text-success"></i> Manzil ma'lumotlari</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Keyinroq</button>
+                <a href="" class="btn btn-primary">
+                    <i class="fas fa-arrow-right"></i> Profilni to'ldirish
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 
 <!-- footer area start -->
 <footer class="bd-footer-area fix">
@@ -495,6 +671,42 @@
 <script src="{% static 'assets/js/plugins/apexcharts.min.js' %}"></script>
 <script src="{% static 'assets/js/plugins/typed.js' %}"></script>
 <script src="{% static 'assets/js/main.js' %}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Disable link functionality for incomplete profile sections
+        const disabledLinks = document.querySelectorAll('.bd-dashboard-menu a.disabled');
+        disabledLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                // Show profile completion modal if exists
+                const modal = document.getElementById('profileCompletionModal');
+                if (modal) {
+                    const bootstrapModal = new bootstrap.Modal(modal);
+                    bootstrapModal.show();
+                } else {
+                    alert('Avval profilingizni to\'ldiring!');
+                }
+            });
+        });
+
+        // Auto-show profile completion modal for new users
+        {% if not profile or not profile.passport_series %}
+        const showModalOnce = localStorage.getItem('profileModalShown');
+        if (!showModalOnce) {
+            setTimeout(() => {
+                const modal = document.getElementById('profileCompletionModal');
+                if (modal) {
+                    const bootstrapModal = new bootstrap.Modal(modal);
+                    bootstrapModal.show();
+                    localStorage.setItem('profileModalShown', 'true');
+                }
+            }, 2000);
+        }
+        {% endif %}
+    });
+</script>
 
 {% block extra_js %}{% endblock extra_js %}
 

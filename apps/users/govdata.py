@@ -79,7 +79,7 @@ class PassportDataService:
                         'birth_date': birth_date,
                         'passport_series': passport_series,
                         'pinfl': data.get('pinfl', ''),
-                        'gender': PassportDataService._determine_gender(data.get('gender', '')),
+                        'gender': data.get('genderid', ''),
                         'address': PassportDataService._parse_address(data),
                         'nationality': 'O\'zbek',  # Default
                     }

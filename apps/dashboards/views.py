@@ -74,7 +74,9 @@ def abituriyent_dashboard(request):
         'applications': get_user_applications(user),
         'recent_notifications': get_notifications(user),
         'next_steps': get_next_steps(profile) if profile else ['Profilingizni yarating'],
-        'quick_stats': get_abituriyent_stats(user)
+        'quick_stats': get_abituriyent_stats(user),
+
+        'active_class': 'abituriyent_home',
     }
 
     return render(request, 'dashboard/abituriyent/home.html', context)

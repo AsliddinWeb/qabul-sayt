@@ -17,6 +17,9 @@ urlpatterns = [
     # Dashboard
     path('dashboard/', include('apps.dashboards.urls')),
 
+    # Regions
+    path('regions/', include('apps.regions.urls')),
+
 ]
 
 

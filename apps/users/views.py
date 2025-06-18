@@ -180,7 +180,7 @@ class VerifyCodeView(FormView):
             )
             # Yangi foydalanuvchi - profil to'ldirish sahifasiga
             if user.is_abituriyent:
-                return redirect('dashboard:main')
+                return redirect('dashboard:abituriyent_passport')
         else:
             # Login haqida bildirishnoma
             send_notification_sms(phone, 'login_alert')
