@@ -1,0 +1,321 @@
+{% extends 'dashboard/abituriyent/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    .form-control {
+        font-size: 16px;
+    }
+    .form-section {
+        background: #fff;
+        border-radius: 8px;
+        padding: 25px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    .section-title {
+        color: #2c3e50;
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #f8f9fa;
+    }
+    .form-group label {
+        font-weight: 500;
+        color: #495057;
+        margin-bottom: 8px;
+        display: block;
+    }
+    .required-field {
+        color: #dc3545;
+    }
+    .file-upload-info {
+        font-size: 12px;
+        color: #6c757d;
+        margin-top: 5px;
+    }
+    .navigation-buttons {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .navigation-buttons .bd-btn {
+        margin: 0 10px;
+        min-width: 150px;
+    }
+    .alert {
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .transfer-info {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+    }
+    .transfer-info h5 {
+        color: white;
+        margin-bottom: 10px;
+    }
+</style>
+{% endblock extra_css %}
+
+{% block main_content %}
+<div class="col-xl-9 col-lg-9 col-md-8 order-1 order-xl-2">
+    <div class="bd-dashboard-inner">
+        <div class="bd-dashboard-title-inner mb-3">
+            <h4 class="bd-dashboard-title">
+                {% if is_edit %}
+                    O'qishni Ko'chirish Ma'lumotlarini Tahrirlash
+                {% else %}
+                    O'qishni Ko'chirish Ma'lumotlarini Kiritish
+                {% endif %}
+            </h4>
+        </div>
+
+        <!-- Navigation buttons -->
+        <div class="navigation-buttons">
+            <a href="{% url 'dashboard:abituriyent_diplom' %}" class="bd-btn btn-outline-primary">Yangi qabul</a>
+            <a href="{% url 'dashboard:abituriyent_transfer_diplom' %}" class="bd-btn btn-primary">O'qishni ko'chirish</a>
+        </div>
+
+
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Form -->
+        <form method="post" enctype="multipart/form-data" id="transferDiplomForm">
+            {% csrf_token %}
+
+            <!-- Davlat va Universitet ma'lumotlari -->
+            <div class="form-section">
+                <h5 class="section-title">Davlat va Universitet Ma'lumotlari</h5>
+                <div class="row gy-20">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.country.id_for_label }}">
+                                {{ form.country.label }} <span class="required-field">*</span>
+                            </label>
+                            {{ form.country }}
+                            {% if form.country.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.country.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.target_course.id_for_label }}">
+                                {{ form.target_course.label }} <span class="required-field">*</span>
+                            </label>
+                            {{ form.target_course }}
+                            {% if form.target_course.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.target_course.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="{{ form.university_name.id_for_label }}">
+                                {{ form.university_name.label }} <span class="required-field">*</span>
+                            </label>
+                            {{ form.university_name }}
+                            <div class="file-upload-info">
+                                O'qishni ko'chirmoqchi bo'lgan universitetning to'liq va aniq nomini kiriting
+                            </div>
+                            {% if form.university_name.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.university_name.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transcript fayli -->
+            <div class="form-section">
+                <h5 class="section-title">Transcript Fayli</h5>
+                <div class="row gy-20">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="{{ form.transcript_file.id_for_label }}">
+                                {{ form.transcript_file.label }} <span class="required-field">*</span>
+                            </label>
+                            {{ form.transcript_file }}
+                            <div class="file-upload-info">
+                                Transcript faylini PDF, JPG, JPEG, PNG formatlarida yuklang. Maksimal hajm: 5MB.
+                                Transcript - bu sizning oldingi universitetingizda olgan baholaringiz va o'qigan fanlaringiz ro'yxati.
+                            </div>
+                            {% if form.transcript_file.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.transcript_file.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% if transfer_diplom and transfer_diplom.transcript_file %}
+                                <div class="mt-2">
+                                    <small class="text-success">
+                                        Mavjud fayl: <a href="{{ transfer_diplom.transcript_file.url }}" target="_blank" class="text-success">
+                                            <i class="fas fa-download me-1"></i>Ko'rish/Yuklash
+                                        </a>
+                                    </small>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Submit button -->
+            <div class="form-section">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <button type="submit" class="bd-btn btn-primary" id="submitBtn">
+                            {% if is_edit %}
+                                <i class="fas fa-save me-2"></i>O'zgarishlarni Saqlash
+                            {% else %}
+                                <i class="fas fa-paper-plane me-2"></i>Ma'lumotlarni Yuborish
+                            {% endif %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock main_content %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Form validation
+    $('#transferDiplomForm').on('submit', function(e) {
+        var isValid = true;
+        var submitBtn = $('#submitBtn');
+
+        // Required field larni tekshirish
+        $(this).find('input[required], select[required], textarea[required]').each(function() {
+            if (!$(this).val().trim()) {
+                isValid = false;
+                $(this).addClass('is-invalid');
+            } else {
+                $(this).removeClass('is-invalid');
+            }
+        });
+
+        if (!isValid) {
+            e.preventDefault();
+            alert('Iltimos, barcha majburiy maydonlarni to\'ldiring!');
+            return false;
+        }
+
+        // Loading state
+        submitBtn.prop('disabled', true);
+        submitBtn.html('<i class="fas fa-spinner fa-spin me-2"></i>Yuborilmoqda...');
+
+        // 30 soniyadan keyin buttonni qayta faollashtirish
+        setTimeout(function() {
+            submitBtn.prop('disabled', false);
+            submitBtn.html('{% if is_edit %}<i class="fas fa-save me-2"></i>O\'zgarishlarni Saqlash{% else %}<i class="fas fa-paper-plane me-2"></i>Ma\'lumotlarni Yuborish{% endif %}');
+        }, 30000);
+    });
+
+    // File upload validation
+    $('#id_transcript_file').on('change', function() {
+        var file = this.files[0];
+        if (file) {
+            var fileSize = file.size / 1024 / 1024; // MB
+            var allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+
+            if (fileSize > 5) {
+                alert('Fayl hajmi 5MB dan katta bo\'lmasligi kerak!');
+                $(this).val('');
+                return;
+            }
+
+            if (!allowedTypes.includes(file.type)) {
+                alert('Faqat PDF, JPG, JPEG, PNG formatlaridagi fayllar qabul qilinadi!');
+                $(this).val('');
+                return;
+            }
+
+            // File name preview
+            var fileName = file.name;
+            $(this).next('.file-upload-info').append('<br><small class="text-success"><i class="fas fa-file me-1"></i>' + fileName + '</small>');
+        }
+    });
+
+    // University name textarea auto-resize
+    $('#id_university_name').on('input', function() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+    });
+
+    // Country selection enhancement
+    $('#id_country').on('change', function() {
+        var selectedCountry = $(this).find('option:selected').text();
+        if (selectedCountry && selectedCountry !== 'Davlatni tanlang') {
+            $(this).removeClass('is-invalid').addClass('is-valid');
+        }
+    });
+
+    // Target course selection enhancement
+    $('#id_target_course').on('change', function() {
+        var selectedCourse = $(this).find('option:selected').text();
+        if (selectedCourse && selectedCourse !== 'Kursni tanlang') {
+            $(this).removeClass('is-invalid').addClass('is-valid');
+        }
+    });
+
+    // Auto-hide alerts after 5 seconds
+    setTimeout(function() {
+        $('.alert').fadeOut('slow');
+    }, 5000);
+
+    // Form field focus effects
+    $('input, select, textarea').on('focus', function() {
+        $(this).parent().addClass('focused');
+    }).on('blur', function() {
+        $(this).parent().removeClass('focused');
+    });
+
+    // Character counter for university name
+    $('#id_university_name').on('input', function() {
+        var currentLength = $(this).val().length;
+        var maxLength = 1000; // Assuming max length
+
+        if (!$(this).siblings('.char-counter').length) {
+            $(this).after('<div class="char-counter text-muted mt-1"></div>');
+        }
+
+        $(this).siblings('.char-counter').text(currentLength + ' / ' + maxLength + ' belgi');
+
+        if (currentLength > maxLength * 0.9) {
+            $(this).siblings('.char-counter').addClass('text-warning');
+        } else {
+            $(this).siblings('.char-counter').removeClass('text-warning');
+        }
+    });
+});
+</script>
+{% endblock extra_js %}

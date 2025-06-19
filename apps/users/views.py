@@ -37,7 +37,7 @@ class HomeView(TemplateView):
         elif user.is_marketing:
             return render(request, 'dashboard/marketing.html')
         elif user.is_abituriyent:
-            return render(request, 'dashboard/abituriyent/home.html')
+            return redirect('dashboard:abituriyent')
 
         return super().get(request, *args, **kwargs)
 

@@ -18,6 +18,17 @@ from apps.applications.models import Application
 from apps.diploms.models import Diplom, TransferDiplom
 from .decorators import role_required
 
+from apps.diploms.models import Diplom, TransferDiplom
+from apps.diploms.forms import DiplomForm, TransferDiplomForm
+
+from apps.applications.models import Application, ApplicationStatus
+from apps.applications.forms import ApplicationForm, QuickApplicationForm
+
+from apps.diploms.models import Diplom, TransferDiplom
+
+from apps.programs.models import Program
+
+
 
 @login_required
 @role_required(['abituriyent'])
@@ -280,7 +291,7 @@ def handle_passport_form(request, user, profile):
             clear_user_cache(user)
 
             messages.success(request, 'Ma\'lumotlar muvaffaqiyatli saqlandi!')
-            return redirect('dashboard:abituriyent:home')
+            return redirect('dashboard:abituriyent')
         else:
             # Form has errors
             for field, errors in form.errors.items():
@@ -290,7 +301,7 @@ def handle_passport_form(request, user, profile):
     except Exception as e:
         messages.error(request, f'Xatolik yuz berdi: {str(e)}')
 
-    return redirect('dashboard:abituriyent:passport')
+    return redirect('dashboard:abituriyent_passport')
 
 
 @login_required
@@ -563,24 +574,338 @@ def dashboard_stats_ajax(request):
         })
 
 
+
+
+
 @login_required
 @role_required(['abituriyent'])
 def diplom_page(request):
-    """Diplom page"""
+    """Diplom page - foydalanuvchi o'z diplomini qo'shishi yoki tahrirlashi"""
     user = request.user
     profile = get_user_profile(user)
 
+    if hasattr(user, 'transfer_diplom') and user.transfer_diplom:
+        return redirect('dashboard:abituriyent_transfer_diplom')
+
+    # Foydalanuvchining mavjud diplomini tekshirish
+    try:
+        diplom = Diplom.objects.get(user=user)
+        is_edit = True
+    except Diplom.DoesNotExist:
+        diplom = None
+        is_edit = False
 
     if request.method == 'POST':
-        pass
+        if is_edit:
+            # Mavjud diplomni yangilash
+            form = DiplomForm(request.POST, request.FILES, instance=diplom)
+            success_message = "Diplom ma'lumotlari muvaffaqiyatli yangilandi!"
+        else:
+            # Yangi diplom yaratish
+            form = DiplomForm(request.POST, request.FILES)
+            success_message = "Diplom ma'lumotlari muvaffaqiyatli saqlandi!"
 
+        if form.is_valid():
+            diplom_obj = form.save(commit=False)
+            diplom_obj.user = user  # Foydalanuvchini avtomatik belgilash
+            diplom_obj.save()
+
+            messages.success(request, success_message)
+            return redirect('dashboard:abituriyent_apply')
+        else:
+            print(form.errors)
+            messages.error(request, "Ma'lumotlarni to'ldirishda xatolik yuz berdi. Iltimos, qaytadan urinib ko'ring.")
+    else:
+        # GET so'rov - formani ko'rsatish
+        if is_edit:
+            form = DiplomForm(instance=diplom)
+        else:
+            form = DiplomForm()
 
     context = {
         'user': user,
         'profile': profile,
-
+        'form': form,
+        'diplom': diplom,
+        'is_edit': is_edit,
         'active_class': 'abituriyent_diplom',
     }
 
     return render(request, 'dashboard/abituriyent/diplom.html', context)
 
+
+@login_required
+@role_required(['abituriyent'])
+def transfer_diplom_page(request):
+    """Transfer diplom page - foydalanuvchi perevod diplomini qo'shishi yoki tahrirlashi"""
+    user = request.user
+    profile = get_user_profile(user)
+
+    if hasattr(user, 'diplom') and user.diplom:
+        return redirect('dashboard:abituriyent_diplom')
+
+    # Foydalanuvchining mavjud perevod diplomini tekshirish
+    try:
+        transfer_diplom = TransferDiplom.objects.get(user=user)
+        is_edit = True
+    except TransferDiplom.DoesNotExist:
+        transfer_diplom = None
+        is_edit = False
+
+    if request.method == 'POST':
+        if is_edit:
+            # Mavjud perevod diplomni yangilash
+            form = TransferDiplomForm(request.POST, request.FILES, instance=transfer_diplom)
+            success_message = "Perevod diplomi ma'lumotlari muvaffaqiyatli yangilandi!"
+        else:
+            # Yangi perevod diplom yaratish
+            form = TransferDiplomForm(request.POST, request.FILES)
+            success_message = "Perevod diplomi ma'lumotlari muvaffaqiyatli saqlandi!"
+
+        if form.is_valid():
+            transfer_diplom_obj = form.save(commit=False)
+            transfer_diplom_obj.user = user  # Foydalanuvchini avtomatik belgilash
+            transfer_diplom_obj.save()
+
+            messages.success(request, success_message)
+            return redirect('dashboard:abituriyent_apply')
+        else:
+            messages.error(request, "Ma'lumotlarni to'ldirishda xatolik yuz berdi. Iltimos, qaytadan urinib ko'ring.")
+    else:
+        # GET so'rov - formani ko'rsatish
+        if is_edit:
+            form = TransferDiplomForm(instance=transfer_diplom)
+        else:
+            form = TransferDiplomForm()
+
+    context = {
+        'user': user,
+        'profile': profile,
+        'form': form,
+        'transfer_diplom': transfer_diplom,
+        'is_edit': is_edit,
+        'active_class': 'abituriyent_transfer_diplom',
+    }
+
+    return render(request, 'dashboard/abituriyent/transfer_diplom.html', context)
+
+
+# from django.shortcuts import render, redirect, get_object_or_404
+# from django.contrib.auth.decorators import login_required
+# from django.contrib import messages
+# from django.http import JsonResponse
+# from django.db.models import Q
+#
+
+
+
+
+@login_required
+@role_required(['abituriyent'])
+def apply_page(request):
+    """Ariza sahifasi - foydalanuvchi ariza topshirishi yoki tahrirlashi"""
+    user = request.user
+    profile = get_user_profile(user)
+
+    # Foydalanuvchining mavjud arizasini tekshirish
+    try:
+        application = Application.objects.get(user=user)
+        is_edit = True
+
+        # Agar ariza allaqachon qabul qilingan bo'lsa, tahrirlashga ruxsat bermaslik
+        if application.status == ApplicationStatus.ACCEPTED:
+            messages.info(request, "Sizning arizangiz allaqachon qabul qilingan. Tahrirlash mumkin emas.")
+            return redirect('dashboard:abituriyent')
+
+    except Application.DoesNotExist:
+        application = None
+        is_edit = False
+
+    # Foydalanuvchining diplomlarini tekshirish
+    user_diplomas = Diplom.objects.filter(user=user)
+    user_transfer_diplomas = TransferDiplom.objects.filter(user=user)
+
+    if not user_diplomas.exists() and not user_transfer_diplomas.exists():
+        messages.warning(request, "Ariza topshirishdan oldin avval diplom ma'lumotlarini kiriting.")
+        return redirect('dashboard:abituriyent_diplom')
+
+    if request.method == 'POST':
+        if is_edit:
+            # Mavjud arizani yangilash
+            form = ApplicationForm(request.POST, request.FILES, instance=application, user=user)
+            success_message = "Ariza ma'lumotlari muvaffaqiyatli yangilandi!"
+        else:
+            # Yangi ariza yaratish
+            form = ApplicationForm(request.POST, request.FILES, user=user)
+            success_message = "Arizangiz muvaffaqiyatli topshirildi!"
+
+        if form.is_valid():
+            application_obj = form.save(commit=False)
+            application_obj.user = user  # Foydalanuvchini avtomatik belgilash
+
+            # Yangi ariza bo'lsa, statusni pending qilish
+            if not is_edit:
+                application_obj.status = ApplicationStatus.PENDING
+
+            application_obj.save()
+
+            messages.success(request, success_message)
+
+            # Yangi ariza bo'lsa dashboard ga yo'naltirish
+            if not is_edit:
+                return redirect('dashboard:abituriyent_apply')
+            else:
+                return redirect('dashboard:abituriyent_apply')
+        else:
+            print("Form errors:", form.errors)
+            messages.error(request, "Ma'lumotlarni to'ldirishda xatolik yuz berdi. Iltimos, qaytadan urinib ko'ring.")
+    else:
+        # GET so'rov - formani ko'rsatish
+        if is_edit:
+            form = ApplicationForm(instance=application, user=user)
+        else:
+            form = ApplicationForm(user=user)
+
+    context = {
+        'user': user,
+        'profile': profile,
+        'form': form,
+        'application': application,
+        'is_edit': is_edit,
+        'active_class': 'abituriyent_apply',
+        'user_diplomas': user_diplomas,
+        'user_transfer_diplomas': user_transfer_diplomas,
+    }
+
+    return render(request, 'dashboard/abituriyent/apply.html', context)
+
+
+@login_required
+@role_required(['abituriyent'])
+def application_status(request):
+    """Ariza holatini ko'rish sahifasi"""
+    user = request.user
+    profile = get_user_profile(user)
+
+    try:
+        application = Application.get_user_application(user)
+        if not application:
+            messages.info(request, "Sizda hali ariza mavjud emas.")
+            return redirect('dashboard:abituriyent_apply')
+    except Application.DoesNotExist:
+        messages.info(request, "Sizda hali ariza mavjud emas.")
+        return redirect('dashboard:abituriyent_apply')
+
+    context = {
+        'user': user,
+        'profile': profile,
+        'application': application,
+        'active_class': 'abituriyent_status',
+    }
+
+    return render(request, 'dashboard/abituriyent/application_status.html', context)
+
+
+@login_required
+def load_programs(request):
+    """AJAX - Yo'nalishlarni yuklash"""
+    branch_id = request.GET.get('branch_id')
+    education_level_id = request.GET.get('education_level_id')
+    education_form_id = request.GET.get('education_form_id')
+
+    programs = []
+
+    if branch_id and education_level_id and education_form_id:
+        programs_queryset = Program.objects.filter(
+            branch_id=branch_id,
+            education_level_id=education_level_id,
+            education_form_id=education_form_id,
+        ).order_by('name')
+
+        programs = [
+            {'id': program.id, 'name': program.name}
+            for program in programs_queryset
+        ]
+
+    return JsonResponse({'programs': programs})
+
+
+@login_required
+@role_required(['abituriyent'])
+def withdraw_application(request):
+    """Arizani bekor qilish"""
+    if request.method == 'POST':
+        user = request.user
+
+        try:
+            application = Application.objects.get(user=user)
+
+            # Faqat pending va review holatidagi arizalarni bekor qilish mumkin
+            if application.can_be_reviewed:
+                application.delete()
+                messages.success(request, "Arizangiz muvaffaqiyatli bekor qilindi.")
+            else:
+                messages.error(request, "Bu arizani bekor qilib bo'lmaydi.")
+
+        except Application.DoesNotExist:
+            messages.error(request, "Ariza topilmadi.")
+
+    return redirect('dashboard:abituriyent')
+
+
+@login_required
+@role_required(['abituriyent'])
+def application_history(request):
+    """Ariza tarixi (agar bir nechta ariza bo'lishi mumkin bo'lsa)"""
+    user = request.user
+    profile = get_user_profile(user)
+
+    # Hozircha faqat bitta ariza bo'lgani uchun, kelajakda ko'p ariza bo'lsa foydali
+    applications = Application.objects.filter(user=user).order_by('-created_at')
+
+    context = {
+        'user': user,
+        'profile': profile,
+        'applications': applications,
+        'active_class': 'abituriyent_history',
+    }
+
+    return render(request, 'dashboard/abituriyent/application_history.html', context)
+
+
+@login_required
+@role_required(['abituriyent'])
+def quick_apply(request):
+    """Tezkor ariza topshirish (minimal ma'lumotlar bilan)"""
+    user = request.user
+    profile = get_user_profile(user)
+
+    # Foydalanuvchining arizasi bor-yo'qligini tekshirish
+    if hasattr(user, 'application'):
+        messages.info(request, "Sizda allaqachon ariza mavjud.")
+        return redirect('dashboard:abituriyent_apply')
+
+    # Diplom mavjudligini tekshirish
+    if not Diplom.objects.filter(user=user).exists():
+        messages.warning(request, "Tezkor ariza uchun avval diplom ma'lumotlarini kiriting.")
+        return redirect('dashboard:abituriyent_diplom')
+
+    if request.method == 'POST':
+        form = QuickApplicationForm(request.POST, user=user)
+
+        if form.is_valid():
+            application = form.save()
+            messages.success(request,
+                             "Tezkor arizangiz topshirildi! Keyinroq to'liq ma'lumotlarni kiritishingiz mumkin.")
+            return redirect('dashboard:abituriyent_apply')
+    else:
+        form = QuickApplicationForm(user=user)
+
+    context = {
+        'user': user,
+        'profile': profile,
+        'form': form,
+        'active_class': 'abituriyent_quick_apply',
+    }
+
+    return render(request, 'dashboard/abituriyent/quick_apply.html', context)

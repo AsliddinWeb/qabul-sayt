@@ -7,6 +7,9 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 DJANGO_APPS = [
+    # Admin UI
+    'jazzmin',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -18,6 +21,7 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
+    'ckeditor',
 ]
 
 LOCAL_APPS = [
@@ -28,6 +32,7 @@ LOCAL_APPS = [
     'apps.applications',
     'apps.dashboards',
     'apps.pages',
+    'apps.settings',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -159,3 +164,125 @@ ESKIZ_CALLBACK_URL = config('ESKIZ_CALLBACK_URL')
 
 # Passport api
 PASSPORT_API = config('PASSPORT_API')
+
+# CKEditor sozlamalari
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': '100%',
+        'extraPlugins': ','.join([
+            'uploadimage',
+            'div',
+            'autolink',
+            'autoembed',
+            'embedsemantic',
+            'autogrow',
+            'widget',
+            'lineutils',
+            'clipboard',
+            'dialog',
+            'dialogui',
+            'elementspath'
+        ]),
+    },
+}
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+
+
+# JAZZMIN SETTINGS
+JAZZMIN_SETTINGS = {
+    "site_title": "Qabul Admin",
+
+    "site_header": "Qabul Admin",
+
+    "site_brand": "Qabul Admin",
+
+    "site_logo": "/assets/images/new/logo-one.png",
+
+    "login_logo": "/assets/images/new/logo-one.png",
+
+    "login_logo_dark": "/assets/images/new/logo-one.pngg",
+
+    "site_logo_classes": "img-circle",
+
+    "site_icon": "/assets/images/new/logo-one.png",
+
+    "welcome_sign": "Qabul tizimiga xush kelibsiz!",
+
+    "copyright": "Qabul | qabul.xiuedu.uz",
+
+    "search_model": [],
+
+    "user_avatar": None,
+
+    "topmenu_links": [
+
+        {"name": "Bosh sahifa",  "url": "admin:index", "permissions": ["auth.view_user"]},
+
+    ],
+
+
+    "usermenu_links": [
+    ],
+
+    "show_sidebar": True,
+
+    "navigation_expanded": True,
+
+    "hide_apps": [],
+
+    "hide_models": [],
+
+    "order_with_respect_to": [],
+
+    "icons": {
+    },
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+
+    "related_modal_active": False,
+
+    "custom_css": False,
+    "custom_js": False,
+    "use_google_fonts_cdn": True,
+    "show_ui_builder": False,
+
+    "changeform_format": "horizontal_tabs",
+    "changeform_format_overrides": {"accounts.user": "collapsible", "auth.group": "vertical_tabs"},
+
+    "language_chooser": False,
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": "navbar-info",
+    "accent": "accent-info",
+    "navbar": "navbar-white navbar-light",
+    "no_navbar_border": False,
+    "navbar_fixed": False,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": False,
+    "sidebar": "sidebar-light-info",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False,
+    "theme": "lux",
+    "dark_mode_theme": None,
+    "button_classes": {
+        "primary": "btn-outline-primary",
+        "secondary": "btn-outline-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    }
+}

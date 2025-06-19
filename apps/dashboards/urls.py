@@ -12,10 +12,21 @@ urlpatterns = [
     path('abituriyent/', views.abituriyent_dashboard, name='abituriyent'),
     path('abituriyent/passport/', views.passport_view, name='abituriyent_passport'),
     path('abituriyent/profile/', views.passport_view, name='abituriyent_profile'),
+
     path('abituriyent/diplom/', views.diplom_page, name='abituriyent_diplom'),
-    path('abituriyent/application/', views.passport_view, name='abituriyent_application'),
-    path('abituriyent/applications/', views.passport_view, name='abituriyent_applications'),
-    path('abituriyent/applications/', views.passport_view, name='abituriyent_applications'),
+    path('abituriyent/transfer-diplom/', views.transfer_diplom_page, name='abituriyent_transfer_diplom'),
+
+    # Asosiy ariza sahifalari
+    path('apply/', views.apply_page, name='abituriyent_apply'),
+    path('status/', views.application_status, name='abituriyent_status'),
+    path('history/', views.application_history, name='abituriyent_history'),
+    path('load-programs/', views.load_programs, name='abituriyent_load_programs'),
+
+    # Tezkor ariza
+    path('quick-apply/', views.quick_apply, name='abituriyent_quick_apply'),
+
+    # Ariza amalllari
+    path('withdraw/', views.withdraw_application, name='abituriyent_withdraw'),
 
     # AJAX endpoints
     path('abituriyent/ajax/search-passport/', views.search_passport_data, name='abituriyent_search_passport'),

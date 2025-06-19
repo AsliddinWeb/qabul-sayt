@@ -202,8 +202,8 @@
             <div class="bd-offcanvas-content">
                 <div class="bd-offcanvas-top d-flex justify-content-between align-items-center mb-30">
                     <div class="bd-offcanvas-logo">
-                        <a href="index.html">
-                            <img src="{% static 'assets/images/logo/logo.svg' %}" alt="logo">
+                        <a href="/">
+                            <img src="{% static 'assets/images/new/logo-one.png' %}" alt="logo">
                         </a>
                     </div>
                     <div class="bd-offcanvas-close">
@@ -360,7 +360,7 @@
                                                     <i class="fa-solid fa-clock text-warning"></i>
                                                 {% endif %}
                                             </span>
-                                            {% if profile and profile.check_profile_completion %}
+                                            {% if profile and user.application %}
                                             Profil to'ldirilgan
                                             {% else %}
                                             Profil to'ldirilmagan
@@ -370,15 +370,9 @@
                                 </div>
                             </div>
                             <div class="bd-dashboard-profile-btn">
-                                {% if profile and profile.check_profile_completion %}
-                                <a href="#" class="bd-btn btn-primary">
+                                <a href="{% url 'dashboard:abituriyent_apply' %}" class="bd-btn btn-primary">
                                     Ariza topshirish <i class="fas fa-arrow-right"></i>
                                 </a>
-                                {% else %}
-                                <a href="#" class="bd-btn btn-secondary-white">
-                                    Profilni to'ldirish <i class="fas fa-arrow-right"></i>
-                                </a>
-                                {% endif %}
                             </div>
 
                         </div>
@@ -394,7 +388,7 @@
         <div class="container">
             <div class="bd-dashboard-main">
                 <div class="row gy-30">
-                    <div class="col-xl-3 col-lg-3 col-md-4">
+                    <div class="col-xl-3 col-lg-3 col-md-4 order-2 order-xl-1">
                         <div class="bd-dashboard-menu">
                             <h6 class="bd-dashboard-menu-title mt-0">Hush kelibsiz!</h6>
                             <ul>
@@ -427,19 +421,10 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#"
-                                       class="{% if request.resolver_match.url_name == 'ariza_topshirish' %}active{% endif %}
-                                              {% if not profile or not profile.check_profile_completion %}disabled{% endif %}">
+                                    <a href="{% url 'dashboard:abituriyent_apply' %}"
+                                       class="{% if active_class == 'abituriyent_apply' %}active{% endif %}">
                                         <span><i class="fa-light fa-file-circle-plus"></i></span> Ariza topshirish
-                                        {% if not profile or not profile.check_profile_completion %}
-                                        <span class="badge bg-secondary ms-2">🔒</span>
-                                        {% endif %}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#"
-                                       class="{% if request.resolver_match.url_name == 'ariza_holati' %}active{% endif %}">
-                                        <span><i class="fa-light fa-timeline-arrow"></i></span> Ariza holati
+
                                     </a>
                                 </li>
                             </ul>
@@ -469,53 +454,6 @@
 
 </main>
 
-<!-- Profile completion progress modal -->
-{% if not profile or not profile.check_profile_completion %}
-<div class="modal fade" id="profileCompletionModal" tabindex="-1" aria-labelledby="profileCompletionModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="profileCompletionModalLabel">
-                    <i class="fas fa-info-circle text-primary"></i> Profilni to'ldiring
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="alert alert-info">
-                    <h6><i class="fas fa-exclamation-triangle"></i> Diqqat!</h6>
-                    <p class="mb-2">Ariza topshirish uchun avval profilingizni to'ldiring:</p>
-                    <ul class="list-unstyled mb-0">
-                        {% if not profile or not profile.passport_series %}
-                        <li><i class="fas fa-times text-danger"></i> Passport ma'lumotlari</li>
-                        {% else %}
-                        <li><i class="fas fa-check text-success"></i> Passport ma'lumotlari</li>
-                        {% endif %}
-
-                        {% if not profile or not profile.image %}
-                        <li><i class="fas fa-times text-danger"></i> 3x4 rasm</li>
-                        {% else %}
-                        <li><i class="fas fa-check text-success"></i> 3x4 rasm</li>
-                        {% endif %}
-
-                        {% if not profile or not profile.region or not profile.district %}
-                        <li><i class="fas fa-times text-danger"></i> Manzil ma'lumotlari</li>
-                        {% else %}
-                        <li><i class="fas fa-check text-success"></i> Manzil ma'lumotlari</li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Keyinroq</button>
-                <a href="" class="btn btn-primary">
-                    <i class="fas fa-arrow-right"></i> Profilni to'ldirish
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-{% endif %}
 
 
 <!-- footer area start -->
@@ -528,7 +466,7 @@
                         <div class="bd-footer-widget-content">
                             <div class="bd-footer-widget-logo">
                                 <a href="/">
-                                    <img src="assets/images/logo/logo.svg" alt="image">
+                                    <img src="{% static 'assets/images/new/logo-one.png' %}" alt="image">
                                 </a>
                             </div>
                             <p class="bd-footer-widget-description">Education focused website or template is an
@@ -613,9 +551,9 @@
                         <div class="bd-footer-from-content">
                             <div class="bd-footer-app-btn d-flex align-items-center gap-15">
                                 <a class="bd-app-btn" href="student-dashboard.html#"><img
-                                        src="assets/images/icon/play-store.webp" alt="play-store"></a>
+                                        src="{% static 'assets/images/icon/play-store.webp' %}" alt="play-store"></a>
                                 <a class="bd-app-btn" href="student-dashboard.html#"><img
-                                        src="assets/images/icon/app-store.webp" alt="app-store"></a>
+                                        src="{% static 'assets/images/icon/app-store.webp' %}" alt="app-store"></a>
                             </div>
                         </div>
                     </div>

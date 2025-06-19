@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>To'lov-kontrakt (Ikki tomonlama)</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            line-height: 1.4;
+            margin: 30px;
+            font-size: 14px;
+            color: #000;
+        }
+        .contract-header {
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        .date-location {
+            text-align: right;
+            margin-bottom: 25px;
+            font-size: 13px;
+        }
+        .section-title {
+            font-weight: bold;
+            font-size: 15px;
+            text-align: center;
+            margin: 20px 0 15px 0;
+            text-transform: uppercase;
+        }
+        .content-block {
+            margin-bottom: 12px;
+            text-align: justify;
+            text-indent: 20px;
+            line-height: 1.5;
+        }
+        .info-section {
+            margin: 15px 0;
+            padding: 12px;
+            text-align: left;
+        }
+        .obligations {
+            margin-left: 0;
+        }
+        .obligations li {
+            margin-bottom: 8px;
+            text-align: justify;
+            line-height: 1.4;
+        }
+        .signature-section {
+            margin-top: 40px;
+            page-break-inside: avoid;
+        }
+        .signatures {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        .signature-block {
+            width: 48%;
+            font-size: 13px;
+        }
+        .signature-line {
+            border-bottom: 1px solid #000;
+            width: 180px;
+            margin: 15px 0 5px 0;
+            display: inline-block;
+        }
+        .bank-details {
+            font-size: 12px;
+            line-height: 1.3;
+            margin: 10px 0;
+        }
+        .qr-section {
+            display: flex;
+            align-items: flex-start;
+            margin-top: 30px;
+            page-break-inside: avoid;
+        }
+        .qr-code {
+            width: 80px;
+            height: 80px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        .qr-text {
+            font-size: 11px;
+            line-height: 1.3;
+        }
+        ul, ol {
+            padding-left: 25px;
+            margin: 8px 0;
+        }
+        li {
+            margin-bottom: 6px;
+            text-align: justify;
+        }
+        .bold {
+            font-weight: bold;
+        }
+        .payment-details {
+            margin-left: 20px;
+            font-size: 13px;
+        }
+        @media print {
+            body { margin: 20px; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="contract-header">
+        To'lov-kontrakt (Ikki tomonlama) asosida mutaxassis tayyorlashga<br>
+        <span class="bold">KONTRAKT № BK{{ SANA|slice:":4" }}{{ SANA|slice:"5:7" }}{{ SANA|slice:"8:10" }}</span>
+    </div>
+
+    <div class="date-location">
+        {{ FILIAL }}, {{ SANA }}
+    </div>
+
+    <div class="content-block">
+        O'zbekiston Respublikasi Prezidentining 2019 yil 17 iyundagi PQ-4359 son Qarori, Vazirlar Mahkamasining 2017 yil 20 iyundagi 393-son Qarori hamda unga 2019 yil 27 apreldagi 360-son Qaror bilan kiritilgan o'zgartirish va qo'shimchalarga, Oliy va o'rta maxsus ta'lim vazirligining 2012 yil 28 dekabrdagi 508-son buyrug'i bilan tasdiqlangan, Adliya vazirligida 2013 yil 26 fevralda 2431-son bilan davlat ro'yxatidan o'tkazilgan "Oliy va o'rta maxsus, kasb-hunar ta'limi muassasalarida o'qitishning to'lov-kontrakt shakli va undan tushgan mablag'larni taqsimlash tartibi to'g'risida"gi Nizomga muvofiq, <span class="bold">Xalqaro innovatsion universitet</span> nodavlat oliy ta'lim muassasasi (keyingi o'rinlarda – Universitet-deb yuritiladi) nomidan ishonchnoma va Ustavga asosan ish yurituvchi rektori <span class="bold">Mallayev Amin Sayfulloyevich</span> bir tomondan, <span class="bold">{{ TALABA_ISMI }}</span> (keyingi o'rinlarda – Talaba), ikkinchi tomondan, birgalikda – "Tomonlar" deb ataladigan shaxslar mazkur shartnomani quyidagi shartlar asosida tuzdilar:
+    </div>
+
+    <div class="section-title">I. SHARTNOMA PREDMETI</div>
+
+    <div class="content-block">
+        <span class="bold">1.1.</span> Ta'lim muassasasi ta'lim xizmatini ko'rsatishni, Ta'lim oluvchi o'qish uchun belgilangan to'lovni o'z vaqtida amalga oshirishni va tasdiqlangan o'quv reja bo'yicha darslarga to'liq qatnashish va ta'lim olishni, Shartnomaning 2-bobida ko'rsatilgan tartib va miqdordagi to'lovni amalga oshirishni o'z zimmalariga oladi. Ta'lim oluvchining ta'lim ma'lumotlari quyidagicha:
+    </div>
+
+    <div class="info-section">
+        <span class="bold">Ta'lim bosqichi:</span> {{ TALIM_DARAJASI }}<br>
+        <span class="bold">Ta'lim shakli:</span> {{ TALIM_SHAKLI }}<br>
+        <span class="bold">O'qish muddati:</span> 4 yil<br>
+        <span class="bold">O'quv kursi:</span> 1-kurs<br>
+        <span class="bold">Ta'lim yo'nalishi:</span> {{ YONALISH }}
+    </div>
+
+    <div class="section-title">II. TO'LOV MIQDORLARI VA MUDDATLARI</div>
+
+    <div class="content-block">
+        <span class="bold">2.1.</span> "Universitet"da o'qish davrida ta'lim xizmatlarini ko'rsatish narxi Respublikada belgilangan Bazaviy hisoblash miqdoriga bog'liq holda hisoblanadi.
+    </div>
+
+    <div class="content-block">
+        <span class="bold">2.2.</span> Ushbu shartnoma bo'yicha ta'lim oluvchini bir yillik o'qitish uchun to'lov <span class="bold">15,000,000.00</span> (o'n besh million) so'mni tashkil etadi va quyidagi muddatlarda amalga oshiriladi:
+    </div>
+
+    <div class="content-block">
+        <span class="bold">Semestrlarga bo'lib to'langanda quyidagi muddatlarda:</span><br>
+        <div class="payment-details">
+            Kuzgi semestr (birinchi yarim yillik): talabalikka tavsiya etilgan abiturientlar uchun 1 oktabrgacha yoki universitet qabul komissiyasi tomonidan belgilangan muddatgacha, ikkinchi va undan yuqori kurs talabalari uchun 1 oktabrgacha;<br><br>
+            Bahorgi semestr (ikkinchi yarim yillik): barcha talabalar uchun 1 martgacha (oyma-oy to'langan hollarda ham).
+        </div>
+    </div>
+
+    <div class="content-block">
+        <span class="bold">Choraklarga bo'lib to'langanda quyidagi muddatlarda:</span><br>
+        <div class="payment-details">
+            Belgilangan to'lov miqdorining kamida 25 foizi talabalikka tavsiya etilgan abiturientlar uchun 1 oktabrgacha yoki Qabul komissiyasi tomonidan belgilangan muddatgacha, ikkinchi va undan yuqori bosqich talabalar uchun 1 oktabrgacha:<br><br>
+            Belgilangan to'lov miqdorining kamida 50 foizini 1 yanvargacha, 75 foizini 1 martgacha va 100 foizini 1 maygacha.
+        </div>
+    </div>
+
+    <div class="content-block">
+        <span class="bold">2.3.</span> Shartnoma bo'yicha o'qitish qiymatini to'lashda to'lov topshiriqnomasida Talaba tomonidan o'zining familiyasi, ismi, sharifi hamda o'qiyotgan kursi to'liq ko'rsatiladi.
+    </div>
+
+    <div class="section-title">III. TOMONLARNING MAJBURIYATLARI</div>
+
+    <div class="content-block">
+        <span class="bold">3.1. Universitetning majburiyatlari:</span>
+    </div>
+    <ul class="obligations">
+        <li>Imtihondan muvaffaqiyatli o'tgan yoki oshirilgan to'lov shartnomasi asosida talabalikka tavsiya etilgan abiturient o'quv yilining birinchi yarmi uchun yoki to'liq to'lovni amalga oshirganidan so'ng uni talabalar safiga qabul qilish.</li>
+        <li>O'qitish uchun O'zbekiston Respublikasining "Ta'lim to'g'risida"gi Qonuniga muvofiq universitet Ustavi va boshqa ichki hujjatlarida nazarda tutilgan zarur shart-sharoitlarni yaratadi;</li>
+        <li>Talabalarning qonun hujjatlarida belgilangan huquqlarining bajarilishini ta'minlaydi;</li>
+        <li>Talabani ta'lim yo'nalishlari bo'yicha tasdiqlangan o'quv reja va dasturlarga muvofiq davlat ta'lim standarti talablari darajasida o'qitadi;</li>
+        <li>Talaba bakalavriat yo'nalishini muvaffaqiyatli tamomlaganda, belgilangan tartibda O'zbekiston Respublikasi davlat va nodavlat tashkilotlarida tan olinadigan davlat namunasidagi diplom beradi;</li>
+        <li>Respublikada belgilangan Mehnatga haq to'lashning eng kam miqdori yoki tariflar o'zgarishi natijasida o'qitish uchun belgilangan to'lov miqdori o'zgargan taqdirda talabaga ta'limning qolgan muddati uchun to'lovchiga xabar berish.</li>
+    </ul>
+
+    <div class="content-block">
+        <span class="bold">3.2. Talabaning majburiyatlari:</span>
+    </div>
+    <ul class="obligations">
+        <li>Talaba joriy o'quv yili uchun belgilangan o'qitish qiymatini Shartnomaning 2-bobida ko'rsatilgan tartib va miqdorda o'z vaqtida to'laydi;</li>
+        <li>Universitet Ustavi va boshqa ichki hujjatlari talablariga qat'iy rioya qiladi;</li>
+        <li>Respublikada belgilangan Mehnatga haq to'lashning eng kam miqdori yoki tariflar o'zgarishi natijasida o'qitish uchun belgilangan to'lov miqdori o'zgargan taqdirda, o'qishning qolgan muddti uchun Universitetga xaq to'lash bo'yicha bir oy muddat ichida shartnomaga qo'shimcha bitim rasmiylashtirish va to'lov farqini to'lash.</li>
+        <li>Talaba o'qitish uchun belgilangan to'loq miqdorini to'laganlik to'g'risidagi bank taqdimnomasi topshirish.</li>
+        <li>Talaba o'quv mashg'ulotlarida muntazam qatnashadi;</li>
+        <li>Talaba universitetda belgilangan tartib va qoidalar asosida ta'lim oladi hamda ushbu jarayonda bilim darajasini oshirib boradi. Qoldirilgan darslar universitet tomonidan qoplab berilmaydi va ushbu darslar uchun qayta hisob-kitob qilinmaydi;</li>
+        <li>Universitet va talabalar turar joyining ichki nizomlari va tartib qoidalariga rioya qilish, professor-o'qituvchi va xodimlarga xurmat bilan qarash, "Universitet" obro'siga putur yetkazadigan harakatlar qilmaslik, moddiy-texnik bazani asrash, ziyon keltirilganda o'rnini qoplash.</li>
+        <li>Talabalikka tavsiya etilgan abiturientlar bilan Shartnomani imzolaganidan keyin uning bir nusxasini va boshqa talab qilingan hujjatlarni universitetga taqdim etadi. Hujjatlar (ushbu shartnomani imzolangan nusxasi, diplom, attestat yoki shahodatnomani asli, belgilangan fotosurat, shaxsni tasdiqlovchi hujjat nusxasi) yoki ularning nusxalarini universitet tomonidan belgilangan muddatda qisman yoki to'liq taqdim etilmasligi talabalikka qabul qilmaslikka asos bo'ladi.</li>
+    </ul>
+
+    <div class="section-title">IV. TOMONLARNING HUQUQLARI</div>
+
+    <div class="content-block">
+        <span class="bold">4.1. Universitetning huquqlari:</span>
+    </div>
+    <ul class="obligations">
+        <li>Talabadan ushbu shartnoma majburiyatlarini bajarilishini, shu jumladan universitetning ichki hujjatlarida belgilangan qoidalarga rioya qilishni, o'quv mashg'ulotlarida muntazam qatnashishni, shartnoma bo'yicha to'lovlarni o'z vaqtida amalga oshirishni talab qilish;</li>
+        <li>Talaba universitetning ichki hujjatlarida belgilangan qoidalarga rioya qilmagan, bir semestr davomida darslarni uzrli sabablarsiz 80 soatdan ortiq qoldirgan yoki o'qitish uchun belgilangan miqdordagi to'lovni o'z vaqtida amalga oshirmagan bo'lsa, universitet talabaga nisbatan belgilangan tartibda talabalar safidan chetlashtirish, tegishli kursda qoldirish yoki boshqa choralarni qo'llash;</li>
+        <li>Talaba universitetning ichki hujjatlarida belgilangan qoidalarni bir marta qo'pol yoki muntazam ravishda buzgan, huquqbuzarlik yoki jinoyat sodir etgan hollarda shartnomani bir tomonlama bekor qilish;</li>
+        <li>Istisno tariqasida shartnoma bo'yicha to'lov muddatlarini uzaytirish (universitetning rektor buyrug'i orqali) mumkin;</li>
+        <li>Shartnomaning 2-bobida ko'rsatilgan tartib va miqdorda o'z vaqtida to'lovni amalga oshirmaganida, talabani barcha imtihon(oraliq va yakuniy) jarayonlariga qo'ymaslik;</li>
+    </ul>
+
+    <div class="content-block">
+        <span class="bold">4.2. Talabaning huquqlari:</span>
+    </div>
+    <ul class="obligations">
+        <li>Universitetdan shartnoma majburiyatlari bajarilishini talab qilish;</li>
+        <li>Universitetda tasdiqlangan o'quv reja va dasturlarga muvofiq ta'lim olish;</li>
+        <li>Universitetning ta'lim jarayonlariga takliflar berish;</li>
+        <li>O'qish uchun to'lov turini mazkur shartnomaning 2-bobga asosan tanlash;</li>
+        <li>Universitet imkon berganda (agar tanlangan filialda belgilangan yo'nalish, ta'lim shakli, ta'lim tilida bo'sh o'rin bo'lsa) universitetning filiali yoki boshqa ta'lim tashkilotlariga o'qishni ko'chirish huquqiga ega.</li>
+    </ul>
+
+    <div class="section-title">V. JAVOBGARLIK VA NIZOLARNI HAL QILISH</div>
+
+    <div class="content-block">
+        <span class="bold">5.1.</span> Tomonlarning biri ushbu shartnoma majburiyatlarini bajarmagan yoki lozim darajada bajarmagan taqdirda boshqa tarafga yetkazilgan zararni ushbu shartnomada va amaldagi qonunchilikda belgilangan tartibda to'laydi.
+    </div>
+
+    <div class="content-block">
+        <span class="bold">5.2.</span> Talaba tomonidan mazkur shartnoma shartlari tegishli tarzda bajarilmasligi natijasida universitetga yetkazilgan zararlarni, universitetga qoplab berishi shart.
+    </div>
+
+    <div class="content-block">
+        <span class="bold">5.3.</span> Tomonlar o'rtasidagi barcha nizolar oldindan muzokaralar yo'li bilan hal qilinadi. Agar o'zaro rozilikka erishilmasa, nizolar O'zbekiston Respublikasi qonunchiligiga va tomonlar kelishuviga asosan sudlarda ko'rib chiqiladi.
+    </div>
+
+    <div class="section-title">VI. YAKUNIY QOIDALAR</div>
+
+    <div class="content-block">
+        <span class="bold">6.1.</span> Ushbu shartnoma ikki tomonlama imzolangandan so'ng kuchga kiradi hamda ta'lim xizmatlarini taqdim etish o'quv yili tugagunga qadar amalda bo'ladi.
+    </div>
+
+    <div class="content-block">
+        <span class="bold">6.2.</span> Shartnoma 2 (ikki) nusxada, tomonlarning har biri uchun bir nusxadan tuzildi va ikkala nusxa ham bir xil huquqiy kuchga ega.
+    </div>
+
+    <div class="section-title">VII. TOMONLARNING REKVIZITLARI VA IMZOLARI</div>
+
+    <div class="signature-section">
+        <div class="signatures">
+            <div class="signature-block">
+                <span class="bold">7.1. Ta'lim muassasasi:</span><br>
+                <span class="bold">Xalqaro innovatsion universitet</span><br><br>
+
+                <div class="bank-details">
+                    <span class="bold">Pochta manzili:</span><br>
+                    Address: {{ FILIAL }}<br>
+                    E-mail: info@xiuedu.uz<br>
+                    Tel.: +998 (95) 406-15-15<br><br>
+
+                    <span class="bold">Bank rekvizitlari:</span><br>
+                    Bank nomi: "Hamkorbank"ATB Qarshi UBXO<br>
+                    H/R: 20208000305068421001<br>
+                    STIR: 306372808<br>
+                    MFO: 00083
+                </div>
+
+                <span class="bold">Ta'lim muassasasi rahbari:</span> <span class="signature-line"></span><br>
+                Mallayev Amin Sayfulloyevich
+            </div>
+
+            <div class="signature-block">
+                <span class="bold">7.2. Ta'lim oluvchi:</span><br><br>
+                <span class="bold">F.I.Sh.:</span> {{ TALABA_ISMI }}<br>
+                <span class="bold">Yashash manzili:</span> _______________<br>
+                <span class="bold">Pasport ma'lumotlari:</span> _______________<br>
+                <span class="bold">Telefon raqami:</span> {{ TELEFON }}<br><br>
+
+                <span class="bold">Ta'lim oluvchining imzosi:</span><br>
+                <span class="signature-line"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="qr-section">
+        {% if QR_CODE_DATA %}
+        <img src="{{ QR_CODE_DATA }}" alt="QR Code" class="qr-code">
+        {% endif %}
+    </div>
+
+</body>
+</html>

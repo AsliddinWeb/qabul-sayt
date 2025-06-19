@@ -1,10 +1,354 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'dashboard/abituriyent/base.html' %}
+{% load static %}
 
-</body>
-</html>
+{% block extra_css %}
+<style>
+    .form-control, .form-select {
+        font-size: 16px;
+    }
+    .form-section {
+        background: #fff;
+        border-radius: 8px;
+        padding: 25px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    .section-title {
+        color: #2c3e50;
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #f8f9fa;
+    }
+    .form-group label {
+        font-weight: 500;
+        color: #495057;
+        margin-bottom: 8px;
+        display: block;
+    }
+    .required-field {
+        color: #dc3545;
+    }
+    .file-upload-info {
+        font-size: 12px;
+        color: #6c757d;
+        margin-top: 5px;
+    }
+    .navigation-buttons {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .navigation-buttons .bd-btn {
+        margin: 0 10px;
+        min-width: 150px;
+    }
+    .alert {
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+</style>
+{% endblock extra_css %}
+
+{% block main_content %}
+<div class="col-xl-9 col-lg-9 col-md-8 order-1 order-xl-2">
+    <div class="bd-dashboard-inner">
+        <div class="bd-dashboard-title-inner mb-3">
+            <h4 class="bd-dashboard-title">
+                {% if is_edit %}
+                    Diplom Ma'lumotlarini Tahrirlash
+                {% else %}
+                    Diplom Ma'lumotlarini Kiritish
+                {% endif %}
+            </h4>
+        </div>
+
+        <!-- Navigation buttons -->
+        <div class="navigation-buttons">
+            <a href="{% url 'dashboard:abituriyent_diplom' %}" class="bd-btn btn-primary">Yangi qabul</a>
+            <a href="{% url 'dashboard:abituriyent_transfer_diplom' %}" class="bd-btn btn-outline-primary">O'qishni ko'chirish</a>
+        </div>
+
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Form -->
+        <form method="post" enctype="multipart/form-data" id="diplomForm">
+            {% csrf_token %}
+
+            <!-- Asosiy ma'lumotlar -->
+            <div class="form-section">
+                <h5 class="section-title">Asosiy Ma'lumotlar</h5>
+                <div class="row gy-20">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.serial_number.id_for_label }}">
+                                {{ form.serial_number.label }} <span class="required-field">*</span>
+                            </label>
+                            {{ form.serial_number }}
+                            {% if form.serial_number.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.serial_number.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.graduation_year.id_for_label }}">
+                                {{ form.graduation_year.label }} <span class="required-field">*</span>
+                            </label>
+                            {{ form.graduation_year }}
+                            {% if form.graduation_year.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.graduation_year.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ta'lim ma'lumotlari -->
+            <div class="form-section">
+                <h5 class="section-title">Ta'lim Ma'lumotlari</h5>
+                <div class="row gy-20">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.education_type.id_for_label }}">
+                                {{ form.education_type.label }} <span class="required-field">*</span>
+                            </label>
+                            {{ form.education_type }}
+                            {% if form.education_type.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.education_type.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.institution_type.id_for_label }}">
+                                {{ form.institution_type.label }} <span class="required-field">*</span>
+                            </label>
+                            {{ form.institution_type }}
+                            {% if form.institution_type.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.institution_type.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="{{ form.university_name.id_for_label }}">
+                                {{ form.university_name.label }} <span class="required-field">*</span>
+                            </label>
+                            {{ form.university_name }}
+                            {% if form.university_name.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.university_name.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Joylashuv ma'lumotlari -->
+            <div class="form-section">
+                <h5 class="section-title">Joylashuv Ma'lumotlari</h5>
+                <div class="row gy-20">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.region.id_for_label }}">
+                                {{ form.region.label }} <span class="required-field">*</span>
+                            </label>
+                            {{ form.region }}
+                            {% if form.region.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.region.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.district.id_for_label }}">
+                                {{ form.district.label }} <span class="required-field">*</span>
+                            </label>
+                            {{ form.district }}
+                            {% if form.district.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.district.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fayl yuklash -->
+            <div class="form-section">
+                <h5 class="section-title">Diplom Fayli</h5>
+                <div class="row gy-20">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="{{ form.diploma_file.id_for_label }}">
+                                {{ form.diploma_file.label }} <span class="required-field">*</span>
+                            </label>
+                            {{ form.diploma_file }}
+                            <div class="file-upload-info">
+                                PDF, JPG, JPEG, PNG formatlarida fayl yuklash mumkin. Maksimal hajm: 5MB
+                            </div>
+                            {% if form.diploma_file.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.diploma_file.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% if diplom and diplom.diploma_file %}
+                                <div class="mt-2">
+                                    <small class="text-success">
+                                        Mavjud fayl: <a href="{{ diplom.diploma_file.url }}" target="_blank">Ko'rish</a>
+                                    </small>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit button -->
+            <div class="form-section">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <button type="submit" class="bd-btn btn-primary" id="submitBtn">
+                            {% if is_edit %}
+                                <i class="fas fa-save me-2"></i>O'zgarishlarni Saqlash
+                            {% else %}
+                                <i class="fas fa-plus me-2"></i>Ma'lumotlarni Saqlash
+                            {% endif %}
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock main_content %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Region o'zgarsa district larni yangilash
+    $('#id_region').on('change', function() {
+        var regionId = $(this).val();
+        var districtSelect = $('#id_district');
+
+        // District ni tozalash
+        districtSelect.empty();
+        districtSelect.append('<option value="">Tumanni tanlang</option>');
+
+        if (regionId) {
+            $.ajax({
+                url: '{% url "dashboard:abituriyent_load_districts" %}',
+                data: {
+                    'region_id': regionId
+                },
+                success: function(data) {
+                    $.each(data.districts, function(index, district) {
+                        districtSelect.append('<option value="' + district.id + '">' + district.name + '</option>');
+                    });
+                },
+                error: function() {
+                    console.log('Tumanlarni yuklashda xatolik yuz berdi');
+                }
+            });
+        }
+    });
+
+    // Form validation
+    $('#diplomForm').on('submit', function(e) {
+        var isValid = true;
+        var submitBtn = $('#submitBtn');
+
+        // Required field larni tekshirish
+        $(this).find('input[required], select[required], textarea[required]').each(function() {
+            if (!$(this).val().trim()) {
+                isValid = false;
+                $(this).addClass('is-invalid');
+            } else {
+                $(this).removeClass('is-invalid');
+            }
+        });
+
+        if (!isValid) {
+            e.preventDefault();
+            alert('Iltimos, barcha majburiy maydonlarni to\'ldiring!');
+            return false;
+        }
+
+        // Loading state
+        submitBtn.prop('disabled', true);
+        submitBtn.html('<i class="fas fa-spinner fa-spin me-2"></i>Saqlanmoqda...');
+
+        // 30 soniyadan keyin buttonni qayta faollashtirish
+        setTimeout(function() {
+            submitBtn.prop('disabled', false);
+            submitBtn.html('{% if is_edit %}<i class="fas fa-save me-2"></i>O\'zgarishlarni Saqlash{% else %}<i class="fas fa-plus me-2"></i>Ma\'lumotlarni Saqlash{% endif %}');
+        }, 30000);
+    });
+
+    // File upload validation
+    $('#id_diploma_file').on('change', function() {
+        var file = this.files[0];
+        if (file) {
+            var fileSize = file.size / 1024 / 1024; // MB
+            var allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+
+            if (fileSize > 5) {
+                alert('Fayl hajmi 5MB dan katta bo\'lmasligi kerak!');
+                $(this).val('');
+                return;
+            }
+
+            if (!allowedTypes.includes(file.type)) {
+                alert('Faqat PDF, JPG, JPEG, PNG formatlaridagi fayllar qabul qilinadi!');
+                $(this).val('');
+                return;
+            }
+        }
+    });
+
+    // Auto-hide alerts after 5 seconds
+    setTimeout(function() {
+        $('.alert').fadeOut('slow');
+    }, 5000);
+});
+</script>
+{% endblock extra_js %}

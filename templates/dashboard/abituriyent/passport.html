@@ -182,7 +182,7 @@
 {% endblock extra_css %}
 
 {% block main_content %}
-<div class="col-xl-9 col-lg-9 col-md-8">
+<div class="col-xl-9 col-lg-9 col-md-8 order-1 order-xl-2">
     <div class="bd-dashboard-inner">
         <div class="bd-dashboard-title-inner mb-3">
             <h4 class="bd-dashboard-title">Passport Ma'lumotlari</h4>
@@ -706,7 +706,7 @@
                     if (data.success) {
                         showAlert(data.message || 'Ma\'lumotlar saqlandi!', 'success');
                         setTimeout(() => {
-                            window.location.reload();
+                            window.location.href = '{% url "dashboard:abituriyent_diplom" %}';
                         }, 2000);
                     } else {
                         showAlert(data.error || 'Saqlashda xatolik yuz berdi', 'danger');

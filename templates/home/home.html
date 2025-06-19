@@ -26,6 +26,191 @@
     <link rel="stylesheet" href="{% static 'assets/css/main.css' %}">
 
     {% block extra_css %}{% endblock %}
+    <!-- Optimized CSS -->
+    <style>
+        .course-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .course-info-item {
+            font-size: 13px;
+            color: #666;
+            display: flex;
+            align-items: center;
+        }
+
+        .course-info-item i {
+            margin-right: 5px;
+            width: 12px;
+            color: #07A169;
+        }
+
+        .bd-course-content-bottom {
+            padding-top: 15px;
+        }
+
+        .default-course-image {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .default-course-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+        }
+
+        .empty-state {
+            padding: 40px 20px;
+            border: 2px dashed #dee2e6;
+            border-radius: 12px;
+            background: #f8f9fa;
+        }
+
+        @media (max-width: 768px) {
+            .course-item {
+                justify-content: center !important;
+            }
+
+            .filter-item {
+                flex: 1;
+                min-width: auto;
+                font-size: 14px;
+                padding: 8px 12px;
+            }
+
+            .course-info-grid {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+
+            .bd-program-btn {
+                margin-top: 40px !important;
+            }
+        }
+
+        /* Filter Animation */
+        .grid-item {
+            transition: all 0.3s ease;
+        }
+
+        .filter-item {
+            transition: all 0.2s ease;
+        }
+
+        .filter-item:hover {
+            transform: translateY(-1px);
+        }
+
+
+.partner-benefits .benefit-item {
+    font-size: 14px;
+    color: #666;
+    transition: color 0.3s ease;
+}
+
+.partner-benefits .benefit-item:hover {
+    color: #333;
+}
+
+.bd-brand-item {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.bd-brand-item:hover {
+    transform: translateY(-5px);
+}
+
+.partner-info {
+    position: absolute;
+    bottom: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-align: center;
+    opacity: 0;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    font-size: 12px;
+    z-index: 10;
+}
+
+.bd-brand-item:hover .partner-info {
+    opacity: 1;
+    bottom: -40px;
+}
+
+.partner-name {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.partner-type {
+    display: block;
+    font-size: 10px;
+    opacity: 0.8;
+}
+
+.partner-categories {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.category-item {
+    padding: 10px 0;
+}
+
+.category-number {
+    margin-bottom: 5px;
+}
+
+.category-label {
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+@media (max-width: 768px) {
+    .bd-section-title {
+        font-size: 24px;
+    }
+
+    .partner-categories {
+        margin-top: 30px;
+    }
+
+    .category-number {
+        font-size: 18px;
+    }
+
+    .benefit-item {
+        font-size: 13px;
+    }
+}
+
+/* Responsive grid for partner logos */
+@media (max-width: 576px) {
+    .bd-brand-box {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+}
+    </style>
 </head>
 
 <body>
@@ -84,10 +269,10 @@
                 <div class="bd-header-menu">
                     <nav class="main-menu bd-mobile-menu-active d-none d-xl-block">
                         <ul>
-                            <li><a class="active" href="index.html">Bosh sahifa</a></li>
-                            <li><a href="index.html">Universitet haqida</a></li>
-                            <li><a href="index.html">Yo'nalishlar</a></li>
-                            <li><a href="index.html">Bog'lanish</a></li>
+                            <li><a class="active" href="/">Bosh sahifa</a></li>
+                            <li><a href="/">Universitet haqida</a></li>
+                            <li><a href="/#programs">Yo'nalishlar</a></li>
+                            <li><a href="/">Bog'lanish</a></li>
                         </ul>
 
                     </nav>
@@ -133,7 +318,7 @@
             <div class="bd-offcanvas-content">
                 <div class="bd-offcanvas-top d-flex justify-content-between align-items-center mb-30">
                     <div class="bd-offcanvas-logo">
-                        <a href="index.html">
+                        <a href="/">
                             <img src="{% static 'assets/images/logo/logo.svg' %}" alt="logo">
                         </a>
                     </div>
@@ -338,64 +523,33 @@
                 <div class="col-xl-4 col-lg-4 col-md-6">
                     <div class="bd-feature-wrapper style-one wow bdFadeInUp">
                         <div class="bd-feature-item">
-                                <span class="icon"><svg width="49" height="49" viewBox="0 0 49 49" fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg">
-                              <path d="M22.5 30.5H26.5" stroke="#07A169" stroke-width="3" stroke-linecap="round"
-                                    stroke-linejoin="round"/>
-                              <path d="M24.5 36.5V44.5" stroke="#07A169" stroke-width="3"/>
-                              <path d="M16.5 44.5H32.5" stroke="#07A169" stroke-width="3" stroke-linecap="round"/>
-                              <path
-                                      d="M18.5 4.5C13.2491 4.5167 10.413 4.67256 8.33782 6.12562C7.47782 6.7278 6.7298 7.4758 6.12764 8.3358C4.5 10.6604 4.5 13.9396 4.5 20.498C4.5 27.0565 4.5 30.3357 6.12764 32.6603C6.7298 33.5203 7.47782 34.2682 8.33782 34.8704C10.6623 36.498 13.9415 36.4981 20.5 36.4981H28.5C35.0584 36.4981 38.3376 36.498 40.6622 34.8704C41.5222 34.2682 42.2702 33.5203 42.8724 32.6603C44.3254 30.5851 44.4812 27.7489 44.498 22.4981"
-                                      stroke="#07A169" stroke-width="3" stroke-linecap="round"/>
-                              <path
-                                      d="M39.5 8.79262L39.626 8.70172C41.7416 7.1742 42.7996 6.41044 43.6498 6.77922C44.5 7.148 44.5 8.3706 44.5 10.8158V12.1842C44.5 14.6294 44.5 15.852 43.6498 16.2208C42.7996 16.5896 41.7416 15.8258 39.626 14.2983L39.5 14.2074M31.5 18.5H32.5C35.7998 18.5 37.4498 18.5 38.4748 17.603C39.5 16.706 39.5 15.2624 39.5 12.375V10.625C39.5 7.73764 39.5 6.29398 38.4748 5.39698C37.4498 4.5 35.7998 4.5 32.5 4.5H31.5C28.2002 4.5 26.5502 4.5 25.5252 5.39698C24.5 6.29398 24.5 7.73764 24.5 10.625V12.375C24.5 15.2624 24.5 16.706 25.5252 17.603C26.5502 18.5 28.2002 18.5 31.5 18.5Z"
-                                      stroke="#FFB800" stroke-width="3" stroke-linecap="round"/>
-                           </svg>
+                        <span class="icon">
+                            <i class="fa-duotone fa-file-circle-plus"
+                               style="font-size: 48px; --fa-primary-color: #07A169; --fa-secondary-color: #FFB800;"></i>
                         </span>
-                            <p class="description">24,000 dan ortiq video kurslar orqali tajriba to'plang.</p>
+                            <p class="description">Onlayn ariza tizimi orqali oson va tez hujjat topshiring.</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-xl-4 col-lg-4 col-md-6">
                     <div class="bd-feature-wrapper style-one wow bdFadeInUp">
                         <div class="bd-feature-item">
-                                <span class="icon"><svg width="49" height="49" viewBox="0 0 49 49" fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg">
-                              <path d="M24.5 44.5L20.5 32.5H4.5L8.5 44.5H24.5ZM24.5 44.5H32.5" stroke="#07A169"
-                                    stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                              <path
-                                      d="M24.5 26.5V25.5C24.5 21.7288 24.5 19.8431 23.3284 18.6716C22.1568 17.5 20.2712 17.5 16.5 17.5C12.7288 17.5 10.8431 17.5 9.67158 18.6716C8.5 19.8431 8.5 21.7288 8.5 25.5V26.5"
-                                      stroke="#07A169" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                              <path
-                                      d="M38.5 26.5C38.5 28.7092 36.7092 30.5 34.5 30.5C32.2908 30.5 30.5 28.7092 30.5 26.5C30.5 24.2908 32.2908 22.5 34.5 22.5C36.7092 22.5 38.5 24.2908 38.5 26.5Z"
-                                      stroke="#FFB800" stroke-width="3"/>
-                              <path
-                                      d="M20.5 8.5C20.5 10.7091 18.7091 12.5 16.5 12.5C14.2909 12.5 12.5 10.7091 12.5 8.5C12.5 6.29086 14.2909 4.5 16.5 4.5C18.7091 4.5 20.5 6.29086 20.5 8.5Z"
-                                      stroke="#07A169" stroke-width="3"/>
-                              <path
-                                      d="M28.5 35.5H40.5C42.7092 35.5 44.5 37.2908 44.5 39.5V40.5C44.5 42.7092 42.7092 44.5 40.5 44.5H38.5"
-                                      stroke="#FFB800" stroke-width="3" stroke-linecap="round"/>
-                           </svg>
+                        <span class="icon">
+                            <i class="fa-duotone fa-graduation-cap"
+                               style="font-size: 48px; --fa-primary-color: #07A169; --fa-secondary-color: #FFB800;"></i>
                         </span>
-                            <p class="description">Soha mutaxassislari tomonidan o'qitiladigan kurslardan o'rganing.</p>
+                            <p class="description">Malakali professor-o'qituvchilar va zamonaviy ta'lim dasturlari.</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-xl-4 col-lg-4 col-md-6">
                     <div class="bd-feature-wrapper style-one wow bdFadeInUp">
                         <div class="bd-feature-item">
-                                <span class="icon"><svg width="49" height="49" viewBox="0 0 49 49" fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg">
-                              <path
-                                      d="M34 31.5V28C34 26.067 35.567 24.5 37.5 24.5C38.6562 24.5 39.6814 25.0606 40.3188 25.9248M44.5 37C44.5 34.6544 44.5 33.4816 43.88 32.6738C43.7204 32.4658 43.5342 32.2796 43.3262 32.12C42.5184 31.5 41.3456 31.5 39 31.5H36C33.6544 31.5 32.4816 31.5 31.6738 32.12C31.4658 32.2796 31.2796 32.4658 31.12 32.6738C30.5 33.4816 30.5 34.6544 30.5 37C30.5 39.3456 30.5 40.5184 31.12 41.3262C31.2796 41.5342 31.4658 41.7204 31.6738 41.88C32.4816 42.5 33.6544 42.5 36 42.5H39C41.3456 42.5 42.5184 42.5 43.3262 41.88C43.5342 41.7204 43.7204 41.5342 43.88 41.3262C44.5 40.5184 44.5 39.3456 44.5 37Z"
-                                      stroke="#07A169" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                              <path
-                                      d="M24.5054 42.5C15.0748 42.5 10.3595 42.5 7.42974 39.571C4.5 36.6422 4.5 31.928 4.5 22.5V16.3885C4.5 12.7556 4.5 10.9391 5.26084 9.57612C5.8032 8.60454 6.6051 7.80284 7.57696 7.26064C8.94034 6.5 10.7573 6.5 14.3912 6.5C16.7194 6.5 17.8834 6.5 18.9024 6.88202C21.229 7.75424 22.1884 9.86716 23.2382 11.9663L24.5054 14.5M16.5033 14.5H34.008C38.2226 14.5 40.3298 14.5 41.8436 15.5112C42.499 15.9489 43.0616 16.5114 43.4994 17.1666C44.2874 18.3456 44.4616 19.8849 44.5 22.5"
-                                      stroke="#FFB800" stroke-width="3" stroke-linecap="round"/>
-                           </svg>
+                        <span class="icon">
+                            <i class="fa-duotone fa-shield-check"
+                               style="font-size: 48px; --fa-primary-color: #07A169; --fa-secondary-color: #FFB800;"></i>
                         </span>
-                            <p class="description">Istalgan vaqtda, istalgan joyda, har qanday qurilmada cheksiz kirish
-                                imkoniyati.</p>
+                            <p class="description">Xavfsiz va ishonchli qabul jarayoni, shaffof baholash tizimi.</p>
                         </div>
                     </div>
                 </div>
@@ -405,250 +559,132 @@
     <!-- feature area end -->
 
     <!-- program area start -->
-    <section class="bd-program-area section-space">
+    <section class="bd-program-area section-space" id="programs">
         <div class="container">
             <div class="row gy-30 justify-content-between align-items-center section-title-space">
                 <div class="col-xxl-6 col-xl-6 col-lg-6">
                     <div class="bd-section-title-wrapper">
-                        <span class="bd-section-subtitle">Yetakchi dasturlar</span>
-                        <h2 class="bd-section-title">Top universitet <span class="down-mark-line">dasturlari</span>
-                        </h2>
+                        <span class="bd-section-subtitle">Ta'lim yo'nalishlari</span>
+                        <h2 class="bd-section-title">Bizning <span class="down-mark-line">yo'nalishlar</span>
+                            </h2>
                     </div>
                 </div>
-                <div class="col-xxl-5 col-xl-6 col-lg-6">
+                <div class="col-xxl-6 col-xl-6 col-lg-6">
                     <div class="course-item text-center d-flex flex-wrap gap-15 justify-content-lg-end justify-content-start">
-                        <button class="filter-item bd-btn btn-outline-primary active" data-filter=".cat1">Bakalavr
+                        {% for level in education_levels %}
+                        <button class="filter-item bd-btn btn-outline-primary {% if forloop.first %}active{% endif %}"
+                                data-filter=".cat{{ forloop.counter }}">
+                            {{ level.name }}
                         </button>
-                        <button class="filter-item bd-btn btn-outline-primary" data-filter=".cat2">Magistr</button>
-                        <button class="filter-item bd-btn btn-outline-primary" data-filter=".cat3">Doktorantura</button>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
+
             <div class="row g-30 grid">
-                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 grid-item cat1">
+                {% for level in education_levels %}
+                <!-- {{ level.name }} yo'nalishlari -->
+                {% for program in featured_programs %}
+                {% if program.education_level.id == level.id %}
+                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 grid-item cat{{ forloop.parentloop.counter }}"
+                     {% if not forloop.parentloop.first %}style="display: none;" {% endif %}>
                     <div class="bd-course-wrapper style-six">
-                        <a href="program-details.html"
-                           class="bd-course-thumb-wrapper bd-course-thumb-style-two p-relative">
+                        <a href="#" class="bd-course-thumb-wrapper bd-course-thumb-style-two p-relative">
                             <div class="bd-course-thumb">
-                                <img src="{% static 'assets/images/course/course-thumb-1.webp' %}" alt="rasm">
+                                {% if program.image %}
+                                <img src="{{ program.image.url }}" alt="{{ program.name }}">
+                                {% else %}
+                                <div class="default-course-image d-flex align-items-center justify-content-center"
+                                     style="height: 200px; background: linear-gradient(135deg, #07A169, #05784a);">
+                                    <i class="fa-light fa-graduation-cap fa-3x text-white"></i>
+                                </div>
+                                {% endif %}
                             </div>
-                            <div class="bd-course-shape"><img
-                                    src="{% static 'assets/images/course/course-shape-1.webp' %}" alt="shakl"></div>
-                            <div class="bd-course-logo"><img src="{% static 'assets/images/course/csc.webp' %}"
-                                                             alt="logo"></div>
+                            <div class="bd-course-shape">
+                                <img src="{% static 'assets/images/course/course-shape-1.webp' %}" alt="shakl">
+                            </div>
+                            <div class="bd-course-logo">
+                                <div class="logo-placeholder text-white d-flex align-items-center justify-content-center"
+                                     style="width: 50px; height: 50px; border-radius: 50%; font-weight: bold; font-size: 12px;
+                                                    background: {% cycle 'linear-gradient(45deg, #007bff, #0056b3)' 'linear-gradient(45deg, #28a745, #1e7e34)' 'linear-gradient(45deg, #ffc107, #e0a800)' %};">
+                                    {{ program.study_duration|slice:":6"|upper }}
+                                </div>
+                            </div>
                             <div class="bd-course-badge">
-                                <span class="bd-badge badge-primary">TO'LIQ VAQT</span>
+                                        <span class="bd-badge {% cycle 'badge-primary' 'badge-success' 'badge-warning' %}">
+                                            {{ program.education_form.name }}
+                                        </span>
                             </div>
                         </a>
                         <div class="bd-course-content">
-                            <h5 class="bd-course-title underline mb-15"><a href="program-details.html">Kompyuter fanlari
-                                bo'yicha bakalavr</a></h5>
-                            <div class="bd-course-content-body">
-                                <p>Texnologiya kelajagini boshqarish uchun dasturlash, algoritmlar va hisoblash
-                                    nazariyasini o'rganing.</p>
-                            </div>
+                            <h5 class="bd-course-title underline mb-15">
+                                <a href="#" title="{{ program.name }}">
+                                    {% if program.name|length > 50 %}
+                                    {{ program.name|truncatechars:47 }}
+                                    {% else %}
+                                    {{ program.name }}
+                                    {% endif %}
+                                </a>
+                            </h5>
                             <div class="bd-course-divider"></div>
-                            <div class="bd-course-content-bottom d-flex-between flex-wrap gap-15">
-                                <div class="bd-course-lesson">
-                                    <span><i class="fa-light fa-clock"></i> 4 yil</span>
+                            <div class="bd-course-content-bottom">
+                                <div class="course-info-grid mb-3">
+                                    <div class="course-info-item">
+                                        <span><i class="fa-light fa-clock"></i> {{ program.study_duration }}</span>
+                                    </div>
+                                    <div class="course-info-item">
+                                        <span><i
+                                                class="fa-light fa-map-marker-alt"></i> {{ program.branch.name }}</span>
+                                    </div>
+                                    <div class="course-info-item">
+                                        <span><i class="fa-light fa-money-bill"></i> {{ program.tuition_fee }}</span>
+                                    </div>
+                                    <div class="course-info-item">
+                                        <span><i class="fa-light fa-graduation-cap"></i> {{ program.education_form.name }}</span>
+                                    </div>
                                 </div>
-                                <div class="bd-course-lesson">
-                                    <span><i class="fa-sharp fa-solid fa-list"></i> 12 kredit</span>
+                                <div class="text-center">
+                                    <a class="bd-btn btn-outline-primary w-100" href="{% url 'users:phone_auth' %}">
+                                        <i class="fa-light fa-paper-plane me-2"></i>Ariza topshiring
+                                    </a>
                                 </div>
-                                <a class="bd-btn btn-outline-primary" href="program-details.html">Hoziroq ariza
-                                    topshiring</a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 grid-item cat1">
-                    <div class="bd-course-wrapper style-six">
-                        <a href="program-details.html"
-                           class="bd-course-thumb-wrapper bd-course-thumb-style-two p-relative">
-                            <div class="bd-course-thumb">
-                                <img src="{% static 'assets/images/course/course-thumb-2.webp' %}" alt="rasm">
-                            </div>
-                            <div class="bd-course-shape"><img
-                                    src="{% static 'assets/images/course/course-shape-2.webp' %}" alt="shakl"></div>
-                            <div class="bd-course-logo"><img src="{% static 'assets/images/course/bap.webp' %}"
-                                                             alt="logo"></div>
-                            <div class="bd-course-badge">
-                                <span class="bd-badge badge-primary">YARIM VAQT</span>
-                            </div>
-                        </a>
-                        <div class="bd-course-content">
-                            <h5 class="bd-course-title underline mb-15"><a href="program-details.html">Psixologiya
-                                bo'yicha san'at bakalavri</a></h5>
-                            <div class="bd-course-content-body">
-                                <p>Psixologiyaning keng qamrovli o'rganishi orqali insoniy xatti-harakatlar va aqliy
-                                    jarayonlarni tushunish.</p>
-                            </div>
-                            <div class="bd-course-divider"></div>
-                            <div class="bd-course-content-bottom d-flex-between flex-wrap gap-15">
-                                <div class="bd-course-lesson">
-                                    <span><i class="fa-light fa-clock"></i> 3 yil</span>
-                                </div>
-                                <div class="bd-course-lesson">
-                                    <span><i class="fa-sharp fa-solid fa-list"></i> 10 kredit</span>
-                                </div>
-                                <a class="bd-btn btn-outline-primary" href="program-details.html">Hoziroq ariza
-                                    topshiring</a>
-                            </div>
-                        </div>
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
+
+                <!-- Agar hech qanday yo'nalish yo'q bo'lsa -->
+                {% if not featured_programs %}
+                <div class="col-12 text-center py-5">
+                    <div class="empty-state">
+                        <i class="fa-light fa-graduation-cap fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Yo'nalishlar hozircha mavjud emas</h5>
+                        <p class="text-muted">Tez orada yangi yo'nalishlar qo'shiladi.</p>
                     </div>
                 </div>
-                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 grid-item cat1">
-                    <div class="bd-course-wrapper style-six">
-                        <a href="program-details.html"
-                           class="bd-course-thumb-wrapper bd-course-thumb-style-two p-relative">
-                            <div class="bd-course-thumb">
-                                <img src="{% static 'assets/images/course/course-thumb-3.webp' %}" alt="rasm">
-                            </div>
-                            <div class="bd-course-shape"><img
-                                    src="{% static 'assets/images/course/course-shape-3.webp' %}" alt="shakl"></div>
-                            <div class="bd-course-logo"><img src="{% static 'assets/images/course/bba.webp' %}"
-                                                             alt="logo"></div>
-                            <div class="bd-course-badge">
-                                <span class="bd-badge badge-primary">ONLAYN</span>
-                            </div>
-                        </a>
-                        <div class="bd-course-content">
-                            <h5 class="bd-course-title underline mb-15"><a href="program-details.html">Biznes boshqaruvi
-                                bakalavri</a></h5>
-                            <div class="bd-course-content-body">
-                                <p>Dinamik bozor uchun ilg'or biznes strategiyalari va boshqaruv ko'nikmalari bilan
-                                    o'zingizni jihozlang.</p>
-                            </div>
-                            <div class="bd-course-divider"></div>
-                            <div class="bd-course-content-bottom d-flex-between flex-wrap gap-15">
-                                <div class="bd-course-lesson">
-                                    <span><i class="fa-light fa-clock"></i> 2 yil</span>
-                                </div>
-                                <div class="bd-course-lesson">
-                                    <span><i class="fa-sharp fa-solid fa-list"></i> 15 kredit</span>
-                                </div>
-                                <a class="bd-btn btn-outline-primary" href="program-details.html">Hoziroq ariza
-                                    topshiring</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 grid-item cat2">
-                    <div class="bd-course-wrapper style-six">
-                        <a href="program-details.html"
-                           class="bd-course-thumb-wrapper bd-course-thumb-style-two p-relative">
-                            <div class="bd-course-thumb">
-                                <img src="{% static 'assets/images/course/course-thumb-4.webp' %}" alt="rasm">
-                            </div>
-                            <div class="bd-course-shape"><img
-                                    src="{% static 'assets/images/course/course-shape-4.webp' %}" alt="shakl"></div>
-                            <div class="bd-course-logo"><img src="{% static 'assets/images/course/mscds.webp' %}"
-                                                             alt="logo"></div>
-                            <div class="bd-course-badge">
-                                <span class="bd-badge badge-primary">TO'LIQ VAQT</span>
-                            </div>
-                        </a>
-                        <div class="bd-course-content">
-                            <h5 class="bd-course-title underline mb-15"><a href="program-details.html">Ma'lumotlar fani
-                                bo'yicha fan magistri</a></h5>
-                            <div class="bd-course-content-body">
-                                <p>Ma'lumotlarga asoslangan sohalarda tushunchalarni ochish uchun statistik usullar,
-                                    mashinani o'rganish va katta ma'lumotlar tahlilini o'zlashtirishishing.</p>
-                            </div>
-                            <div class="bd-course-divider"></div>
-                            <div class="bd-course-content-bottom d-flex-between flex-wrap gap-15">
-                                <div class="bd-course-lesson">
-                                    <span><i class="fa-light fa-clock"></i> 2 yil</span>
-                                </div>
-                                <div class="bd-course-lesson">
-                                    <span><i class="fa-sharp fa-solid fa-list"></i> 16 kredit</span>
-                                </div>
-                                <a class="bd-btn btn-outline-primary" href="program-details.html">Hoziroq ariza
-                                    topshiring</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 grid-item cat2">
-                    <div class="bd-course-wrapper style-six">
-                        <a href="program-details.html"
-                           class="bd-course-thumb-wrapper bd-course-thumb-style-two p-relative">
-                            <div class="bd-course-thumb">
-                                <img src="{% static 'assets/images/course/course-thumb-5.webp' %}" alt="rasm">
-                            </div>
-                            <div class="bd-course-shape"><img
-                                    src="{% static 'assets/images/course/course-shape-5.webp' %}" alt="shakl"></div>
-                            <div class="bd-course-logo"><img src="{% static 'assets/images/course/mph.webp' %}"
-                                                             alt="logo"></div>
-                            <div class="bd-course-badge">
-                                <span class="bd-badge badge-primary">YARIM VAQT</span>
-                            </div>
-                        </a>
-                        <div class="bd-course-content">
-                            <h5 class="bd-course-title underline mb-15"><a href="program-details.html">Jamoat
-                                salomatligi magistri (MPH)</a></h5>
-                            <div class="bd-course-content-body">
-                                <p>Global sog'liqni saqlash muammolarini hal qilish va jamoat salomatligi strategiyalari
-                                    orqali jamiyat farovonligini yaxshilash uchun ko'nikmalar rivojlantiring.</p>
-                            </div>
-                            <div class="bd-course-divider"></div>
-                            <div class="bd-course-content-bottom d-flex-between flex-wrap gap-15">
-                                <div class="bd-course-lesson">
-                                    <span><i class="fa-light fa-clock"></i> 2 yil</span>
-                                </div>
-                                <div class="bd-course-lesson">
-                                    <span><i class="fa-sharp fa-solid fa-list"></i> 14 kredit</span>
-                                </div>
-                                <a class="bd-btn btn-outline-primary" href="program-details.html">Hoziroq ariza
-                                    topshiring</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 grid-item cat3">
-                    <div class="bd-course-wrapper style-six">
-                        <a href="program-details.html"
-                           class="bd-course-thumb-wrapper bd-course-thumb-style-two p-relative">
-                            <div class="bd-course-thumb">
-                                <img src="{% static 'assets/images/course/course-thumb-6.webp' %}" alt="rasm">
-                            </div>
-                            <div class="bd-course-shape"><img
-                                    src="{% static 'assets/images/course/course-shape-6.webp' %}" alt="shakl"></div>
-                            <div class="bd-course-logo"><img src="{% static 'assets/images/course/ai.webp' %}"
-                                                             alt="logo"></div>
-                            <div class="bd-course-badge">
-                                <span class="bd-badge badge-primary">TADQIQOT</span>
-                            </div>
-                        </a>
-                        <div class="bd-course-content">
-                            <h5 class="bd-course-title underline mb-15"><a href="program-details.html">Sun'iy intellekt
-                                bo'yicha PhD</a></h5>
-                            <div class="bd-course-content-body">
-                                <p>Texnologiya va innovatsiya chegaralarini kengaytirish uchun AI, mashinani o'rganish
-                                    va chuqur o'rganish bo'yicha pioner tadqiqotlar o'tkazing.</p>
-                            </div>
-                            <div class="bd-course-divider"></div>
-                            <div class="bd-course-content-bottom d-flex-between flex-wrap gap-15">
-                                <div class="bd-course-lesson">
-                                    <span><i class="fa-light fa-clock"></i> 5 yil</span>
-                                </div>
-                                <div class="bd-course-lesson">
-                                    <span><i class="fa-sharp fa-solid fa-list"></i> 20 kredit</span>
-                                </div>
-                                <a class="bd-btn btn-outline-primary" href="program-details.html">Hoziroq ariza
-                                    topshiring</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {% endif %}
             </div>
-            <div class="bd-program-btn d-flex justify-content-center mt-50">
-                <a class="bd-btn btn-primary" href="courses-grid-two.html">Ko'proq universitet dasturlarini
-                    o'rganish</a>
+
+            <!-- Button with proper spacing -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="bd-program-btn d-flex justify-content-center"
+                         style="margin-top: 60px; padding-top: 20px;">
+                        <a class="bd-btn btn-primary btn-lg" href="{% url 'users:phone_auth' %}">
+                            <i class="fa-light fa-search me-2"></i>Barcha yo'nalishlarni ko'rish
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
+
+
     <!-- program area end -->
+
 
     <!-- about area start -->
     <section class="bd-about-area section-space-top pb-200 primary-bg">
@@ -686,37 +722,37 @@
                         <div class="bd-counter-item">
                             <div class="bd-counter-content">
                                 <h2 class="bd-counter-title"><span data-purecounter-duration="1"
-                                                                   data-purecounter-end="1009"
+                                                                   data-purecounter-end="20"
                                                                    class="purecounter">0</span>+
                                 </h2>
-                                <p>Mavjud kurslar</p>
+                                <p>Yo'nalishlar</p>
                             </div>
                         </div>
                         <div class="bd-counter-item">
                             <div class="bd-counter-content">
                                 <h2 class="bd-counter-title"><span data-purecounter-duration="1"
-                                                                   data-purecounter-end="9313"
+                                                                   data-purecounter-end="5000"
                                                                    class="purecounter">0</span>+
                                 </h2>
-                                <p>Faol o'quvchilar</p>
+                                <p>Talabalar</p>
                             </div>
                         </div>
                         <div class="bd-counter-item">
                             <div class="bd-counter-content">
                                 <h2 class="bd-counter-title"><span data-purecounter-duration="1"
-                                                                   data-purecounter-end="2015"
+                                                                   data-purecounter-end="100"
                                                                    class="purecounter">0</span>+
                                 </h2>
-                                <p>Malakali o'qituvchilar</p>
+                                <p>O'qituvchilar</p>
                             </div>
                         </div>
                         <div class="bd-counter-item">
                             <div class="bd-counter-content">
                                 <h2 class="bd-counter-title"><span data-purecounter-duration="1"
-                                                                   data-purecounter-end="1105"
+                                                                   data-purecounter-end="3"
                                                                    class="purecounter">0</span>+
                                 </h2>
-                                <p>Olingan mukofotlar</p>
+                                <p>Oliy ta'limda tajriba</p>
                             </div>
                         </div>
                     </div>
@@ -746,47 +782,36 @@
             <div class="row gy-30">
                 <div class="col-xl-5 col-lg-5 col-md-12">
                     <div class="bd-section-title-wrapper">
-                        <h2 class="bd-section-title mb-20">Bizning <span class="down-mark-line">Global</span> Hurmatli
-                            Hamkorlarimiz</h2>
-                        <p class="bd-section-paragraph">Global hamkorlar har doim o'zingiz xohlagan tarzda, o'zingiz
-                            xohlagan kursni nashr etish imkoniyatini beradi va nazoratni saqlaydi.</p>
-                        <p class="bd-section-paragraph">Butun dunyo bo'ylab <span
-                                class="text-primary fs-18 fw-6">9,500</span>+ bizneslar va talabalar</p>
+                        <h2 class="bd-section-title mb-20">Bizning <span class="down-mark-line">Hamkorlarimiz</span></h2>
+                        <p class="bd-section-paragraph">Yetakchi xalqaro universitetlar, tadqiqot markazlari va
+                            korxonalar bilan o'rnatilgan mustahkam hamkorlik aloqalari bizning ta'lim sifatimizning
+                            yuqori darajasini ta'minlaydi.</p>
+                        <p class="bd-section-paragraph">O'zbekiston bo'ylab <span
+                                class="text-primary fs-18 fw-6">5+</span> yetakchi ta'lim muassasalari va xalqaro
+                            kompaniyalar bilan hamkorlik</p>
+
                     </div>
                 </div>
                 <div class="col-xl-7 col-lg-7 col-md-12">
                     <div class="bd-brand-wrapper style-five">
                         <div class="bd-brand-box">
                             <div class="bd-brand-item">
-                                <img src="{% static 'assets/images/partner/partner-01.webp' %}" alt="rasm">
-                            </div>
-                            <div class="bd-brand-item">
-                                <img src="{% static 'assets/images/partner/partner-02.webp' %}" alt="rasm">
-                            </div>
-                            <div class="bd-brand-item">
-                                <img src="{% static 'assets/images/partner/partner-03.webp' %}" alt="rasm">
-                            </div>
-                            <div class="bd-brand-item">
-                                <img src="{% static 'assets/images/partner/partner-04.webp' %}" alt="rasm">
-                            </div>
-                            <div class="bd-brand-item">
-                                <img src="{% static 'assets/images/partner/partner-05.webp' %}" alt="rasm">
-                            </div>
-                            <div class="bd-brand-item">
-                                <img src="{% static 'assets/images/partner/partner-06.webp' %}" alt="rasm">
-                            </div>
-                            <div class="bd-brand-item">
-                                <img src="{% static 'assets/images/partner/partner-07.webp' %}" alt="rasm">
-                            </div>
-                            <div class="bd-brand-item">
-                                <img src="{% static 'assets/images/partner/partner-08.webp' %}" alt="rasm">
+                                <img src="{% static 'assets/images/new/surxon-plas.png' %}"
+                                     alt="Surxon Plas Decor">
+                                <div class="partner-info">
+                                    <span class="partner-name">Surxon Plas Decor</span>
+                                    <span class="partner-type">Ishlab chiqarish zavodi</span>
+                                </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
+
+
     <!-- partner area end -->
 
 </main>
@@ -797,93 +822,78 @@
     <div class="bd-footer-area style-two has-footer-space theme-black fix">
         <div class="container">
             <div class="row gy-30 justify-content-between">
-                <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 col-sm-12">
                     <div class="bd-footer-widget footer-2-col-1">
                         <div class="bd-footer-widget-logo">
-                            <a href="index.html">
-                                <img src="{% static 'assets/images/logo/logo-white.svg' %}" alt="rasm">
+                            <a href="/">
+                                <img src="{% static 'assets/images/new/logo-footer.png' %}" alt="Logo"
+                                     style="max-height: 60px;">
                             </a>
                         </div>
                         <div class="bd-footer-widget-content">
                             <p class="bd-footer-widget-description">
-                                Ta'limga qaratilgan veb-sayt yoki shablon tashrif buyuruvchilarga taklif etilayotgan
-                                dastur yoki xizmat haqida tushuncha beruvchi muhim qismdir.
+                                © Xalqaro Innovatsion Universiteti Qabul tizimi!
                             </p>
                             <div class="bd-footer-social">
                                 <div class="theme-social has-white">
                                     <ul class="social-icon-list">
-                                        <li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
-                                        <li><a href="#"><i class="fa-brands fa-x-twitter"></i></a></li>
-                                        <li><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></li>
-                                        <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+                                        <li><a href="https://www.facebook.com/profile.php?id=100090241119598&mibextid=ZbWKwL"><i class="fa-brands fa-facebook-f"></i></a></li>
+                                        <li><a href="https://www.instagram.com/xiu_edu.uz"><i class="fa-brands fa-instagram"></i></a></li>
+                                        <li><a href="https://t.me/xalqaro_innovatsion_universiteti"><i class="fa-brands fa-telegram"></i></a></li>
+                                        <li><a href="https://www.youtube.com/@xiu_youtube"><i class="fa-brands fa-youtube"></i></a></li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 col-sm-4">
+
+                <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 col-sm-6">
                     <div class="bd-footer-widget footer-2-col-2">
-                        <h6 class="bd-footer-widget-title ">Havolalar</h6>
+                        <h6 class="bd-footer-widget-title text-white">Asosiy</h6>
                         <div class="bd-footer-widget-links">
                             <ul>
-                                <li class="underline-two"><a href="about-online-course.html">Biz haqimizda</a></li>
-                                <li class="underline-two"><a href="blog.html">Yangiliklar</a></li>
-                                <li class="underline-two"><a href="event.html">Tadbirlar</a></li>
-                                <li class="underline-two"><a href="shop.html">Do'kon</a></li>
-                                <li class="underline-two"><a href="pricing-table.html">Narxlar jadvali</a></li>
+                                <li class="underline-two"><a href="/">Bosh sahifa</a></li>
+                                <li class="underline-two"><a href="/#about">Universitet haqida</a></li>
+                                <li class="underline-two"><a href="/#programs">Yo'nalishlar</a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 col-sm-4">
+
+                <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 col-sm-6">
                     <div class="bd-footer-widget footer-2-col-3">
-                        <h6 class="bd-footer-widget-title ">Ta'lim</h6>
+                        <h6 class="bd-footer-widget-title text-white">Abituriyentlar</h6>
                         <div class="bd-footer-widget-links">
                             <ul>
-                                <li class="underline-two"><a href="courses.html">Kurslar</a></li>
-                                <li class="underline-two"><a href="instructor.html">O'qituvchilar</a></li>
-                                <li class="underline-two"><a href="instructor-details.html">O'qituvchi ma'lumotlari</a>
+                                <li class="underline-two"><a href="{% url 'users:phone_auth' %}">Ariza topshirish</a>
                                 </li>
-                                <li class="underline-two"><a href="become-instructor.html">O'qituvchi bo'lish</a></li>
-                                <li class="underline-two"><a href="student-dashboard.html">Talaba paneli</a></li>
+
                             </ul>
                         </div>
                     </div>
                 </div>
-                <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-4 col-sm-4">
-                    <div class="bd-footer-widget footer-2-col-4">
-                        <h6 class="bd-footer-widget-title ">Yordam</h6>
-                        <div class="bd-footer-widget-links">
-                            <ul>
-                                <li class="underline-two"><a href="contact.html">Bog'lanish</a></li>
-                                <li class="underline-two"><a href="faq.html">Savol-javob</a></li>
-                                <li class="underline-two"><a href="purchase-guide.html">Xarid qo'llanmasi</a></li>
-                                <li class="underline-two"><a href="terms-conditions.html">Shartlar</a></li>
-                                <li class="underline-two"><a href="privacy-policy.html">Maxfiylik siyosati</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-8 col-sm-12">
+
+                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-sm-12">
                     <div class="bd-footer-widget footer-2-col-5">
-                        <h6 class="bd-footer-widget-title">Yangiliklar</h6>
+                        <h6 class="bd-footer-widget-title text-white">Bog'lanish</h6>
                         <div class="bd-footer-from-content">
                             <div class="bd-footer-widget-subscribe">
-                                <p class="bd-footer-widget-description">So'nggi yangiliklar va yangiliklarni olish uchun
-                                    bizning yangiliklarimizga obuna bo'ling.</p>
-                                <form action="#">
-                                    <div class="bd-footer-subscribe-form style-two">
-                                        <input type="email" placeholder="Email manzili">
-                                        <button class="bd-btn btn-primary h-40px" type="submit">Obuna bo'lish</button>
+
+                                <!-- Contact Info -->
+                                <div class="footer-contact-info mb-20">
+                                    <div class="contact-item mb-15">
+                                        <i class="fa-light fa-phone text-white me-2"></i>
+                                        <a href="tel:+998554061515" class="text-white">
+                                            <span>+998 (55) 406-15-15</span>
+                                        </a>
                                     </div>
-                                </form>
-                                <div class="checkout-agree">
-                                    <div class="checkout-option">
-                                        <input id="read_all" type="checkbox">
-                                        <label for="read_all">Men veb-sayt shartlarini o'qidim va roziman.</label>
+                                    <div class="contact-item text-white">
+                                        <i class="fa-light fa-location-dot text-white me-2"></i>
+                                        <span>Qarshi shahri I.Karimov ko'chasi 405-uy. Eski politexnikum kolleji binosi</span>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -891,19 +901,30 @@
             </div>
         </div>
     </div>
+
     <div class="bd-footer-copyright-area style-two theme-bg fix bd-noise-bg">
         <div class="container">
-            <div class="row justify-content-between">
-                <div class="col-xl-12">
-                    <div class="bd-footer-copyright-text text-center">
-                        <p class="underline-two">© Mualliflik huquqi <span id="year"></span> | iStudy tomonidan ishlab
-                            chiqilgan</p>
+            <div class="row justify-content-between align-items-center">
+                <div class="col-md-8">
+                    <div class="bd-footer-copyright-text">
+                        <p class="underline-two">© <span id="year"></span> Xalqaro Innovatsion Universitet.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="footer-links">
+                        <span class="text-white">Barcha huquqlar himoyalangan.</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </footer>
+
+<script>
+    // Current year for footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
 <!-- footer area end -->
 
 <!-- back to top -->
@@ -937,6 +958,28 @@
 <script>
     // Yil avtomatik o'zgarishi
     document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+<!-- Optimized JavaScript -->
+<script>
+    $(document).ready(function() {
+        // Filter functionality
+        $('.filter-item').on('click', function() {
+            var filterValue = $(this).attr('data-filter');
+
+            // Update active state
+            $('.filter-item').removeClass('active');
+            $(this).addClass('active');
+
+            // Smooth transition
+            $('.grid-item').fadeOut(200, function() {
+                $(filterValue).fadeIn(300);
+            });
+        });
+
+        // Show first category by default
+        $('.cat1').show();
+    });
 </script>
 </body>
 

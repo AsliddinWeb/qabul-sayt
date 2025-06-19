@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block main_content %}
-<div class="col-xl-9 col-lg-9 col-md-8">
+<div class="col-xl-9 col-lg-9 col-md-8 order-1 order-xl-2">
     <div class="bd-dashboard-inner">
         <div class="bd-dashboard-status-box mb-30">
             <div class="bd-dashboard-title-inner">
@@ -19,9 +19,9 @@
                                         <span>Passport</span>
                                     </h4>
                                     {% if profile %}
-                                        <p class="text-success">{{ profile.passport_series }}</p>
+                                    <p class="text-success">{{ profile.passport_series }}</p>
                                     {% else %}
-                                        <p class="text-warning">Passport kiritilmagan</p>
+                                    <p class="text-warning">Passport kiritilmagan</p>
                                     {% endif %}
                                 </div>
                             </div>
@@ -38,13 +38,13 @@
                                         <span>Diplom</span>
                                     </h4>
                                     {% if profile and user.diplom or profile and user.transfer_diplom %}
-                                        {% if user.diplom %}
-                                            <p>{{ user.diplom.university_name }}</p>
-                                        {% elif user.transfer_diplom %}
-                                            <p>{{ user.transfer_diplom.university_name }}</p>
-                                        {% endif %}
+                                    {% if user.diplom %}
+                                    <p>{{ user.diplom.university_name }}</p>
+                                    {% elif user.transfer_diplom %}
+                                    <p>{{ user.transfer_diplom.university_name }}</p>
+                                    {% endif %}
                                     {% else %}
-                                        <p class="text-warning">Diplom ma'lumotlari topilmadi</p>
+                                    <p class="text-warning">Diplom ma'lumotlari topilmadi</p>
                                     {% endif %}
 
                                 </div>
@@ -61,9 +61,9 @@
                                         <span>Ariza</span>
                                     </h4>
                                     {% if profile and user.application %}
-                                        <p>{{ user.application.status }}</p>
+                                    <p>{{ user.application.status }}</p>
                                     {% else %}
-                                        <p class="text-warning">Ariza topshirilmagan</p>
+                                    <p class="text-warning">Ariza topshirilmagan</p>
                                     {% endif %}
                                 </div>
                             </div>
@@ -77,14 +77,15 @@
     <div class="bd-dashboard-inner">
         <div class="bd-dashboard-reviews-wrapper">
             <div class="bd-dashboard-review-item mb-30">
-                <h5 class="title underline"><a href="{% url 'dashboard:abituriyent_passport' %}">Passport ma'lumotlari</a></h5>
+                <h5 class="title underline"><a href="{% url 'dashboard:abituriyent_passport' %}">Passport
+                    ma'lumotlari</a></h5>
                 <div class="course-info d-flex align-content-center justify-content-between flex-wrap gap-2 mb-10">
                     <div class="bd-course-rating-wrap d-flex align-items-center gap-10">
                         <div class="bd-course-rating-text">
                             {% if profile %}
-                                <span>{{ profile.get_full_name }}</span>
+                            <span>{{ profile.get_full_name }}</span>
                             {% else %}
-                                <span class="text-warning">Passport ma'lumotlari kiritilmagan</span>
+                            <span class="text-warning">Passport ma'lumotlari kiritilmagan</span>
                             {% endif %}
                         </div>
                     </div>
@@ -96,37 +97,101 @@
             </div>
 
             <div class="bd-dashboard-review-item mb-30">
-                <h5 class="title underline"><a href="#">Diplom ma'lumotlari</a></h5>
+                {% if user.diplom or user.transfer_diplom %}
+                <!-- Mavjud diplom ma'lumotlari -->
+                {% if user.diplom %}
+                <h5 class="title underline">
+                    <a href="{% url 'dashboard:abituriyent_diplom' %}">Diplom ma'lumotlari</a>
+                </h5>
                 <div class="course-info d-flex align-content-center justify-content-between flex-wrap gap-2 mb-10">
                     <div class="bd-course-rating-wrap d-flex align-items-center gap-10">
                         <div class="bd-course-rating-text">
-                            {% if profile and user.diplom or profile and user.transfer_diplom %}
-                                {% if user.diplom %}
-                                    <span>{{ user.diplom.university_name }}</span>
-                                {% elif user.transfer_diplom %}
-                                    <span>{{ user.transfer_diplom.university_name }}</span>
-                                {% endif %}
-                            {% else %}
-                                <span class="text-warning">Diplom ma'lumotlari topilmadi</span>
-                            {% endif %}
+                            <span><strong>{{ user.diplom.university_name }}</strong></span>
+                            <br>
+                            <small class="text-muted">
+                                {{ user.diplom.education_type.name }} • {{ user.diplom.graduation_year }}-yil
+                            </small>
+                            <br>
+                            <small class="text-success">
+                                <i class="fas fa-check-circle me-1"></i>Yangi qabul
+                            </small>
                         </div>
                     </div>
                     <div class="bd-button-action">
-                        <a class="bd-default-tooltip view" href="#"><span><i
-                                class="fas fa-arrow-right"></i></span></a>
+                        <a class="bd-default-tooltip view" href="{% url 'dashboard:abituriyent_diplom' %}"
+                           title="Ko'rish va tahrirlash">
+                            <span><i class="fas fa-arrow-right"></i></span>
+                        </a>
                     </div>
                 </div>
+                {% elif user.transfer_diplom %}
+                <h5 class="title underline">
+                    <a href="{% url 'dashboard:abituriyent_transfer_diplom' %}">O'qishni ko'chirish ma'lumotlari</a>
+                </h5>
+                <div class="course-info d-flex align-content-center justify-content-between flex-wrap gap-2 mb-10">
+                    <div class="bd-course-rating-wrap d-flex align-items-center gap-10">
+                        <div class="bd-course-rating-text">
+                            <span><strong>{{ user.transfer_diplom.university_name }}</strong></span>
+                            <br>
+                            <small class="text-muted">
+                                {{ user.transfer_diplom.country.name }} • {{ user.transfer_diplom.target_course.name }}
+                            </small>
+                            <br>
+                            <small class="text-info">
+                                <i class="fas fa-exchange-alt me-1"></i>O'qishni ko'chirish
+                            </small>
+                        </div>
+                    </div>
+                    <div class="bd-button-action">
+                        <a class="bd-default-tooltip view" href="{% url 'dashboard:abituriyent_transfer_diplom' %}"
+                           title="Ko'rish va tahrirlash">
+                            <span><i class="fas fa-arrow-right"></i></span>
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+                {% else %}
+                <!-- Diplom ma'lumotlari yo'q -->
+                <h5 class="title underline">
+                    <a href="{% url 'dashboard:abituriyent_diplom' %}">Diplom ma'lumotlari</a>
+                </h5>
+                <div class="course-info d-flex align-content-center justify-content-between flex-wrap gap-2 mb-10">
+                    <div class="bd-course-rating-wrap d-flex align-items-center gap-10">
+                        <div class="bd-course-rating-text">
+                    <span class="text-warning">
+                        <i class="fas fa-exclamation-triangle me-1"></i>Diplom ma'lumotlari topilmadi
+                    </span>
+                            <br>
+                            <small class="text-muted">Ma'lumotlaringizni kiriting</small>
+                        </div>
+                    </div>
+                    <div class="bd-button-action d-flex gap-2">
+                        <a class="bd-default-tooltip" href="{% url 'dashboard:abituriyent_diplom' %}"
+                           title="Yangi qabul">
+                    <span class="badge bg-primary">
+                        <i class="fas fa-plus me-1"></i>Yangi
+                    </span>
+                        </a>
+                        <a class="bd-default-tooltip" href="{% url 'dashboard:abituriyent_transfer_diplom' %}"
+                           title="O'qishni ko'chirish">
+                    <span class="badge bg-info">
+                        <i class="fas fa-exchange-alt me-1"></i>Ko'chirish
+                    </span>
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
             </div>
 
             <div class="bd-dashboard-review-item mb-30">
-                <h5 class="title underline"><a href="#">Ariza holati</a></h5>
+                <h5 class="title underline"><a href="{% url 'dashboard:abituriyent_apply' %}">Ariza holati</a></h5>
                 <div class="course-info d-flex align-content-center justify-content-between flex-wrap gap-2 mb-10">
                     <div class="bd-course-rating-wrap d-flex align-items-center gap-10">
                         <div class="bd-course-rating-text">
                             {% if profile and user.application %}
-                                <p>{{ user.application.status }}</p>
+                            <p>{{ user.application }}</p>
                             {% else %}
-                                <p class="text-warning">Ariza topshirilmagan</p>
+                            <p class="text-warning">Ariza topshirilmagan</p>
                             {% endif %}
                         </div>
                     </div>

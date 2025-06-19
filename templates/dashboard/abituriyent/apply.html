@@ -1,0 +1,654 @@
+{% extends 'dashboard/abituriyent/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    .form-control, .form-select {
+        font-size: 16px;
+    }
+    .form-section {
+        background: #fff;
+        border-radius: 8px;
+        padding: 25px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    .section-title {
+        color: #2c3e50;
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #f8f9fa;
+    }
+    .form-group label {
+        font-weight: 500;
+        color: #495057;
+        margin-bottom: 8px;
+        display: block;
+    }
+    .required-field {
+        color: #dc3545;
+    }
+    .file-upload-info {
+        font-size: 12px;
+        color: #6c757d;
+        margin-top: 5px;
+    }
+    .navigation-buttons {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .navigation-buttons .bd-btn {
+        margin: 0 10px;
+        min-width: 150px;
+    }
+    .alert {
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .admission-type-section {
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+    .admission-type-section.active {
+        border-color: #007bff;
+        background-color: #f8f9ff;
+    }
+    .admission-type-radio {
+        margin-right: 10px;
+    }
+    .diploma-fields, .transfer-fields {
+        display: none;
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 6px;
+    }
+    .diploma-fields.show, .transfer-fields.show {
+        display: block;
+    }
+    .info-box {
+        background-color: #e7f3ff;
+        border: 1px solid #bee5eb;
+        border-radius: 6px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    .info-box i {
+        color: #17a2b8;
+        margin-right: 8px;
+    }
+</style>
+{% endblock extra_css %}
+
+{% block main_content %}
+<div class="col-xl-9 col-lg-9 col-md-8 order-1 order-xl-2">
+    <div class="bd-dashboard-inner">
+        <div class="bd-dashboard-title-inner mb-3">
+            <h4 class="bd-dashboard-title">
+                {% if is_edit %}
+                    Arizani Tahrirlash
+                {% else %}
+                    Ariza Topshirish
+                {% endif %}
+            </h4>
+        </div>
+
+        <!-- Info box -->
+        <div class="info-box">
+            <i class="fas fa-info-circle"></i>
+            <strong>Diqqat:</strong> Ariza topshirishdan oldin barcha ma'lumotlarni to'g'ri kiritganingizga ishonch hosil qiling.
+            Ariza topshirilgandan keyin ba'zi ma'lumotlarni o'zgartirish cheklanishi mumkin.
+        </div>
+
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Shartnoma ma'lumotlari -->
+        {% if application %}
+            <div class="form-section">
+                <h5 class="section-title">Shartnoma Ma'lumotlari</h5>
+                <div class="row gy-20">
+                    <div class="col-lg-12">
+                        {% if application.contract_file %}
+                            <!-- Shartnoma tayyor -->
+                            <div class="alert alert-success shartnoma-alert">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-file-pdf fa-2x me-3 text-success"></i>
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1"><strong>Shartnoma tayyor!</strong></h6>
+                                        <p class="mb-2">Shartnoma muvaffaqiyatli yaratildi va yuklab olishga tayyor.</p>
+                                        <a href="{{ application.contract_file.url }}"
+                                           target="_blank"
+                                           class="btn btn-success btn-sm">
+                                            <i class="fas fa-download me-1"></i>Shartnomani yuklab olish
+                                        </a>
+                                        <a href="{{ application.contract_file.url }}"
+                                           target="_blank"
+                                           class="btn btn-outline-success btn-sm ms-2">
+                                            <i class="fas fa-eye me-1"></i>Ko'rish
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <!-- Shartnoma kutilmoqda -->
+                            <div class="alert alert-info shartnoma-alert">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-clock fa-2x me-3 text-info"></i>
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1"><strong>Shartnoma tayyorlanmoqda</strong></h6>
+                                        <p class="mb-0">Arizangiz qabul qilingandan so'ng shartnoma avtomatik yaratiladi va sizga yuboriladi. Bu jarayon biroz vaqt olishi mumkin.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Form (faqat application mavjud bo'lmasa yoki edit holatida ko'rinadi) -->
+        {% if not application %}
+            <form method="post" enctype="multipart/form-data" id="applicationForm">
+                {% csrf_token %}
+
+            <!-- Qabul turi -->
+            <div class="form-section">
+                <h5 class="section-title">Qabul Turi</h5>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label>{{ form.admission_type.label }} <span class="required-field">*</span></label>
+
+                            {% if user.diplom %}
+                                <!-- Foydalanuvchida oddiy diplom bor - faqat yangi qabul -->
+                                <div class="admission-type-section active" id="regular-section">
+                                    <label class="d-flex align-items-center">
+                                        <input type="radio" name="{{ form.admission_type.name }}" value="yangi_qabul"
+                                               class="admission-type-radio" checked disabled>
+                                        <div>
+                                            <strong>1-kurs (Yangi qabul)</strong>
+                                            <br><small class="text-muted">O'rta maktab yoki kollej/litsey diplomingiz asosida</small>
+                                        </div>
+                                    </label>
+                                </div>
+                                <!-- Hidden input for form submission -->
+                                <input type="hidden" name="{{ form.admission_type.name }}" value="yangi_qabul">
+
+                            {% elif user.transfer_diplom %}
+                                <!-- Foydalanuvchida transfer diplom bor - faqat perevod -->
+                                <div class="admission-type-section active" id="transfer-section">
+                                    <label class="d-flex align-items-center">
+                                        <input type="radio" name="{{ form.admission_type.name }}" value="perevod"
+                                               class="admission-type-radio" checked disabled>
+                                        <div>
+                                            <strong>Perevod (O'qishni ko'chirish)</strong>
+                                            <br><small class="text-muted">Oliy ta'lim muassasasi diplomingiz asosida</small>
+                                        </div>
+                                    </label>
+                                </div>
+                                <!-- Hidden input for form submission -->
+                                <input type="hidden" name="{{ form.admission_type.name }}" value="perevod">
+
+                            {% else %}
+                                <!-- Foydalanuvchida hech qanday diplom yo'q - xatolik -->
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    <strong>Diqqat!</strong> Ariza topshirishdan oldin avval diplom ma'lumotlarini kiriting.
+                                    <br>
+                                    <a href="{% url 'dashboard:abituriyent_diplom' %}" class="btn btn-sm btn-primary mt-2">
+                                        <i class="fas fa-plus me-1"></i>Diplom qo'shish
+                                    </a>
+                                    <a href="{% url 'dashboard:abituriyent_transfer_diplom' %}" class="btn btn-sm btn-outline-primary mt-2 ms-2">
+                                        <i class="fas fa-exchange-alt me-1"></i>Transfer diplom qo'shish
+                                    </a>
+                                </div>
+                            {% endif %}
+
+                            {% if form.admission_type.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.admission_type.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ta'lim ma'lumotlari -->
+            <div class="form-section">
+                <h5 class="section-title">Ta'lim Ma'lumotlari</h5>
+                <div class="row gy-20">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.branch.id_for_label }}">
+                                {{ form.branch.label }} <span class="required-field">*</span>
+                            </label>
+                            {{ form.branch }}
+                            {% if form.branch.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.branch.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.education_level.id_for_label }}">
+                                {{ form.education_level.label }} <span class="required-field">*</span>
+                            </label>
+                            {{ form.education_level }}
+                            {% if form.education_level.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.education_level.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.education_form.id_for_label }}">
+                                {{ form.education_form.label }} <span class="required-field">*</span>
+                            </label>
+                            {{ form.education_form }}
+                            {% if form.education_form.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.education_form.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.program.id_for_label }}">
+                                {{ form.program.label }} <span class="required-field">*</span>
+                            </label>
+                            {{ form.program }}
+                            {% if form.program.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.program.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diplom ma'lumotlari (Yangi qabul uchun) -->
+            <div class="form-section diploma-fields" id="diploma-section">
+                <h5 class="section-title">Diplom Ma'lumotlari</h5>
+                <div class="row gy-20">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="{{ form.diplom.id_for_label }}">
+                                {{ form.diplom.label }} <span class="required-field">*</span>
+                            </label>
+                            {% if user.diplom %}
+                                <!-- Diplom avtomatik tanlanadi va readonly bo'ladi -->
+                                <select name="{{ form.diplom.name }}" id="{{ form.diplom.id_for_label }}" class="form-select" disabled>
+                                    <option value="{{ user.diplom.id }}" selected>
+                                        {{ user.diplom.university_name }} - {{ user.diplom.serial_number }} ({{ user.diplom.graduation_year }})
+                                    </option>
+                                </select>
+                                <!-- Hidden input for form submission -->
+                                <input type="hidden" name="{{ form.diplom.name }}" value="{{ user.diplom.id }}">
+                                <div class="file-upload-info">
+                                    <i class="fas fa-check-circle text-success me-1"></i>
+                                    Sizning diplomingiz avtomatik tanlangan.
+                                </div>
+                            {% else %}
+                                {{ form.diplom }}
+                                <div class="file-upload-info">
+                                    Agar diplomingiz ro'yxatda bo'lmasa, avval "Diplom ma'lumotlari" bo'limidan diplom qo'shing.
+                                </div>
+                            {% endif %}
+                            {% if form.diplom.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.diplom.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transfer diplom ma'lumotlari (Perevod uchun) -->
+            <div class="form-section transfer-fields" id="transfer-section-fields">
+                <h5 class="section-title">Perevod Ma'lumotlari</h5>
+                <div class="row gy-20">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.transfer_diplom.id_for_label }}">
+                                {{ form.transfer_diplom.label }} <span class="required-field">*</span>
+                            </label>
+                            {% if user.transfer_diplom %}
+                                <!-- Transfer diplom avtomatik tanlanadi va readonly bo'ladi -->
+                                <select name="{{ form.transfer_diplom.name }}" id="{{ form.transfer_diplom.id_for_label }}" class="form-select" disabled>
+                                    <option value="{{ user.transfer_diplom.id }}" selected>
+                                        {{ user.transfer_diplom.university_name }} ({{ user.transfer_diplom.country.name }})
+                                    </option>
+                                </select>
+                                <!-- Hidden input for form submission -->
+                                <input type="hidden" name="{{ form.transfer_diplom.name }}" value="{{ user.transfer_diplom.id }}">
+                                <div class="file-upload-info">
+                                    <i class="fas fa-check-circle text-success me-1"></i>
+                                    Sizning transfer diplomingiz avtomatik tanlangan.
+                                </div>
+                            {% else %}
+                                {{ form.transfer_diplom }}
+                            {% endif %}
+                            {% if form.transfer_diplom.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.transfer_diplom.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="{{ form.course.id_for_label }}">
+                                {{ form.course.label }} <span class="required-field">*</span>
+                            </label>
+                            {% if user.transfer_diplom and user.transfer_diplom.target_course %}
+                                <!-- Course avtomatik tanlanadi va readonly bo'ladi -->
+                                <select name="{{ form.course.name }}" id="{{ form.course.id_for_label }}" class="form-select" disabled>
+                                    <option value="{{ user.transfer_diplom.target_course.id }}" selected>
+                                        {{ user.transfer_diplom.target_course.name }}
+                                    </option>
+                                </select>
+                                <!-- Hidden input for form submission -->
+                                <input type="hidden" name="{{ form.course.name }}" value="{{ user.transfer_diplom.target_course.id }}">
+                                <div class="file-upload-info">
+                                    <i class="fas fa-check-circle text-success me-1"></i>
+                                    Kurs transfer diplom ma'lumotlariga asosan avtomatik tanlangan.
+                                </div>
+                            {% else %}
+                                {{ form.course }}
+                            {% endif %}
+                            {% if form.course.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.course.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit button -->
+            <div class="form-section">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <button type="submit" class="bd-btn btn-primary" id="submitBtn">
+                            {% if is_edit %}
+                                <i class="fas fa-save me-2"></i>O'zgarishlarni Saqlash
+                            {% else %}
+                                <i class="fas fa-paper-plane me-2"></i>Ariza Topshirish
+                            {% endif %}
+                        </button>
+                        <a href="{% url 'dashboard:abituriyent' %}" class="bd-btn btn-outline-secondary ms-3">
+                            <i class="fas fa-arrow-left me-2"></i>Bekor qilish
+                        </a>
+                    </div>
+                </div>
+            </div>
+            </form>
+        {% else %}
+            <!-- Ariza topshirilgandan keyin faqat ko'rish rejimi -->
+            <div class="form-section">
+                <h5 class="section-title">Ariza Ma'lumotlari</h5>
+                <div class="alert alert-success">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-check-circle fa-2x me-3 text-success"></i>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1"><strong>Ariza muvaffaqiyatli topshirildi</strong></h6>
+                            <p class="mb-0">Sizning arizangiz qabul qilindi. Shartnoma tayyorlanishi jarayonini kuzatib boring.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ariza ma'lumotlarini ko'rsatish (read-only) -->
+                <div class="row gy-3">
+                    <div class="col-md-6">
+                        <strong>Filial:</strong> {{ application.branch.name }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Ta'lim darajasi:</strong> {{ application.education_level.name }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Ta'lim shakli:</strong> {{ application.education_form.name }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Yo'nalish:</strong> {{ application.program.name }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Qabul turi:</strong>
+                        {% if application.admission_type == 'yangi_qabul' %}
+                            Yangi qabul (1-kurs)
+                        {% else %}
+                            Perevod
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Holati:</strong>
+                        <span class="badge bg-primary">{{ application.get_status_display }}</span>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock main_content %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Admission type o'zgarsa maydonlarni ko'rsatish/yashirish
+    function toggleAdmissionFields() {
+        var selectedType = $('input[name="{{ form.admission_type.name }}"]:checked').val();
+        var hiddenInput = $('input[name="{{ form.admission_type.name }}"][type="hidden"]');
+
+        // Agar hidden input mavjud bo'lsa, uning qiymatini olish
+        if (hiddenInput.length) {
+            selectedType = hiddenInput.val();
+        }
+
+        // Barcha bo'limlarni faolsizlantirish
+        $('.diploma-fields, .transfer-fields').removeClass('show');
+
+        if (selectedType === 'yangi_qabul') {
+            $('.diploma-fields').addClass('show');
+        } else if (selectedType === 'perevod') {
+            $('.transfer-fields').addClass('show');
+        }
+    }
+
+    // Sahifa yuklanganda
+    toggleAdmissionFields();
+
+    // Radio button o'zgarsa (agar mavjud bo'lsa)
+    $('input[name="{{ form.admission_type.name }}"]').on('change', function() {
+        if (!$(this).is(':disabled')) {
+            toggleAdmissionFields();
+        }
+    });
+
+    // Filial, ta'lim darajasi yoki ta'lim shakli o'zgarsa program larni yangilash
+    $('#id_branch, #id_education_level, #id_education_form').on('change', function() {
+        updatePrograms();
+    });
+
+    function updatePrograms() {
+        var branchId = $('#id_branch').val();
+        var educationLevelId = $('#id_education_level').val();
+        var educationFormId = $('#id_education_form').val();
+        var programSelect = $('#id_program');
+
+        // Agar barcha kerakli maydonlar to'ldirilgan bo'lsa
+        if (branchId && educationLevelId && educationFormId) {
+            // Loading holatini ko'rsatish
+            programSelect.prop('disabled', true);
+            programSelect.empty();
+            programSelect.append('<option value="">Yuklanmoqda...</option>');
+
+            $.ajax({
+                url: '{% url "dashboard:abituriyent_load_programs" %}',
+                data: {
+                    'branch_id': branchId,
+                    'education_level_id': educationLevelId,
+                    'education_form_id': educationFormId
+                },
+                success: function(data) {
+                    programSelect.empty();
+                    programSelect.append('<option value="">Yo\'nalishni tanlang</option>');
+
+                    if (data.programs && data.programs.length > 0) {
+                        $.each(data.programs, function(index, program) {
+                            programSelect.append('<option value="' + program.id + '">' + program.name + '</option>');
+                        });
+                    } else {
+                        programSelect.append('<option value="">Ushbu tanlovlar uchun yo\'nalish topilmadi</option>');
+                    }
+
+                    programSelect.prop('disabled', false);
+                },
+                error: function(xhr, status, error) {
+                    console.log('Yo\'nalishlarni yuklashda xatolik:', error);
+                    programSelect.empty();
+                    programSelect.append('<option value="">Xatolik yuz berdi</option>');
+                    programSelect.prop('disabled', false);
+                }
+            });
+        } else {
+            // Agar barcha maydonlar to'ldirilmagan bo'lsa, programni tozalash
+            programSelect.empty();
+            programSelect.append('<option value="">Avval filial, ta\'lim darajasi va shakli tanlang</option>');
+            programSelect.prop('disabled', true);
+        }
+    }
+
+    // Sahifa yuklanganda programlarni yangilash
+    updatePrograms();
+
+    // Form validation
+    $('#applicationForm').on('submit', function(e) {
+        var isValid = true;
+        var submitBtn = $('#submitBtn');
+
+        // Admission type ni aniqlash
+        var selectedType = $('input[name="{{ form.admission_type.name }}"]:checked').val();
+        var hiddenInput = $('input[name="{{ form.admission_type.name }}"][type="hidden"]');
+
+        if (hiddenInput.length) {
+            selectedType = hiddenInput.val();
+        }
+
+        // Diplom mavjudligini tekshirish
+        {% if not user.diplom and not user.transfer_diplom %}
+            e.preventDefault();
+            alert('Ariza topshirishdan oldin avval diplom ma\'lumotlarini kiriting!');
+            return false;
+        {% endif %}
+
+        // Asosiy maydonlarni tekshirish
+        var requiredFields = ['branch', 'education_level', 'education_form', 'program'];
+
+        // Admission type ga qarab qo'shimcha majburiy maydonlar
+        if (selectedType === 'yangi_qabul') {
+            requiredFields.push('diplom');
+        } else if (selectedType === 'perevod') {
+            requiredFields.push('transfer_diplom', 'course');
+        }
+
+        // Har bir majburiy maydonni tekshirish
+        $.each(requiredFields, function(index, fieldName) {
+            var field = $('#id_' + fieldName);
+            var hiddenField = $('input[name="' + fieldName + '"][type="hidden"]');
+
+            // Agar hidden field mavjud bo'lsa, uni tekshirish
+            if (hiddenField.length) {
+                if (!hiddenField.val()) {
+                    isValid = false;
+                    // Hidden field uchun ko'rinadigan elementni xatolik bilan belgilash
+                    field.addClass('is-invalid');
+                    field.closest('.form-group').find('label').addClass('text-danger');
+                } else {
+                    field.removeClass('is-invalid');
+                    field.closest('.form-group').find('label').removeClass('text-danger');
+                }
+            }
+            // Oddiy field tekshirish
+            else if (field.length && !field.val()) {
+                isValid = false;
+                field.addClass('is-invalid');
+                field.closest('.form-group').find('label').addClass('text-danger');
+            } else if (field.length) {
+                field.removeClass('is-invalid');
+                field.closest('.form-group').find('label').removeClass('text-danger');
+            }
+        });
+
+        if (!isValid) {
+            e.preventDefault();
+            alert('Iltimos, barcha majburiy maydonlarni to\'ldiring!');
+            return false;
+        }
+
+        // Loading state
+        submitBtn.prop('disabled', true);
+        submitBtn.html('<i class="fas fa-spinner fa-spin me-2"></i>Topshirilmoqda...');
+
+        // 30 soniyadan keyin buttonni qayta faollashtirish
+        setTimeout(function() {
+            submitBtn.prop('disabled', false);
+            submitBtn.html('{% if is_edit %}<i class="fas fa-save me-2"></i>O\'zgarishlarni Saqlash{% else %}<i class="fas fa-paper-plane me-2"></i>Ariza Topshirish{% endif %}');
+        }, 30000);
+    });
+
+    // Auto-hide alerts after 5 seconds (faqat xabar alertlari uchun, shartnoma uchun emas)
+    setTimeout(function() {
+        $('.alert:not(.shartnoma-alert)').fadeOut('slow');
+    }, 5000);
+
+    // Confirmation dialog for form submission
+    $('#applicationForm').on('submit', function(e) {
+        if (!$(this).data('confirmed')) {
+            e.preventDefault();
+
+            if (confirm('Arizani topshirishga ishonchingiz komilmi? Topshirilgandan keyin ba\'zi ma\'lumotlarni o\'zgartirib bo\'lmaydi.')) {
+                $(this).data('confirmed', true);
+                $(this).submit();
+            }
+        }
+    });
+});
+</script>
+{% endblock extra_js %}
