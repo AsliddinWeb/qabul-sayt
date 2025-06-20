@@ -218,6 +218,11 @@ class ApplicationAdmin(admin.ModelAdmin):
         qr_code_data = self.generate_qr_code(download_url)
 
         return {
+            'ID': application.id,
+            'KONTRAKT_SUMMASI': application.program.tuition_fee,
+            'TALABA_MANZILI': application.user.abituriyent_profile.get_full_address,
+            'PASSPORT_SERIYA': application.user.abituriyent_profile.passport_series,
+
             'TALABA_ISMI': talaba_ismi,
             'TELEFON': application.user.phone,
             'FILIAL': application.branch.name,

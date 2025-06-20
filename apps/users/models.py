@@ -442,6 +442,10 @@ class AbituriyentProfile(BaseProfile):
         """To'liq ismni qaytarish"""
         return f"{self.last_name} {self.first_name} {self.other_name}".strip()
 
+    def get_full_address(self):
+        """To'liq ismni qaytarish"""
+        return f"{self.region.name}, {self.district.name}, {self.address}".strip()
+
     def get_age(self):
         """Yoshni hisoblash"""
         from datetime import date
