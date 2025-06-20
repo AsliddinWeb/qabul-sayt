@@ -95,10 +95,15 @@ TIME_ZONE = 'Asia/Tashkent'
 USE_I18N = True
 USE_TZ = True
 
-# Static files
+# Static files sozlamalari
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # Barcha static fayllar shu yerga to'planadi
+
+# Development uchun static fayllar yo'llari
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',  # Sizning assets papkangiz
+]
+
 
 # Media files
 MEDIA_URL = '/media/'
