@@ -562,132 +562,122 @@
     </div>
     <!-- feature area end -->
 
-    <!-- program area start -->
-    <section class="bd-program-area section-space" id="programs">
-        <div class="container">
-            <div class="row gy-30 justify-content-between align-items-center section-title-space">
-                <div class="col-xxl-6 col-xl-6 col-lg-6">
-                    <div class="bd-section-title-wrapper">
-                        <span class="bd-section-subtitle">Ta'lim yo'nalishlari</span>
-                        <h2 class="bd-section-title">Bizning <span class="down-mark-line">yo'nalishlar</span>
-                            </h2>
-                    </div>
-                </div>
-                <div class="col-xxl-6 col-xl-6 col-lg-6">
-                    <div class="course-item text-center d-flex flex-wrap gap-15 justify-content-lg-end justify-content-start">
-                        {% for level in education_levels %}
-                        <button class="filter-item bd-btn btn-outline-primary {% if forloop.first %}active{% endif %}"
-                                data-filter=".cat{{ forloop.counter }}">
-                            {{ level.name }}
-                        </button>
-                        {% endfor %}
-                    </div>
+<!-- program area start -->
+<section class="bd-program-area section-space" id="programs">
+    <div class="container">
+        <div class="row gy-30 justify-content-between align-items-center section-title-space">
+            <div class="col-xxl-6 col-xl-6 col-lg-6">
+                <div class="bd-section-title-wrapper">
+                    <span class="bd-section-subtitle">Ta'lim yo'nalishlari</span>
+                    <h2 class="bd-section-title">Bizning <span class="down-mark-line">yo'nalishlar</span>
+                        </h2>
                 </div>
             </div>
+            <div class="col-xxl-6 col-xl-6 col-lg-6">
+                <div class="course-item text-center d-flex flex-wrap gap-15 justify-content-lg-end justify-content-start">
+                    {% for level in education_levels %}
+                    <button class="filter-item bd-btn btn-outline-primary {% if forloop.first %}active{% endif %}"
+                            data-filter=".cat{{ forloop.counter }}">
+                        {{ level.name }}
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
 
-            <div class="row g-30 grid">
-                {% for level in education_levels %}
-                <!-- {{ level.name }} yo'nalishlari -->
-                {% for program in featured_programs %}
-                {% if program.education_level.id == level.id %}
-                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 grid-item cat{{ forloop.parentloop.counter }}"
-                     {% if not forloop.parentloop.first %}style="display: none;" {% endif %}>
-                    <div class="bd-course-wrapper style-six">
-                        <a href="#" class="bd-course-thumb-wrapper bd-course-thumb-style-two p-relative">
-                            <div class="bd-course-thumb">
-                                {% if program.image %}
-                                <img src="{{ program.image.url }}" alt="{{ program.name }}">
+        <div class="row g-30 grid">
+            {% for level in education_levels %}
+            <!-- {{ level.name }} yo'nalishlari -->
+            {% for program in featured_programs %}
+            {% if program.education_level.id == level.id %}
+            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 grid-item cat{{ forloop.parentloop.counter }}"
+                 {% if not forloop.parentloop.first %}style="display: none;" {% endif %}>
+                <div class="bd-course-wrapper style-six">
+                    <a href="#" class="bd-course-thumb-wrapper bd-course-thumb-style-two p-relative">
+                        <!-- Image -->
+                        <!-- /Image -->
+                        <div class="bd-course-shape">
+                            <img src="{% static 'assets/images/course/course-shape-1.webp' %}" alt="shakl">
+                        </div>
+                        <div class="bd-course-logo">
+                            <div class="logo-placeholder text-white d-flex align-items-center justify-content-center"
+                                 style="width: 50px; height: 50px; border-radius: 50%; font-weight: bold; font-size: 12px;
+                                                background: {% cycle 'linear-gradient(45deg, #007bff, #0056b3)' 'linear-gradient(45deg, #28a745, #1e7e34)' 'linear-gradient(45deg, #ffc107, #e0a800)' %};">
+                                {{ program.study_duration|slice:":6"|upper }}
+                            </div>
+                        </div>
+                        <div class="bd-course-badge">
+                                    <span class="bd-badge {% cycle 'badge-primary' 'badge-success' 'badge-warning' %}">
+                                        {{ program.education_form_names }}
+                                    </span>
+                        </div>
+                    </a>
+                    <div class="bd-course-content">
+                        <h5 class="bd-course-title underline mb-15">
+                            <a href="#" title="{{ program.name }}">
+                                {% if program.name|length > 50 %}
+                                {{ program.name|truncatechars:47 }}
                                 {% else %}
-                                <div class="default-course-image d-flex align-items-center justify-content-center"
-                                     style="height: 200px; background: linear-gradient(135deg, #07A169, #05784a);">
-                                    <i class="fa-light fa-graduation-cap fa-3x text-white"></i>
-                                </div>
+                                {{ program.name }}
                                 {% endif %}
-                            </div>
-                            <div class="bd-course-shape">
-                                <img src="{% static 'assets/images/course/course-shape-1.webp' %}" alt="shakl">
-                            </div>
-                            <div class="bd-course-logo">
-                                <div class="logo-placeholder text-white d-flex align-items-center justify-content-center"
-                                     style="width: 50px; height: 50px; border-radius: 50%; font-weight: bold; font-size: 12px;
-                                                    background: {% cycle 'linear-gradient(45deg, #007bff, #0056b3)' 'linear-gradient(45deg, #28a745, #1e7e34)' 'linear-gradient(45deg, #ffc107, #e0a800)' %};">
-                                    {{ program.study_duration|slice:":6"|upper }}
+                            </a>
+                        </h5>
+                        <div class="bd-course-divider"></div>
+                        <div class="bd-course-content-bottom">
+                            <div class="course-info-grid mb-3">
+                                <div class="course-info-item">
+                                    <span><i class="fa-light fa-clock"></i> {{ program.all_study_durations }}</span>
+                                </div>
+                                <div class="course-info-item">
+                                    <span><i
+                                            class="fa-light fa-map-marker-alt"></i> {{ program.all_branches }}</span>
+                                </div>
+                                <div class="course-info-item">
+                                    <span><i class="fa-light fa-money-bill"></i> {{ program.all_tuition_fees }}</span>
+                                </div>
+                                <div class="course-info-item">
+                                    <span><i class="fa-light fa-graduation-cap"></i> {{ program.education_form_names }}</span>
                                 </div>
                             </div>
-                            <div class="bd-course-badge">
-                                        <span class="bd-badge {% cycle 'badge-primary' 'badge-success' 'badge-warning' %}">
-                                            {{ program.education_form.name }}
-                                        </span>
-                            </div>
-                        </a>
-                        <div class="bd-course-content">
-                            <h5 class="bd-course-title underline mb-15">
-                                <a href="#" title="{{ program.name }}">
-                                    {% if program.name|length > 50 %}
-                                    {{ program.name|truncatechars:47 }}
-                                    {% else %}
-                                    {{ program.name }}
-                                    {% endif %}
+                            <div class="text-center">
+                                <a class="bd-btn btn-outline-primary w-100" href="{% url 'users:phone_auth' %}">
+                                    <i class="fa-light fa-paper-plane me-2"></i>Ariza topshiring
                                 </a>
-                            </h5>
-                            <div class="bd-course-divider"></div>
-                            <div class="bd-course-content-bottom">
-                                <div class="course-info-grid mb-3">
-                                    <div class="course-info-item">
-                                        <span><i class="fa-light fa-clock"></i> {{ program.study_duration }}</span>
-                                    </div>
-                                    <div class="course-info-item">
-                                        <span><i
-                                                class="fa-light fa-map-marker-alt"></i> {{ program.branch.name }}</span>
-                                    </div>
-                                    <div class="course-info-item">
-                                        <span><i class="fa-light fa-money-bill"></i> {{ program.tuition_fee }}</span>
-                                    </div>
-                                    <div class="course-info-item">
-                                        <span><i class="fa-light fa-graduation-cap"></i> {{ program.education_form.name }}</span>
-                                    </div>
-                                </div>
-                                <div class="text-center">
-                                    <a class="bd-btn btn-outline-primary w-100" href="{% url 'users:phone_auth' %}">
-                                        <i class="fa-light fa-paper-plane me-2"></i>Ariza topshiring
-                                    </a>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                {% endif %}
-                {% endfor %}
-                {% endfor %}
-
-                <!-- Agar hech qanday yo'nalish yo'q bo'lsa -->
-                {% if not featured_programs %}
-                <div class="col-12 text-center py-5">
-                    <div class="empty-state">
-                        <i class="fa-light fa-graduation-cap fa-3x text-muted mb-3"></i>
-                        <h5 class="text-muted">Yo'nalishlar hozircha mavjud emas</h5>
-                        <p class="text-muted">Tez orada yangi yo'nalishlar qo'shiladi.</p>
-                    </div>
-                </div>
-                {% endif %}
             </div>
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
 
-            <!-- Button with proper spacing -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="bd-program-btn d-flex justify-content-center"
-                         style="margin-top: 60px; padding-top: 20px;">
-                        <a class="bd-btn btn-primary btn-lg" href="{% url 'users:phone_auth' %}">
-                            <i class="fa-light fa-search me-2"></i>Barcha yo'nalishlarni ko'rish
-                        </a>
-                    </div>
+            <!-- Agar hech qanday yo'nalish yo'q bo'lsa -->
+            {% if not featured_programs %}
+            <div class="col-12 text-center py-5">
+                <div class="empty-state">
+                    <i class="fa-light fa-graduation-cap fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">Yo'nalishlar hozircha mavjud emas</h5>
+                    <p class="text-muted">Tez orada yangi yo'nalishlar qo'shiladi.</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Button with proper spacing -->
+        <div class="row">
+            <div class="col-12">
+                <div class="bd-program-btn d-flex justify-content-center"
+                     style="margin-top: 60px; padding-top: 20px;">
+                    <a class="bd-btn btn-primary btn-lg" href="{% url 'users:phone_auth' %}">
+                        <i class="fa-light fa-search me-2"></i>Barcha yo'nalishlarni ko'rish
+                    </a>
                 </div>
             </div>
         </div>
-    </section>
-
-
-    <!-- program area end -->
+    </div>
+</section>
+<!-- program area end -->
 
 
     <!-- about area start -->
