@@ -319,7 +319,7 @@
                 <div class="bd-offcanvas-top d-flex justify-content-between align-items-center mb-30">
                     <div class="bd-offcanvas-logo">
                         <a href="/">
-                            <img src="{% static 'assets/images/logo/logo.svg' %}" alt="logo">
+                            <img src="{% static 'assets/images/new/logo-header.png' %}" alt="logo">
                         </a>
                     </div>
                     <div class="bd-offcanvas-close">
@@ -377,17 +377,21 @@
 
                 <div class="bd-offcanvas-btn-wrap mb-30">
                     <div class="bd-offcanvas-btn d-flex align-items-center gap-30">
-                        <a class="bd-btn btn-primary" href="sign-in.html">Kirish</a>
-                        <a class="bd-btn btn-outline-border-secondary" href="sign-up.html">Ro'yhatdan o'tish</a>
+                        <a class="bd-btn btn-primary" href="{% url 'users:phone_auth' %}">Ariza topshirish</a>
                     </div>
                 </div>
                 <div class="bd-offcanvas-social">
                     <h4 class="bd-offcanvas-title-meta">Bizni kuzatib boring</h4>
                     <div class="theme-social">
                         <ul class="social-icon-list">
-                            <li><a href="#"><i class="fa-brands fa-telegram"></i></a></li>
-                            <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
-                            <li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
+                            <li><a href="https://www.facebook.com/profile.php?id=100090241119598&mibextid=ZbWKwL"><i
+                                    class="fa-brands fa-facebook-f"></i></a></li>
+                            <li><a href="https://www.instagram.com/xiu_edu.uz"><i
+                                    class="fa-brands fa-instagram"></i></a></li>
+                            <li><a href="https://t.me/xalqaro_innovatsion_universiteti"><i
+                                    class="fa-brands fa-telegram"></i></a></li>
+                            <li><a href="https://www.youtube.com/@xiu_youtube"><i class="fa-brands fa-youtube"></i></a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -464,9 +468,9 @@
                         <p class="bd-banner-description">Xalqaro Innovatsion Universitet – bu zamonaviy ta’lim, ilg‘or
                             texnologiyalar va global imkoniyatlar uyg‘unligi.</p>
                         <div class="bd-banner-btn d-flex-items flex-wrap gap-30">
-                            <a class="bd-btn btn-outline-border-primary" href="courses.html">Ariza topshirish</a>
+                            <a class="bd-btn btn-outline-border-primary" href="{% url 'users:phone_auth' %}">Ariza topshirish</a>
                             <a class="bd-video-btn secondary popup-video"
-                               href="https://www.youtube.com/watch?v=HKk4oLIzhhM">
+                               href="#">
                                 <span class="icon"><i class="fa-solid fa-play"></i></span>
                                 Qo'llanmani ko'rish
                             </a>

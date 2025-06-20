@@ -715,7 +715,7 @@ def apply_page(request):
         # Agar ariza allaqachon qabul qilingan bo'lsa, tahrirlashga ruxsat bermaslik
         if application.status == ApplicationStatus.ACCEPTED:
             messages.info(request, "Sizning arizangiz allaqachon qabul qilingan. Tahrirlash mumkin emas.")
-            return redirect('dashboard:abituriyent')
+            # return redirect('dashboard:abituriyent')
 
     except Application.DoesNotExist:
         application = None
