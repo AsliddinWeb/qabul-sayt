@@ -4,7 +4,6 @@ from decouple import config
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', default=False, cast=bool)
 
 DJANGO_APPS = [
     # Admin UI
@@ -127,11 +126,7 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
-# SMS xizmati sozlamalari (agar kerak bo'lsa)
-# SMS_API_KEY = 'your_sms_api_key'
-# SMS_API_URL = 'your_sms_provider_url'
-
-# Cache sozlamalari (agar kerak bo'lsa)
+# Cache sozlamalari
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
@@ -190,68 +185,39 @@ CKEDITOR_CONFIGS = {
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 
-
 # JAZZMIN SETTINGS
 JAZZMIN_SETTINGS = {
     "site_title": "Qabul Admin",
-
     "site_header": "Qabul Admin",
-
     "site_brand": "Qabul Admin",
-
     "site_logo": "/assets/images/new/logo-one.png",
-
     "login_logo": "/assets/images/new/logo-one.png",
-
-    "login_logo_dark": "/assets/images/new/logo-one.pngg",
-
+    "login_logo_dark": "/assets/images/new/logo-one.png",
     "site_logo_classes": "img-circle",
-
     "site_icon": "/assets/images/new/logo-one.png",
-
     "welcome_sign": "Qabul tizimiga xush kelibsiz!",
-
     "copyright": "Qabul | qabul.xiuedu.uz",
-
     "search_model": [],
-
     "user_avatar": None,
-
     "topmenu_links": [
-
         {"name": "Bosh sahifa",  "url": "admin:index", "permissions": ["auth.view_user"]},
-
     ],
-
-
-    "usermenu_links": [
-    ],
-
+    "usermenu_links": [],
     "show_sidebar": True,
-
     "navigation_expanded": True,
-
     "hide_apps": [],
-
     "hide_models": [],
-
     "order_with_respect_to": [],
-
-    "icons": {
-    },
+    "icons": {},
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",
-
     "related_modal_active": False,
-
     "custom_css": False,
     "custom_js": False,
     "use_google_fonts_cdn": True,
     "show_ui_builder": False,
-
     "changeform_format": "horizontal_tabs",
     "changeform_format_overrides": {"accounts.user": "collapsible", "auth.group": "vertical_tabs"},
-
     "language_chooser": False,
 }
 
