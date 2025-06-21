@@ -331,10 +331,10 @@ class AbituriyentProfileForm(forms.ModelForm):
             today = date.today()
             age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
 
-            if age < 16:
-                raise ValidationError('Yoshingiz 16 dan kichik bo\'lmasligi kerak')
-            if age > 35:
-                raise ValidationError('Yoshingiz 35 dan katta bo\'lmasligi kerak')
+            # if age < 16:
+            #     raise ValidationError('Yoshingiz 16 dan kichik bo\'lmasligi kerak')
+            # if age > 35:
+            #     raise ValidationError('Yoshingiz 35 dan katta bo\'lmasligi kerak')
 
         return birth_date
 
