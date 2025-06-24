@@ -35,7 +35,7 @@ class HomeView(TemplateView):
         elif user.is_operator:
             return render(request, 'dashboard/operator.html')
         elif user.is_marketing:
-            return render(request, 'dashboard/marketing.html')
+            return redirect('admin:index')
         elif user.is_abituriyent:
             return redirect('dashboard:abituriyent')
 
