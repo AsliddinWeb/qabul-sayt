@@ -90,44 +90,8 @@ class VerifyCodeForm(forms.Form):
         return code
 
 
-class PassportSearchForm(forms.Form):
-    """Passport qidirish formasi"""
-
-    passport_series = forms.CharField(
-        max_length=9,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'AA1234567',
-            'maxlength': '9',
-            'required': True,
-            'id': 'searchPassportSeries'
-        }),
-        label='Passport seriya va raqami *'
-    )
-
-    birth_date = forms.DateField(
-        widget=forms.DateInput(attrs={
-            'class': 'form-control',
-            'type': 'date',
-            'required': True,
-            'id': 'searchBirthDate'
-        }),
-        label='Tug\'ilgan sana *'
-    )
-
-    def clean_passport_series(self):
-        """Passport seriyani tekshirish va formatlash"""
-        passport_series = self.cleaned_data.get('passport_series', '').upper()
-
-        import re
-        if not re.match(r'^[A-Z]{2}\d{7}$', passport_series):
-            raise ValidationError('Passport seriya formati noto\'g\'ri. Masalan: AA1234567')
-
-        return passport_series
-
-
 class AbituriyentProfileForm(forms.ModelForm):
-    """Abituriyent profili uchun forma"""
+    """Abituriyent profili uchun forma - qo'lda to'ldirish uchun optimizatsiyalangan"""
 
     class Meta:
         model = AbituriyentProfile
@@ -141,77 +105,62 @@ class AbituriyentProfileForm(forms.ModelForm):
         widgets = {
             'last_name': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'ABDULLAYEV',
-                'id': 'lastName',
-                'readonly': 'readonly'
+                'placeholder': 'Familiya',
+                'style': 'text-transform: uppercase;'
             }),
             'first_name': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'JASUR',
-                'id': 'firstName',
-                'readonly': 'readonly'
+                'placeholder': 'Ism',
+                'style': 'text-transform: uppercase;'
             }),
             'other_name': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'BAHROMOVICH',
-                'id': 'otherName',
-                'readonly': 'readonly'
+                'placeholder': 'Otasining ismi',
+                'style': 'text-transform: uppercase;'
             }),
             'birth_date': forms.DateInput(attrs={
                 'class': 'form-control',
-                'type': 'date',
-                'id': 'birthDate',
-                'readonly': 'readonly'
+                'type': 'date'
             }),
             'passport_series': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'AA1234567',
                 'maxlength': '9',
-                'id': 'passportSeries',
-                'readonly': 'readonly'
+                'style': 'text-transform: uppercase;'
             }),
             'pinfl': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': '12345678901234',
                 'maxlength': '14',
-                'id': 'pinfl',
-                'readonly': 'readonly'
+                'inputmode': 'numeric',
+                'pattern': '[0-9]{14}'
             }),
             'gender': forms.Select(attrs={
-                'class': 'form-control',
-                'id': 'gender',
-                'disabled': 'disabled'
+                'class': 'form-control'
             }),
             'nationality': forms.TextInput(attrs={
                 'class': 'form-control',
-                'value': "O'zbek",
-                'id': 'nationality',
-                'readonly': 'readonly'
+                'value': "O'zbek"
             }),
             'region': forms.Select(attrs={
-                'class': 'form-control',
-                'id': 'regionSelect'
+                'class': 'form-control'
             }),
             'district': forms.Select(attrs={
-                'class': 'form-control',
-                'id': 'districtSelect'
+                'class': 'form-control'
             }),
             'address': forms.Textarea(attrs={
                 'class': 'form-control',
-                'rows': 2,
-                'placeholder': 'To\'liq manzilni kiriting',
-                'id': 'address'
+                'rows': 3,
+                'placeholder': 'To\'liq manzilni kiriting'
             }),
             'image': forms.FileInput(attrs={
                 'class': 'form-control',
                 'accept': 'image/jpeg,image/jpg,image/png',
-                'id': 'imageUpload',
                 'style': 'display: none;'
             }),
             'passport_file': forms.FileInput(attrs={
                 'class': 'form-control',
-                'accept': 'application/pdf,image/jpeg,image/jpg,image/png',
-                'id': 'passportFile'
+                'accept': 'application/pdf,image/jpeg,image/jpg,image/png'
             }),
         }
 
@@ -230,22 +179,22 @@ class AbituriyentProfileForm(forms.ModelForm):
         self.fields['region'].label = 'Viloyat *'
         self.fields['district'].label = 'Tuman *'
         self.fields['address'].label = 'Yashash manzili *'
-        self.fields['image'].label = '3x4 rasm *'
-        self.fields['passport_file'].label = 'Passport nusxasi *'
+        self.fields['image'].label = '3x4 rasm'  # * belgisini olib tashladik
+        self.fields['passport_file'].label = 'Passport nusxasi'
 
         # Required maydonlarni belgilash
-        self.fields['last_name'].required = True
-        self.fields['first_name'].required = True
-        self.fields['other_name'].required = True
-        self.fields['birth_date'].required = True
-        self.fields['passport_series'].required = True
-        self.fields['pinfl'].required = True
-        self.fields['gender'].required = True
-        self.fields['region'].required = True
-        self.fields['district'].required = True
-        self.fields['address'].required = True
+        required_fields = [
+            'last_name', 'first_name', 'other_name', 'birth_date',
+            'passport_series', 'pinfl', 'gender', 'region', 'district',
+            'address'
+        ]
+        
+        for field_name in required_fields:
+            self.fields[field_name].required = True
+
+        # Image va passport_file ixtiyoriy
         self.fields['image'].required = False
-        self.fields['passport_file'].required = False  # Passport file majburiy emas
+        self.fields['passport_file'].required = False
 
         # Gender choices
         self.fields['gender'].choices = [
@@ -255,28 +204,33 @@ class AbituriyentProfileForm(forms.ModelForm):
         ]
 
         # Region choices
-        self.fields['region'].queryset = Region.objects.all()
+        self.fields['region'].queryset = Region.objects.order_by('name')
         self.fields['region'].empty_label = "Viloyatni tanlang"
 
         # District filtrlash
         if 'region' in self.data:
             try:
                 region_id = int(self.data.get('region'))
-                self.fields['district'].queryset = District.objects.filter(region_id=region_id)
+                self.fields['district'].queryset = District.objects.filter(
+                    region_id=region_id
+                ).order_by('name')
                 self.fields['district'].empty_label = "Tumanni tanlang"
             except (ValueError, TypeError):
                 self.fields['district'].queryset = District.objects.none()
                 self.fields['district'].empty_label = "Avval viloyatni tanlang"
         elif self.instance.pk and self.instance.region:
-            self.fields['district'].queryset = District.objects.filter(region=self.instance.region)
+            self.fields['district'].queryset = District.objects.filter(
+                region=self.instance.region
+            ).order_by('name')
             self.fields['district'].empty_label = "Tumanni tanlang"
         else:
             self.fields['district'].queryset = District.objects.none()
             self.fields['district'].empty_label = "Avval viloyatni tanlang"
+            
 
     def clean_passport_series(self):
         """Passport seriyani tekshirish va formatlash"""
-        passport_series = self.cleaned_data.get('passport_series', '').upper()
+        passport_series = self.cleaned_data.get('passport_series', '').upper().strip()
 
         if passport_series:
             import re
@@ -300,7 +254,7 @@ class AbituriyentProfileForm(forms.ModelForm):
 
     def clean_pinfl(self):
         """PINFL ni tekshirish"""
-        pinfl = self.cleaned_data.get('pinfl', '')
+        pinfl = self.cleaned_data.get('pinfl', '').strip()
 
         if pinfl:
             import re
@@ -331,10 +285,10 @@ class AbituriyentProfileForm(forms.ModelForm):
             today = date.today()
             age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
 
-            # if age < 16:
-            #     raise ValidationError('Yoshingiz 16 dan kichik bo\'lmasligi kerak')
-            # if age > 35:
-            #     raise ValidationError('Yoshingiz 35 dan katta bo\'lmasligi kerak')
+            if age < 16:
+                raise ValidationError('Yoshingiz 16 dan kichik bo\'lmasligi kerak')
+            if age > 60:
+                raise ValidationError('Yoshingiz 60 dan katta bo\'lmasligi kerak')
 
         return birth_date
 
@@ -378,3 +332,14 @@ class AbituriyentProfileForm(forms.ModelForm):
                 raise ValidationError('Faqat PDF, JPG, JPEG, PNG formatidagi fayllar qabul qilinadi')
 
         return passport_file
+
+    def clean(self):
+        """Form umumiy validatsiyasi"""
+        cleaned_data = super().clean()
+        
+        # Ismlarni katta harfga o'tkazish
+        for field_name in ['last_name', 'first_name', 'other_name']:
+            if cleaned_data.get(field_name):
+                cleaned_data[field_name] = cleaned_data[field_name].upper().strip()
+        
+        return cleaned_data

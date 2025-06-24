@@ -1,5 +1,5 @@
-# apps/dashboard/urls.py
-from django.urls import path, include
+# apps/dashboard/urls.py - Cleaned version
+from django.urls import path
 from . import views
 
 app_name = 'dashboard'
@@ -8,33 +8,27 @@ urlpatterns = [
     # Main dashboard
     path('', views.main_dashboard, name='main'),
 
-    # Abituriyent URLs
+    # Abituriyent main pages
     path('abituriyent/', views.abituriyent_dashboard, name='abituriyent'),
     path('abituriyent/passport/', views.passport_view, name='abituriyent_passport'),
-    path('abituriyent/profile/', views.passport_view, name='abituriyent_profile'),
-
+    path('abituriyent/profile/', views.passport_view, name='abituriyent_profile'),  # Alias
+    
+    # Document pages
     path('abituriyent/diplom/', views.diplom_page, name='abituriyent_diplom'),
     path('abituriyent/transfer-diplom/', views.transfer_diplom_page, name='abituriyent_transfer_diplom'),
 
-    # Asosiy ariza sahifalari
-    path('apply/', views.apply_page, name='abituriyent_apply'),
-    path('status/', views.application_status, name='abituriyent_status'),
-    path('history/', views.application_history, name='abituriyent_history'),
-    path('load-programs/', views.load_programs, name='abituriyent_load_programs'),
+    # Application pages
+    path('abituriyent/apply/', views.apply_page, name='abituriyent_apply'),
+    path('abituriyent/status/', views.application_status, name='abituriyent_status'),
+    path('abituriyent/history/', views.application_history, name='abituriyent_history'),
+    path('abituriyent/quick-apply/', views.quick_apply, name='abituriyent_quick_apply'),
 
-    # Tezkor ariza
-    path('quick-apply/', views.quick_apply, name='abituriyent_quick_apply'),
+    # Application actions
+    path('abituriyent/withdraw/', views.withdraw_application, name='abituriyent_withdraw'),
 
-    # Ariza amalllari
-    path('withdraw/', views.withdraw_application, name='abituriyent_withdraw'),
-
-    # AJAX endpoints
-    path('abituriyent/ajax/search-passport/', views.search_passport_data, name='abituriyent_search_passport'),
-    path('abituriyent/ajax/save-passport/', views.save_passport_data, name='abituriyent_save_passport'),
+    # Essential AJAX endpoints only
     path('abituriyent/ajax/load-districts/', views.load_districts, name='abituriyent_load_districts'),
-    path('abituriyent/ajax/applications/', views.applications_ajax, name='abituriyent_applications_ajax'),
-    path('abituriyent/ajax/profile-completion/', views.profile_completion_ajax, name='abituriyent_profile_completion'),
-    path('abituriyent/ajax/dashboard-stats/', views.dashboard_stats_ajax, name='abituriyent_dashboard_stats'),
+    path('abituriyent/ajax/load-programs/', views.load_programs, name='abituriyent_load_programs'),
 
     # Other dashboards
     path('operator/', views.operator_dashboard, name='operator'),

@@ -424,14 +424,18 @@ class AbituriyentProfile(BaseProfile):
         "3x4 rasm",
         upload_to='users/abituriyents/images/%Y/%m/',
         validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])],
-        help_text="3x4 o'lchamdagi rasm (JPG, PNG)"
+        help_text="3x4 o'lchamdagi rasm (JPG, PNG)",
+        blank=True,
+        null=True
     )
 
     passport_file = models.FileField(
         "Pasport nusxasi",
         upload_to='users/abituriyents/passports/%Y/%m/',
         validators=[FileExtensionValidator(allowed_extensions=['pdf', 'jpg', 'jpeg', 'png'])],
-        help_text="Pasport nusxasi (PDF, JPG, PNG)"
+        help_text="Pasport nusxasi (PDF, JPG, PNG)",
+        blank=True,
+        null=True
     )
 
 
@@ -469,9 +473,128 @@ class AbituriyentProfile(BaseProfile):
         self.is_profile_complete = all_filled and all_files
         return self.is_profile_complete
 
+    # apps/users/models.py da AbituriyentProfile klassiga qo'shish kerak bo'lgan metodlar
+
     def save(self, *args, **kwargs):
-        self.check_profile_completion()
+        """Ma'lumotlarni saqlashdan oldin normalizatsiya qilish"""
+        # Ismlarni katta harfga o'tkazish va bo'sh joylarni olib tashlash
+        if self.last_name:
+            self.last_name = self.last_name.upper().strip()
+        if self.first_name:
+            self.first_name = self.first_name.upper().strip()
+        if self.other_name:
+            self.other_name = self.other_name.upper().strip()
+        
+        # Passport seriyasini normalizatsiya qilish
+        if self.passport_series:
+            self.passport_series = self.passport_series.upper().strip()
+        
+        # PINFL ni tozalash
+        if self.pinfl:
+            self.pinfl = self.pinfl.strip()
+        
+        # Manzilni tozalash
+        if self.address:
+            self.address = self.address.strip()
+        
         super().save(*args, **kwargs)
+
+
+    def get_display_address(self):
+        """To'liq manzilni qaytarish"""
+        parts = []
+        if self.region:
+            parts.append(self.region.name)
+        if self.district:
+            parts.append(self.district.name)
+        if self.address:
+            parts.append(self.address)
+        
+        return ", ".join(parts) if parts else "Manzil kiritilmagan"
+
+    def get_age_display(self):
+        """Yoshni matn ko'rinishida qaytarish"""
+        age = self.get_age()
+        return f"{age} yosh" if age else "Noma'lum"
+
+    def get_gender_display_uz(self):
+        """Jinsni o'zbek tilida qaytarish"""
+        gender_map = {
+            'erkak': 'Erkak',
+            'ayol': 'Ayol'
+        }
+        return gender_map.get(self.gender, 'Noma\'lum')
+
+    def clean(self):
+        """Model validatsiyasi"""
+        super().clean()
+        
+        # Tug'ilgan sanani tekshirish
+        if self.birth_date:
+            from datetime import date
+            today = date.today()
+            age = today.year - self.birth_date.year - (
+                (today.month, today.day) < (self.birth_date.month, self.birth_date.day)
+            )
+            
+            if age < 16:
+                from django.core.exceptions import ValidationError
+                raise ValidationError({'birth_date': 'Yoshingiz 16 dan kichik bo\'lmasligi kerak'})
+            
+            if age > 60:
+                from django.core.exceptions import ValidationError
+                raise ValidationError({'birth_date': 'Yoshingiz 60 dan katta bo\'lmasligi kerak'})
+        
+        # Region va district mos kelishini tekshirish
+        if self.district and self.region:
+            if self.district.region != self.region:
+                from django.core.exceptions import ValidationError
+                raise ValidationError({
+                    'district': 'Tanlangan tuman viloyatga mos kelmaydi'
+                })
+
+    @classmethod
+    def get_by_passport(cls, passport_series):
+        """Passport seriya bo'yicha topish"""
+        try:
+            return cls.objects.get(passport_series=passport_series.upper().strip())
+        except cls.DoesNotExist:
+            return None
+
+    @classmethod
+    def get_by_pinfl(cls, pinfl):
+        """PINFL bo'yicha topish"""
+        try:
+            return cls.objects.get(pinfl=pinfl.strip())
+        except cls.DoesNotExist:
+            return None
+
+    def has_required_documents(self):
+        """Zarur hujjatlar mavjudligini tekshirish"""
+        return bool(self.image)  # passport_file ixtiyoriy
+
+    def get_missing_fields(self):
+        """To'ldirilmagan maydonlar ro'yxati"""
+        required_fields = {
+            'last_name': 'Familiya',
+            'first_name': 'Ism', 
+            'other_name': 'Otasining ismi',
+            'birth_date': 'Tug\'ilgan sana',
+            'passport_series': 'Passport seriya',
+            'pinfl': 'PINFL',
+            'gender': 'Jinsi',
+            'region': 'Viloyat',
+            'district': 'Tuman',
+            'address': 'Manzil',
+        }
+        
+        missing = []
+        for field, label in required_fields.items():
+            value = getattr(self, field, None)
+            if not value:
+                missing.append(label)
+        
+        return missing
 
     class Meta:
         verbose_name = 'Abituriyent profili'

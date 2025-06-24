@@ -3,14 +3,6 @@
 
 {% block extra_css %}
 <style>
-    .passport-search-card {
-        background: #f8f9fa;
-        border-radius: 10px;
-        padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-    }
-
     .passport-data-card {
         background: white;
         border-radius: 10px;
@@ -47,11 +39,6 @@
         height: 38px;
     }
 
-    .form-control[readonly] {
-        background-color: #f8f9fa;
-        border-color: #e9ecef;
-    }
-
     .passport-photo-box {
         width: 150px;
         height: 200px;
@@ -64,12 +51,11 @@
         overflow: hidden;
         position: relative;
         cursor: pointer;
+        transition: border-color 0.3s ease;
     }
 
-    /* Profile bor bo'lganda rasm boxini readonly qilish */
-    .readonly-photo-box {
-        cursor: default;
-        border: 2px solid #dee2e6;
+    .passport-photo-box:hover {
+        border-color: #007bff;
     }
 
     @media (max-width: 768px) {
@@ -97,38 +83,6 @@
         display: block;
     }
 
-    .search-inline-form {
-        display: flex;
-        gap: 15px;
-        align-items: flex-end;
-        flex-wrap: wrap;
-    }
-
-    .search-inline-form .form-group {
-        flex: 1;
-        min-width: 200px;
-        margin-bottom: 0;
-    }
-
-    .search-inline-form .btn {
-        height: 38px;
-        padding: 0 20px;
-        font-size: 14px;
-    }
-
-    #alertContainer {
-        position: fixed;
-        top: 80px;
-        right: 20px;
-        z-index: 9999;
-        max-width: 400px;
-    }
-
-    .alert {
-        font-size: 14px;
-        padding: 12px 15px;
-    }
-
     .section-title {
         font-size: 18px;
         font-weight: 600;
@@ -144,13 +98,6 @@
     .row.gy-20 > * {
         padding-top: 10px;
         padding-bottom: 10px;
-    }
-
-    .file-upload-section {
-        margin-top: 20px;
-        padding: 15px;
-        background: #f8f9fa;
-        border-radius: 8px;
     }
 
     /* Profile view mode */
@@ -178,6 +125,16 @@
         border: 1px solid #e9ecef;
         border-radius: 4px;
     }
+
+    .edit-mode-toggle {
+        margin-bottom: 20px;
+    }
+
+    .text-danger {
+        color: #dc3545 !important;
+        font-size: 12px;
+        margin-top: 2px;
+    }
 </style>
 {% endblock extra_css %}
 
@@ -188,56 +145,21 @@
             <h4 class="bd-dashboard-title">Passport Ma'lumotlari</h4>
         </div>
 
-        <!-- Passport Search Section -->
-        {% if not profile or not profile.passport_series %}
-        <div class="passport-search-card" id="searchCardSection">
-            <form id="searchPassportForm" class="search-inline-form">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="searchPassportSeries">Passport seriya va raqami *</label>
-                    <input name="passport_series" id="searchPassportSeries" type="text"
-                           placeholder="AA1234567" maxlength="9" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="searchBirthDate">Tug'ilgan sana *</label>
-                    <input name="birth_date" id="searchBirthDate" type="date"
-                           class="form-control" required>
-                </div>
-                <button type="submit" class="bd-btn btn-primary" id="searchBtn">
-                    <i class="fas fa-search me-1"></i>Qidirish
-                </button>
-            </form>
-        </div>
-        {% else %}
-        <div class="passport-search-card" id="searchCardSection" style="display: none;">
-            <form id="searchPassportForm" class="search-inline-form">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="searchPassportSeries">Passport seriya va raqami *</label>
-                    <input name="passport_series" id="searchPassportSeries" type="text"
-                           placeholder="AA1234567" maxlength="9" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="searchBirthDate">Tug'ilgan sana *</label>
-                    <input name="birth_date" id="searchBirthDate" type="date"
-                           class="form-control" required>
-                </div>
-                <button type="submit" class="bd-btn btn-primary" id="searchBtn">
-                    <i class="fas fa-search me-1"></i>Qidirish
-                </button>
-            </form>
-        </div>
-        {% endif %}
-
-        <!-- Profile view mode - faqat profil bor bo'lganda ko'rsatish -->
+        <!-- Profile view mode - profile mavjud bo'lganda -->
         {% if profile and profile.passport_series %}
-        <div class="profile-view-mode">
+        <div class="profile-view-mode" id="profileViewMode">
+            <div class="edit-mode-toggle">
+                <button type="button" class="bd-btn btn-primary" id="editModeBtn">
+                    <i class="fas fa-edit me-1"></i>Tahrirlash
+                </button>
+            </div>
+
             <h5 class="section-title">Shaxsiy ma'lumotlar</h5>
 
             <!-- Rasm va asosiy ma'lumotlar -->
             <div class="row gy-20 mb-4">
                 <div class="col-lg-2 col-md-3 col-sm-4 mb-3">
-                    <div class="passport-photo-box readonly-photo-box">
+                    <div class="passport-photo-box" style="cursor: default; border: 2px solid #dee2e6;">
                         {% if profile.image %}
                             <img src="{{ profile.image.url }}" alt="Passport rasmi">
                         {% else %}
@@ -318,74 +240,91 @@
                     <div class="info-value">{{ profile.address|default:"—" }}</div>
                 </div>
             </div>
-
         </div>
         {% endif %}
 
-        <!-- Passport Data Form Section - faqat qidiruv natijasida ko'rsatish -->
-        <div class="passport-data-card" id="passportDataSection" style="display: none;">
-            <h5 class="section-title">Shaxsiy ma'lumotlar</h5>
-            <form id="passportDataForm" enctype="multipart/form-data">
+        <!-- Edit mode form -->
+        <div class="passport-data-card" id="editModeSection" style="{% if profile and profile.passport_series %}display: none;{% endif %}">
+            <h5 class="section-title">
+                {% if profile %}Ma'lumotlarni tahrirlash{% else %}Shaxsiy ma'lumotlarni kiriting{% endif %}
+            </h5>
+            
+            <form method="post" enctype="multipart/form-data" id="passportForm">
                 {% csrf_token %}
 
                 <!-- Photo and Basic Info Row -->
                 <div class="row gy-20 mb-4">
                     <div class="col-lg-2 col-md-3 col-sm-4 mb-3">
-                        <div class="passport-photo-box" id="photoBox" onclick="document.getElementById('imageUpload').click()">
-                            <div class="passport-photo-placeholder">
-                                <i class="fas fa-user"></i>
-                                <div>3x4 rasm *</div>
-                            </div>
+                        <div class="passport-photo-box" id="photoBox" onclick="document.getElementById('id_image').click()">
+                            {% if profile and profile.image %}
+                                <img src="{{ profile.image.url }}" alt="Passport rasmi">
+                            {% else %}
+                                <div class="passport-photo-placeholder">
+                                    <i class="fas fa-user"></i>
+                                    <div>3x4 rasm</div>
+                                </div>
+                            {% endif %}
                         </div>
-                        <input type="file" id="imageUpload" name="image"
-                               accept="image/jpeg,image/jpg,image/png" style="display: none;">
+                        {{ form.image }}
+                        {% if form.image.errors %}
+                            <div class="text-danger">{{ form.image.errors.0 }}</div>
+                        {% endif %}
                     </div>
                     <div class="col-lg-10 col-md-9 col-sm-8">
                         <div class="passport-info-section">
                             <div class="row gy-20">
                                 <div class="col-lg-4 col-md-6">
                                     <div class="form-group">
-                                        <label for="lastName">Familiya *</label>
-                                        <input name="last_name" id="lastName" type="text"
-                                               class="form-control" readonly required>
+                                        {{ form.last_name.label_tag }}
+                                        {{ form.last_name }}
+                                        {% if form.last_name.errors %}
+                                            <div class="text-danger">{{ form.last_name.errors.0 }}</div>
+                                        {% endif %}
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-md-6">
                                     <div class="form-group">
-                                        <label for="firstName">Ism *</label>
-                                        <input name="first_name" id="firstName" type="text"
-                                               class="form-control" readonly required>
+                                        {{ form.first_name.label_tag }}
+                                        {{ form.first_name }}
+                                        {% if form.first_name.errors %}
+                                            <div class="text-danger">{{ form.first_name.errors.0 }}</div>
+                                        {% endif %}
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-md-6">
                                     <div class="form-group">
-                                        <label for="otherName">Otasining ismi *</label>
-                                        <input name="other_name" id="otherName" type="text"
-                                               class="form-control" readonly required>
+                                        {{ form.other_name.label_tag }}
+                                        {{ form.other_name }}
+                                        {% if form.other_name.errors %}
+                                            <div class="text-danger">{{ form.other_name.errors.0 }}</div>
+                                        {% endif %}
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-md-6">
                                     <div class="form-group">
-                                        <label for="birthDate">Tug'ilgan sana *</label>
-                                        <input name="birth_date" id="birthDate" type="date"
-                                               class="form-control" readonly required>
+                                        {{ form.birth_date.label_tag }}
+                                        {{ form.birth_date }}
+                                        {% if form.birth_date.errors %}
+                                            <div class="text-danger">{{ form.birth_date.errors.0 }}</div>
+                                        {% endif %}
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-md-6">
                                     <div class="form-group">
-                                        <label for="gender">Jinsi *</label>
-                                        <select name="gender" id="gender" class="form-control" disabled required>
-                                            <option value="">Tanlang</option>
-                                            <option value="erkak">Erkak</option>
-                                            <option value="ayol">Ayol</option>
-                                        </select>
+                                        {{ form.gender.label_tag }}
+                                        {{ form.gender }}
+                                        {% if form.gender.errors %}
+                                            <div class="text-danger">{{ form.gender.errors.0 }}</div>
+                                        {% endif %}
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-md-6">
                                     <div class="form-group">
-                                        <label for="nationality">Millati</label>
-                                        <input name="nationality" id="nationality" type="text"
-                                               class="form-control" readonly value="O'zbek">
+                                        {{ form.nationality.label_tag }}
+                                        {{ form.nationality }}
+                                        {% if form.nationality.errors %}
+                                            <div class="text-danger">{{ form.nationality.errors.0 }}</div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -397,16 +336,20 @@
                 <div class="row gy-20 mb-4">
                     <div class="col-lg-6 col-md-6">
                         <div class="form-group">
-                            <label for="passportSeries">Passport seriya va raqami *</label>
-                            <input name="passport_series" id="passportSeries" type="text"
-                                   class="form-control" readonly required>
+                            {{ form.passport_series.label_tag }}
+                            {{ form.passport_series }}
+                            {% if form.passport_series.errors %}
+                                <div class="text-danger">{{ form.passport_series.errors.0 }}</div>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6">
                         <div class="form-group">
-                            <label for="pinfl">PINFL *</label>
-                            <input name="pinfl" id="pinfl" type="text"
-                                   class="form-control" readonly required>
+                            {{ form.pinfl.label_tag }}
+                            {{ form.pinfl }}
+                            {% if form.pinfl.errors %}
+                                <div class="text-danger">{{ form.pinfl.errors.0 }}</div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -415,21 +358,20 @@
                 <div class="row gy-20 mb-4">
                     <div class="col-lg-6">
                         <div class="form-group">
-                            <label for="regionSelect">Viloyat *</label>
-                            <select name="region" id="regionSelect" class="form-control" required>
-                                <option value="">Viloyatni tanlang</option>
-                                {% for region in regions %}
-                                    <option value="{{ region.id }}">{{ region.name }}</option>
-                                {% endfor %}
-                            </select>
+                            {{ form.region.label_tag }}
+                            {{ form.region }}
+                            {% if form.region.errors %}
+                                <div class="text-danger">{{ form.region.errors.0 }}</div>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group">
-                            <label for="districtSelect">Tuman *</label>
-                            <select name="district" id="districtSelect" class="form-control" required>
-                                <option value="">Avval viloyatni tanlang</option>
-                            </select>
+                            {{ form.district.label_tag }}
+                            {{ form.district }}
+                            {% if form.district.errors %}
+                                <div class="text-danger">{{ form.district.errors.0 }}</div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -437,27 +379,49 @@
                 <div class="row gy-20 mb-4">
                     <div class="col-12">
                         <div class="form-group">
-                            <label for="address">Yashash manzili *</label>
-                            <textarea name="address" id="address" class="form-control"
-                                      rows="2" placeholder="To'liq manzilni kiriting" required></textarea>
+                            {{ form.address.label_tag }}
+                            {{ form.address }}
+                            {% if form.address.errors %}
+                                <div class="text-danger">{{ form.address.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Passport file -->
+                <div class="row gy-20 mb-4">
+                    <div class="col-12">
+                        <div class="form-group">
+                            {{ form.passport_file.label_tag }}
+                            {{ form.passport_file }}
+                            {% if form.passport_file.errors %}
+                                <div class="text-danger">{{ form.passport_file.errors.0 }}</div>
+                            {% endif %}
+                            {% if profile and profile.passport_file %}
+                                <div class="mt-2">
+                                    <small class="text-muted">
+                                        Mavjud fayl: <a href="{{ profile.passport_file.url }}" target="_blank">Ko'rish</a>
+                                    </small>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
 
                 <!-- Action Buttons -->
                 <div class="d-flex gap-2 mt-4">
-                    <button type="submit" class="bd-btn btn-primary" id="saveBtn">
-                        <i class="fas fa-save me-1"></i>Saqlash
+                    <button type="submit" class="bd-btn btn-primary">
+                        <i class="fas fa-save me-1"></i>
+                        {% if profile %}Yangilash{% else %}Saqlash{% endif %}
                     </button>
-                    <button type="button" class="bd-btn btn-secondary" id="newSearchBtn">
-                        <i class="fas fa-search me-1"></i>Yangi qidiruv
+                    {% if profile %}
+                    <button type="button" class="bd-btn btn-secondary" id="cancelEditBtn">
+                        <i class="fas fa-times me-1"></i>Bekor qilish
                     </button>
+                    {% endif %}
                 </div>
             </form>
         </div>
-
-        <!-- Alert Messages -->
-        <div id="alertContainer"></div>
     </div>
 </div>
 {% endblock main_content %}
@@ -465,83 +429,61 @@
 {% block extra_js %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const searchForm = document.getElementById('searchPassportForm');
-        const dataForm = document.getElementById('passportDataForm');
-        const dataSection = document.getElementById('passportDataSection');
-        const newSearchBtn = document.getElementById('newSearchBtn');
-        const regionSelect = document.getElementById('regionSelect');
-        const districtSelect = document.getElementById('districtSelect');
-        const imageUpload = document.getElementById('imageUpload');
+        const profileViewMode = document.getElementById('profileViewMode');
+        const editModeSection = document.getElementById('editModeSection');
+        const editModeBtn = document.getElementById('editModeBtn');
+        const cancelEditBtn = document.getElementById('cancelEditBtn');
+        const regionSelect = document.getElementById('{{ form.region.id_for_label }}');
+        const districtSelect = document.getElementById('{{ form.district.id_for_label }}');
+        const imageInput = document.getElementById('{{ form.image.id_for_label }}');
 
-        // Alert ko'rsatish
-        function showAlert(message, type = 'success') {
-            const alertHtml = `
-                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-                    ${message}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            `;
-            document.getElementById('alertContainer').innerHTML = alertHtml;
-
-            setTimeout(() => {
-                const alert = document.querySelector('.alert');
-                if (alert) {
-                    alert.classList.remove('show');
-                    setTimeout(() => alert.remove(), 150);
-                }
-            }, 5000);
+        // Tahrirlash rejimiga o'tish
+        if (editModeBtn) {
+            editModeBtn.addEventListener('click', function() {
+                profileViewMode.style.display = 'none';
+                editModeSection.style.display = 'block';
+            });
         }
 
-        // Passport seriyani formatlash - faqat qidiruv formasida
-        if (searchForm) {
-            const searchPassportInput = document.getElementById('searchPassportSeries');
-            if (searchPassportInput) {
-                searchPassportInput.addEventListener('input', function(e) {
-                    let value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-                    if (value.length > 2) {
-                        value = value.slice(0, 2) + value.slice(2);
-                    }
-                    e.target.value = value;
-                });
-            }
-        }
-
-        // Region o'zgarganda districtlarni yuklash funksiyasi
-        function loadDistricts(regionId, selectedDistrictId = null) {
-            if (regionId && districtSelect) {
-                districtSelect.innerHTML = '<option value="">Yuklanmoqda...</option>';
-
-                fetch(`{% url "dashboard:abituriyent_load_districts" %}?region_id=${regionId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            districtSelect.innerHTML = '<option value="">Tumanni tanlang</option>';
-                            data.districts.forEach(district => {
-                                const selected = selectedDistrictId && district.id == selectedDistrictId ? 'selected' : '';
-                                districtSelect.innerHTML += `<option value="${district.id}" ${selected}>${district.name}</option>`;
-                            });
-                        } else {
-                            districtSelect.innerHTML = '<option value="">Xatolik yuz berdi</option>';
-                        }
-                    })
-                    .catch(error => {
-                        districtSelect.innerHTML = '<option value="">Xatolik yuz berdi</option>';
-                    });
-            } else if (districtSelect) {
-                districtSelect.innerHTML = '<option value="">Avval viloyatni tanlang</option>';
-            }
+        // Tahrirlashni bekor qilish
+        if (cancelEditBtn) {
+            cancelEditBtn.addEventListener('click', function() {
+                editModeSection.style.display = 'none';
+                profileViewMode.style.display = 'block';
+            });
         }
 
         // Region o'zgarganda districtlarni yuklash
-        if (regionSelect) {
+        if (regionSelect && districtSelect) {
             regionSelect.addEventListener('change', function() {
-                loadDistricts(this.value);
+                const regionId = this.value;
+                districtSelect.innerHTML = '<option value="">Yuklanmoqda...</option>';
+
+                if (regionId) {
+                    fetch(`{% url "dashboard:abituriyent_load_districts" %}?region_id=${regionId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                districtSelect.innerHTML = '<option value="">Tumanni tanlang</option>';
+                                data.districts.forEach(district => {
+                                    districtSelect.innerHTML += `<option value="${district.id}">${district.name}</option>`;
+                                });
+                            } else {
+                                districtSelect.innerHTML = '<option value="">Xatolik yuz berdi</option>';
+                            }
+                        })
+                        .catch(error => {
+                            districtSelect.innerHTML = '<option value="">Xatolik yuz berdi</option>';
+                        });
+                } else {
+                    districtSelect.innerHTML = '<option value="">Avval viloyatni tanlang</option>';
+                }
             });
         }
 
         // Rasm yuklash
-        if (imageUpload) {
-            imageUpload.addEventListener('change', function(e) {
+        if (imageInput) {
+            imageInput.addEventListener('change', function(e) {
                 const file = e.target.files[0];
                 if (file) {
                     const reader = new FileReader();
@@ -555,231 +497,27 @@
             });
         }
 
-        // Passport ma'lumotlarini qidirish
-        if (searchForm) {
-            searchForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-
-                const searchBtn = document.getElementById('searchBtn');
-                const originalText = searchBtn.innerHTML;
-                searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Qidirilmoqda...';
-                searchBtn.disabled = true;
-
-                try {
-                    const formData = new FormData(searchForm);
-                    const response = await fetch('{% url "dashboard:abituriyent_search_passport" %}', {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-CSRFToken': '{{ csrf_token }}'
-                        }
-                    });
-
-                    const data = await response.json();
-
-                    if (data.success) {
-                        fillPassportData(data.data);
-                        dataSection.style.display = 'block';
-                        showAlert('Ma\'lumotlar topildi!', 'success');
-                    } else {
-                        showAlert(data.error || 'Ma\'lumotlar topilmadi', 'danger');
-                    }
-                } catch (error) {
-                    showAlert('Xatolik yuz berdi. Qaytadan urinib ko\'ring.', 'danger');
-                } finally {
-                    searchBtn.innerHTML = originalText;
-                    searchBtn.disabled = false;
+        // Passport seriyasini formatlash
+        const passportInput = document.getElementById('{{ form.passport_series.id_for_label }}');
+        if (passportInput) {
+            passportInput.addEventListener('input', function(e) {
+                let value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+                if (value.length > 9) {
+                    value = value.slice(0, 9);
                 }
+                e.target.value = value;
             });
         }
 
-        // Ma'lumotlarni formaga to'ldirish
-        function fillPassportData(data) {
-            if (document.getElementById('lastName')) document.getElementById('lastName').value = data.last_name || '';
-            if (document.getElementById('firstName')) document.getElementById('firstName').value = data.first_name || '';
-            if (document.getElementById('otherName')) document.getElementById('otherName').value = data.other_name || '';
-            if (document.getElementById('birthDate')) document.getElementById('birthDate').value = data.birth_date || '';
-            if (document.getElementById('passportSeries')) document.getElementById('passportSeries').value = data.passport_series || '';
-            if (document.getElementById('pinfl')) document.getElementById('pinfl').value = data.pinfl || '';
-            if (document.getElementById('nationality')) document.getElementById('nationality').value = data.nationality || "O'zbek";
-            if (document.getElementById('address')) document.getElementById('address').value = data.address || '';
-
-            // Gender
-            const genderSelect = document.getElementById('gender');
-            if (genderSelect) {
-                if (data.gender === 1 || data.gender === '1') {
-                    genderSelect.value = 'erkak';
-                } else if (data.gender === 2 || data.gender === '2') {
-                    genderSelect.value = 'ayol';
-                } else if (data.gender && (data.gender.toLowerCase() === 'erkak' || data.gender.toLowerCase() === 'male')) {
-                    genderSelect.value = 'erkak';
-                } else if (data.gender && (data.gender.toLowerCase() === 'ayol' || data.gender.toLowerCase() === 'female')) {
-                    genderSelect.value = 'ayol';
+        // PINFL formatini tekshirish
+        const pinflInput = document.getElementById('{{ form.pinfl.id_for_label }}');
+        if (pinflInput) {
+            pinflInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/[^0-9]/g, '');
+                if (value.length > 14) {
+                    value = value.slice(0, 14);
                 }
-                genderSelect.disabled = true;
-            }
-
-            // Rasm ko'rsatish
-            if (data.photo_url || data.photo_path) {
-                let photoUrl = data.photo_url || `/media/${data.photo_path}`;
-                if (photoUrl.startsWith('/media/')) {
-                    photoUrl = window.location.origin + photoUrl;
-                }
-
-                document.getElementById('photoBox').innerHTML = `
-                    <img src="${photoUrl}" alt="Passport rasmi">
-                `;
-
-                // API photo URL ni saqlash
-                let apiPhotoInput = document.getElementById('apiPhotoUrl');
-                if (!apiPhotoInput && dataForm) {
-                    apiPhotoInput = document.createElement('input');
-                    apiPhotoInput.type = 'hidden';
-                    apiPhotoInput.id = 'apiPhotoUrl';
-                    apiPhotoInput.name = 'api_photo_url';
-                    dataForm.appendChild(apiPhotoInput);
-                }
-                if (apiPhotoInput) apiPhotoInput.value = photoUrl;
-            }
-        }
-
-        // Ma'lumotlarni saqlash
-        if (dataForm) {
-            dataForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-
-                // Validation
-                const requiredFields = [
-                    { field: 'last_name', name: 'Familiya' },
-                    { field: 'first_name', name: 'Ism' },
-                    { field: 'other_name', name: 'Otasining ismi' },
-                    { field: 'birth_date', name: 'Tug\'ilgan sana' },
-                    { field: 'passport_series', name: 'Passport seriya' },
-                    { field: 'pinfl', name: 'PINFL' },
-                    { field: 'region', name: 'Viloyat' },
-                    { field: 'district', name: 'Tuman' },
-                    { field: 'address', name: 'Manzil' }
-                ];
-
-                for (let req of requiredFields) {
-                    const element = document.querySelector(`[name="${req.field}"]`);
-                    const value = element ? element.value : '';
-                    if (!value || value.trim() === '') {
-                        showAlert(`${req.name} maydoni to'ldirilishi shart!`, 'danger');
-                        if (element) element.focus();
-                        return;
-                    }
-                }
-
-                const genderSelect = document.getElementById('gender');
-                if (!genderSelect || !genderSelect.value) {
-                    showAlert('Jinsi maydoni to\'ldirilishi shart!', 'danger');
-                    return;
-                }
-
-                const imageFile = imageUpload ? imageUpload.files[0] : null;
-                const apiPhotoUrl = document.getElementById('apiPhotoUrl') ? document.getElementById('apiPhotoUrl').value : '';
-
-                if (!imageFile && !apiPhotoUrl) {
-                    showAlert('3x4 rasm yuklanishi shart!', 'danger');
-                    return;
-                }
-
-                const saveBtn = document.getElementById('saveBtn');
-                const originalText = saveBtn.innerHTML;
-                saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Saqlanmoqda...';
-                saveBtn.disabled = true;
-
-                try {
-                    const formData = new FormData(dataForm);
-                    if (genderSelect.disabled && genderSelect.value) {
-                        formData.set('gender', genderSelect.value);
-                    }
-
-                    const response = await fetch('{% url "dashboard:abituriyent_save_passport" %}', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    const data = await response.json();
-
-                    if (data.success) {
-                        showAlert(data.message || 'Ma\'lumotlar saqlandi!', 'success');
-                        setTimeout(() => {
-                            window.location.href = '{% url "dashboard:abituriyent_diplom" %}';
-                        }, 2000);
-                    } else {
-                        showAlert(data.error || 'Saqlashda xatolik yuz berdi', 'danger');
-                    }
-                } catch (error) {
-                    showAlert('Xatolik yuz berdi. Qaytadan urinib ko\'ring.', 'danger');
-                } finally {
-                    saveBtn.innerHTML = originalText;
-                    saveBtn.disabled = false;
-                }
-            });
-        }
-
-        // Yangi qidiruv
-        if (newSearchBtn) {
-            newSearchBtn.addEventListener('click', function() {
-                // Profile view mode ni yashirish
-                const profileViewMode = document.querySelector('.profile-view-mode');
-                if (profileViewMode) {
-                    profileViewMode.style.display = 'none';
-                }
-
-                // Qidiruv formasini ko'rsatish
-                const searchCardSection = document.getElementById('searchCardSection');
-                if (searchCardSection) {
-                    searchCardSection.style.display = 'block';
-                }
-
-                // Data section ni yashirish va reset qilish
-                if (dataSection) {
-                    dataSection.style.display = 'none';
-
-                    // Formani reset qilish
-                    if (dataForm) {
-                        dataForm.reset();
-                    }
-
-                    // Region/District reset
-                    if (regionSelect) regionSelect.value = '';
-                    if (districtSelect) districtSelect.innerHTML = '<option value="">Avval viloyatni tanlang</option>';
-
-                    // Gender reset
-                    const genderSelect = document.getElementById('gender');
-                    if (genderSelect) {
-                        genderSelect.disabled = false;
-                        genderSelect.value = '';
-                    }
-
-                    // Photo reset
-                    const photoBox = document.getElementById('photoBox');
-                    if (photoBox) {
-                        photoBox.innerHTML = `
-                            <div class="passport-photo-placeholder">
-                                <i class="fas fa-user"></i>
-                                <div>3x4 rasm *</div>
-                            </div>
-                        `;
-                        photoBox.onclick = function() {
-                            if (imageUpload) imageUpload.click();
-                        };
-                    }
-
-                    // API photo URL inputni o'chirish
-                    const apiPhotoInput = document.getElementById('apiPhotoUrl');
-                    if (apiPhotoInput) {
-                        apiPhotoInput.remove();
-                    }
-                }
-
-                // Qidiruv formasini reset qilish
-                if (searchForm) {
-                    searchForm.reset();
-                }
+                e.target.value = value;
             });
         }
     });

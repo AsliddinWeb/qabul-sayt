@@ -3,15 +3,9 @@ from .main import main_dashboard
 from .abituriyent import (
     abituriyent_dashboard,
     passport_view,
-    search_passport_data,
-    save_passport_data,
     load_districts,
-    applications_ajax,
-    profile_completion_ajax,
-    dashboard_stats_ajax,
     diplom_page,
     transfer_diplom_page,
-
     apply_page,
     application_status,
     application_history,
@@ -30,22 +24,15 @@ __all__ = [
     'passport_view',
     'diplom_page',
     'transfer_diplom_page',
-    'search_passport_data',
-    'save_passport_data',
     'load_districts',
-    'applications_ajax',
-    'profile_completion_ajax',
-    'dashboard_stats_ajax',
     'operator_dashboard',
     'marketing_dashboard',
     'mini_admin_dashboard',
     'admin_dashboard',
-
     'apply_page',
     'application_status',
     'application_history',
     'quick_apply',
     'withdraw_application',
     'load_programs',
-
 ]
