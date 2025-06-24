@@ -14,7 +14,7 @@ import qrcode
 import base64
 from io import BytesIO
 from datetime import datetime
-from .models import Application, ApplicationStatus
+from .models import Application, ApplicationStatus, AdmissionType
 
 
 @admin.register(Application)
@@ -222,6 +222,8 @@ class ApplicationAdmin(admin.ModelAdmin):
             'KONTRAKT_SUMMASI': application.program.tuition_fee,
             'TALABA_MANZILI': application.user.abituriyent_profile.get_full_address,
             'PASSPORT_SERIYA': application.user.abituriyent_profile.passport_series,
+            'OQUV_KURSI': application.user.transfer_diplom.target_course if application.admission_type == AdmissionType.TRANSFER else "1-kurs",
+            'OQISH_MUDDATI': application.program.study_duration,
 
             'TALABA_ISMI': talaba_ismi,
             'TELEFON': application.user.phone,
