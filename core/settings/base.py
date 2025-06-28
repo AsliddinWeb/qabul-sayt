@@ -213,7 +213,89 @@ JAZZMIN_SETTINGS = {
     "hide_apps": [],
     "hide_models": [],
     "order_with_respect_to": [],
-    "icons": {},
+    # settings.py da JAZZMIN_SETTINGS ichida
+
+    "icons": {
+        # Authentication & Users
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        
+        # Applications app
+        "applications": "fas fa-file-alt",
+        "applications.application": "fas fa-paper-plane",
+        "applications.applicationstatus": "fas fa-chart-line",
+        "applications.admissiontype": "fas fa-graduation-cap",
+        
+        # Programs app
+        "programs": "fas fa-school",
+        "programs.branch": "fas fa-building",
+        "programs.program": "fas fa-book-open",
+        "programs.educationlevel": "fas fa-layer-group",
+        "programs.educationform": "fas fa-chalkboard-teacher",
+        
+        # Diploms app
+        "diploms": "fas fa-certificate",
+        "diploms.diplom": "fas fa-scroll",
+        "diploms.transferdiplom": "fas fa-exchange-alt",
+        "diploms.course": "fas fa-list-ol",
+        "diploms.educationtype": "fas fa-tags",
+        "diploms.institutiontype": "fas fa-university",
+        
+        # Regions app
+        "regions": "fas fa-globe-americas",
+        "regions.country": "fas fa-flag",
+        "regions.region": "fas fa-map-marker-alt",
+        "regions.district": "fas fa-map-pin",
+        
+        # Users app
+        "users": "fas fa-user-circle",
+        "users.user": "fas fa-user",
+        "users.abituriyentprofile": "fas fa-user-graduate",
+        "users.operatorprofile": "fas fa-headset",
+        "users.marketingprofile": "fas fa-bullhorn",
+        "users.miniadminprofile": "fas fa-user-shield",
+        "users.adminprofile": "fas fa-user-tie",
+        "users.phoneverification": "fas fa-mobile-alt",
+        "users.baseprofile": "fas fa-id-card",
+        
+        # Django Admin default models
+        "admin": "fas fa-tachometer-alt",
+        "admin.logentry": "fas fa-history",
+        
+        # Content types
+        "contenttypes": "fas fa-th-large",
+        "contenttypes.contenttype": "fas fa-cube",
+        
+        # Sessions
+        "sessions": "fas fa-clock",
+        "sessions.session": "fas fa-stopwatch",
+        
+        # Sites framework (agar ishlatilsa)
+        "sites": "fas fa-sitemap",
+        "sites.site": "fas fa-globe",
+        
+        # Django REST Framework (agar ishlatilsa)
+        "rest_framework": "fas fa-cogs",
+        "authtoken": "fas fa-key",
+        "authtoken.token": "fas fa-key",
+        "authtoken.tokenproxy": "fas fa-unlock-alt",
+        
+        # Django allauth (agar ishlatilsa)
+        "account": "fas fa-user-shield",
+        "socialaccount": "fas fa-share-alt",
+        
+        # Custom apps (agar mavjud bo'lsa)
+        "notifications": "fas fa-bell",
+        "payments": "fas fa-credit-card",
+        "reports": "fas fa-chart-bar",
+        "statistics": "fas fa-analytics",
+        "documents": "fas fa-folder-open",
+        "contracts": "fas fa-file-contract",
+        "dashboard": "fas fa-tachometer-alt",
+        "core": "fas fa-cube",
+        "utils": "fas fa-tools",
+    },
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",
     "related_modal_active": False,
