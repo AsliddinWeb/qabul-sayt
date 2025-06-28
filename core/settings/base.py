@@ -440,9 +440,7 @@ JAZZMIN_SETTINGS = {
     # Top menu
     "topmenu_links": [
         {"name": "🏠 Bosh Sahifa", "url": "admin:index", "permissions": ["auth.view_user"]},
-        {"name": "📊 Statistika", "url": "/admin/applications/application/", "permissions": ["applications.view_application"]},
-        {"name": "⚙️ Sozlamalar", "url": "/admin/", "permissions": ["auth.change_user"]},
-        {"model": "applications.application"},
+        {"name": "📊 Barcha arizalar", "url": "/admin/applications/application/", "permissions": ["applications.view_application"]},
     ],
     
     # Copyright
