@@ -11,10 +11,10 @@ def main_dashboard(request):
     # Role-based routing
     role_urls = {
         'abituriyent': 'dashboard:abituriyent',
-        'operator': 'dashboard:operator',
-        'marketing': 'dashboard:marketing',
-        'mini_admin': 'dashboard:mini_admin',
-        'admin': 'dashboard:admin'
+        'operator': 'admin:index',
+        'marketing': 'admin:index',
+        'mini_admin': 'admin:index',
+        'admin': 'admin:index'
     }
 
     target_url = role_urls.get(user.role, 'dashboard:abituriyent')
