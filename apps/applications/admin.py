@@ -36,20 +36,142 @@ class ApplicationAdmin(admin.ModelAdmin):
         'program__name', 'branch__name'
     ]
 
-    readonly_fields = ['created_at', 'updated_at', 'reviewed_by']
-    actions = ['generate_contracts_bulk']
+    readonly_fields = ['created_at', 'updated_at', 'reviewed_by', 'get_user_diplom_info']
+    actions = ['generate_ikki_tomonlama_bulk', 'generate_uch_tomonlama_bulk']
 
-    fieldsets = (
-        ('Foydalanuvchi ma\'lumotlari', {
-            'fields': ('user', 'admission_type')
-        }),
-        ('Ta\'lim ma\'lumotlari', {
-            'fields': ('branch', 'education_level', 'education_form', 'program')
-        }),
-        ('Ariza holati', {
-            'fields': ('status', 'reviewed_by', 'contract_file')
-        }),
-    )
+    def get_fieldsets(self, request, obj=None):
+        """Admission type ga qarab fieldsets ni dinamik ravishda qaytarish"""
+        base_fieldsets = [
+            ('Foydalanuvchi ma\'lumotlari', {
+                'fields': ('user', 'admission_type', 'get_user_diplom_info')
+            }),
+            ('Ta\'lim ma\'lumotlari', {
+                'fields': ('branch', 'education_level', 'education_form', 'program')
+            }),
+            ('Ariza holati', {
+                'fields': ('status', 'reviewed_by', 'contract_file')
+            }),
+        ]
+
+        if obj:  # Mavjud obyekt uchun
+            if obj.admission_type == AdmissionType.REGULAR:
+                # Yangi qabul uchun - faqat diplom
+                base_fieldsets.insert(2, ('Diplom ma\'lumotlari', {
+                    'fields': ('diplom',),
+                    'description': 'Yangi qabul turi uchun diplom ma\'lumotlari'
+                }))
+            elif obj.admission_type == AdmissionType.TRANSFER:
+                # Perevod uchun - transfer diplom va course
+                base_fieldsets.insert(2, ('Perevod ma\'lumotlari', {
+                    'fields': ('transfer_diplom', 'course'),
+                    'description': 'Perevod turi uchun oliy ta\'lim diplomi va kurs ma\'lumotlari'
+                }))
+        else:  # Yangi obyekt uchun
+            base_fieldsets.insert(2, ('Diplom/Perevod ma\'lumotlari', {
+                'fields': ('diplom', 'transfer_diplom', 'course'),
+                'description': 'Qabul turiga qarab tegishli maydonni to\'ldiring'
+            }))
+
+        return base_fieldsets
+
+    def get_user_diplom_info(self, obj):
+        """Foydalanuvchining diplom ma'lumotlarini ko'rsatish"""
+        if not obj or not obj.user:
+            return "Ma'lumot yo'q"
+
+        user = obj.user
+        diplom_info = []
+
+        # Oddiy diplom ma'lumotlari
+        if hasattr(user, 'diplom') and user.diplom:
+            diplom_info.append(format_html(
+                '<div style="margin-bottom: 10px; padding: 10px; background: #e8f5e8; border-left: 4px solid #28a745;">'
+                '<strong>📜 Oddiy diplom:</strong><br>'
+                '• Seriya/Raqam: {}<br>'
+                '• Universitet: {}<br>'
+                '• Bitirgan yil: {}<br>'
+                '• Ta\'lim turi: {}<br>'
+                '• Muassasa turi: {}'
+                '</div>',
+                user.diplom.serial_number,
+                user.diplom.university_name[:50] + '...' if len(user.diplom.university_name) > 50 else user.diplom.university_name,
+                user.diplom.graduation_year,
+                user.diplom.education_type.name,
+                user.diplom.institution_type.name
+            ))
+
+        # Transfer diplom ma'lumotlari
+        if hasattr(user, 'transfer_diplom') and user.transfer_diplom:
+            diplom_info.append(format_html(
+                '<div style="margin-bottom: 10px; padding: 10px; background: #e3f2fd; border-left: 4px solid #2196f3;">'
+                '<strong>🎓 Transfer diplom:</strong><br>'
+                '• Davlat: {}<br>'
+                '• Universitet: {}<br>'
+                '• Maqsadli kurs: {}'
+                '</div>',
+                user.transfer_diplom.country.name,
+                user.transfer_diplom.university_name[:50] + '...' if len(user.transfer_diplom.university_name) > 50 else user.transfer_diplom.university_name,
+                user.transfer_diplom.target_course.name
+            ))
+
+        if not diplom_info:
+            return format_html(
+                '<div style="padding: 10px; background: #fff3cd; border-left: 4px solid #ffc107;">'
+                '<strong>⚠️ Diqqat:</strong> Foydalanuvchida diplom ma\'lumotlari topilmadi!<br>'
+                'Ariza topshirishdan oldin diplom ma\'lumotlarini kiritish kerak.'
+                '</div>'
+            )
+
+        return format_html(''.join(diplom_info))
+
+    get_user_diplom_info.short_description = 'Foydalanuvchi diplom ma\'lumotlari'
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        """ForeignKey maydonlari uchun querysetni cheklash"""
+        if db_field.name == "diplom":
+            # Faqat joriy foydalanuvchining diplomini ko'rsatish
+            if hasattr(request, '_obj_') and request._obj_ and request._obj_.user:
+                kwargs["queryset"] = db_field.related_model.objects.filter(user=request._obj_.user)
+            else:
+                kwargs["queryset"] = db_field.related_model.objects.none()
+
+        elif db_field.name == "transfer_diplom":
+            # Faqat joriy foydalanuvchining transfer diplomini ko'rsatish
+            if hasattr(request, '_obj_') and request._obj_ and request._obj_.user:
+                kwargs["queryset"] = db_field.related_model.objects.filter(user=request._obj_.user)
+            else:
+                kwargs["queryset"] = db_field.related_model.objects.none()
+
+        elif db_field.name == "course":
+            # Faqat transfer diplom mavjud bo'lsa kurslarni ko'rsatish
+            if hasattr(request, '_obj_') and request._obj_ and request._obj_.user:
+                if hasattr(request._obj_.user, 'transfer_diplom') and request._obj_.user.transfer_diplom:
+                    # Transfer diplom mavjud bo'lsa barcha kurslarni ko'rsatish
+                    pass  # Default queryset
+                else:
+                    kwargs["queryset"] = db_field.related_model.objects.none()
+
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def get_form(self, request, obj=None, **kwargs):
+        """Formni olishdan oldin obj ni request ga qo'shish"""
+        request._obj_ = obj
+        form = super().get_form(request, obj, **kwargs)
+        
+        # Admission type ga qarab maydonlarni yashirish/ko'rsatish
+        if obj:
+            if obj.admission_type == AdmissionType.REGULAR:
+                # Yangi qabul - transfer diplom va course ni yashirish
+                if 'transfer_diplom' in form.base_fields:
+                    del form.base_fields['transfer_diplom']
+                if 'course' in form.base_fields:
+                    del form.base_fields['course']
+            elif obj.admission_type == AdmissionType.TRANSFER:
+                # Perevod - diplom ni yashirish
+                if 'diplom' in form.base_fields:
+                    del form.base_fields['diplom']
+
+        return form
 
     def get_user_name(self, obj):
         # AbituriyentProfile dan yoki User.full_name dan ismni olish
@@ -72,42 +194,65 @@ class ApplicationAdmin(admin.ModelAdmin):
     get_user_phone.short_description = 'Telefon'
 
     def status_badge(self, obj):
-        colors = {
-            'topshirildi': '#ffc107',
-            'korib_chiqilmoqda': '#17a2b8',
-            'qabul_qilindi': '#28a745',
-            'rad_etildi': '#dc3545'
+        """Bootstrap badge bilan chiroyli status ko'rsatish"""
+        status_classes = {
+            'topshirildi': 'badge badge-warning',
+            'korib_chiqilmoqda': 'badge badge-info', 
+            'qabul_qilindi': 'badge badge-success',
+            'rad_etildi': 'badge badge-danger'
         }
-        color = colors.get(obj.status, '#6c757d')
+        
+        status_icons = {
+            'topshirildi': '📋',
+            'korib_chiqilmoqda': '👀',
+            'qabul_qilindi': '✅', 
+            'rad_etildi': '❌'
+        }
+        
+        badge_class = status_classes.get(obj.status, 'badge badge-secondary')
+        icon = status_icons.get(obj.status, '📄')
+        
         return format_html(
-            '<span style="background-color: {}; color: white; padding: 3px 8px; border-radius: 3px;">{}</span>',
-            color, obj.get_status_display()
+            '<span class="{} px-2 py-1" style="font-size: 12px;">{} {}</span>',
+            badge_class, icon, obj.get_status_display()
         )
 
     status_badge.short_description = 'Holat'
 
     def contract_actions(self, obj):
-        """Shartnoma yaratish tugmalari"""
+        """Bootstrap bilan chiroyli shartnoma tugmalari"""
         if obj.contract_file:
             # Shartnoma allaqachon mavjud
             download_url = f"/media/{obj.contract_file.name}"
             return format_html(
-                '<a href="{}" target="_blank" style="background: #28a745; color: white; padding: 5px 10px; text-decoration: none; border-radius: 3px;">📄 Yuklab olish</a>',
+                '<div class="btn-group" role="group">'
+                '<a href="{}" target="_blank" class="btn btn-success btn-sm">'
+                '<i class="fas fa-download"></i> Yuklab olish'
+                '</a>'
+                '</div>',
                 download_url
             )
         else:
-            # Yangi shartnoma yaratish
+            # Yangi shartnoma yaratish tugmalari
             ikki_url = reverse('admin:applications_application_generate_contract',
                                args=[obj.id, 'ikki_tomonlama'])
             uch_url = reverse('admin:applications_application_generate_contract',
                               args=[obj.id, 'uch_tomonlama'])
+            
             return format_html(
-                '<a href="{}" style="background: #007bff; color: white; padding: 3px 8px; text-decoration: none; border-radius: 3px; margin-right: 5px;">📝 Ikki tomonlama</a>'
-                '<a href="{}" style="background: #6f42c1; color: white; padding: 3px 8px; text-decoration: none; border-radius: 3px;">👨‍👩‍👧 Uch tomonlama</a>',
+                '<div class="btn-group" role="group" aria-label="Shartnoma tugmalari">'
+                '<a href="{}" class="btn btn-primary btn-sm" title="Ikki tomonlama shartnoma">'
+                '<i class="fas fa-file-contract"></i> Ikki tomonlama'
+                '</a>'
+                '<a href="{}" class="btn btn-purple btn-sm ml-1" title="Uch tomonlama shartnoma" '
+                'style="background-color: #6f42c1; border-color: #6f42c1; color: white;">'
+                '<i class="fas fa-users"></i> Uch tomonlama'
+                '</a>'
+                '</div>',
                 ikki_url, uch_url
             )
 
-    contract_actions.short_description = 'Shartnoma'
+    contract_actions.short_description = 'Shartnoma Amallar'
 
     def get_urls(self):
         urls = super().get_urls()
@@ -292,9 +437,9 @@ class ApplicationAdmin(admin.ModelAdmin):
                 pass
 
             # Shartnoma muvaffaqiyatli yaratilgandan keyin statusni "qabul qilindi" ga o'zgartirish
-            application.status = ApplicationStatus.ACCEPTED  # Bu qo'shildi
+            application.status = ApplicationStatus.ACCEPTED
             application.reviewed_by = request.user
-            application.save(update_fields=['contract_file', 'status', 'reviewed_by'])  # 'status' qo'shildi
+            application.save(update_fields=['contract_file', 'status', 'reviewed_by'])
             messages.success(request, success_message)
 
         except TemplateDoesNotExist:
@@ -304,15 +449,14 @@ class ApplicationAdmin(admin.ModelAdmin):
 
         return HttpResponseRedirect(reverse('admin:applications_application_change', args=[application.id]))
 
-    def generate_contracts_bulk(self, request, queryset):
-        """Bir nechta shartnomani avtomatik yaratish"""
+    def generate_ikki_tomonlama_bulk(self, request, queryset):
+        """Ikki tomonlama shartnoma yaratish"""
         success_count = 0
         error_count = 0
 
         for application in queryset:
             try:
-                # Yoshga qarab shartnoma turini aniqlash
-                contract_type = self.determine_contract_type(application)
+                contract_type = 'ikki_tomonlama'
 
                 # Template va context tayyorlash
                 template_name = f'contracts/{contract_type}.html'
@@ -341,9 +485,9 @@ class ApplicationAdmin(admin.ModelAdmin):
                 application.contract_file.save(relative_path, ContentFile(pdf_content), save=False)
 
                 # Shartnoma muvaffaqiyatli yaratilgandan keyin statusni "qabul qilindi" ga o'zgartirish
-                application.status = ApplicationStatus.ACCEPTED  # Bu qo'shildi
+                application.status = ApplicationStatus.ACCEPTED
                 application.reviewed_by = request.user
-                application.save(update_fields=['contract_file', 'status', 'reviewed_by'])  # 'status' qo'shildi
+                application.save(update_fields=['contract_file', 'status', 'reviewed_by'])
 
                 success_count += 1
 
@@ -353,30 +497,73 @@ class ApplicationAdmin(admin.ModelAdmin):
 
             except Exception as e:
                 error_count += 1
-                print(f"Error generating contract for {application.id}: {e}")
+                print(f"Error generating ikki tomonlama contract for {application.id}: {e}")
 
         self.message_user(
             request,
-            f"✅ {success_count} ta shartnoma yaratildi va holati 'qabul qilindi' ga o'zgartirildi. ❌ {error_count} ta xatolik.",
+            f"✅ {success_count} ta ikki tomonlama shartnoma yaratildi va holati 'qabul qilindi' ga o'zgartirildi. ❌ {error_count} ta xatolik.",
             messages.SUCCESS if success_count > 0 else messages.ERROR
         )
 
-    generate_contracts_bulk.short_description = "📄 Tanlangan arizalar uchun shartnoma yaratish"
+    generate_ikki_tomonlama_bulk.short_description = "📝 Ikki tomonlama shartnoma yaratish"
 
-    def determine_contract_type(self, application):
-        """Shartnoma turini aniqlash (yoshga qarab)"""
-        try:
-            if hasattr(application.user, 'abituriyent_profile'):
-                profile = application.user.abituriyent_profile
-                age = profile.get_age()  # AbituriyentProfile da get_age() metodi bor
-                if age < 18:
-                    return 'uch_tomonlama'  # Voyaga yetmagan - ota-ona bilan
-                else:
-                    return 'ikki_tomonlama'  # Voyaga yetgan - faqat talaba bilan
-            else:
-                return 'ikki_tomonlama'  # Default
-        except Exception:
-            return 'ikki_tomonlama'  # Fallback
+    def generate_uch_tomonlama_bulk(self, request, queryset):
+        """Uch tomonlama shartnoma yaratish"""
+        success_count = 0
+        error_count = 0
+
+        for application in queryset:
+            try:
+                contract_type = 'uch_tomonlama'
+
+                # Template va context tayyorlash
+                template_name = f'contracts/{contract_type}.html'
+                template = get_template(template_name)
+                context = self.get_replacement_data(application, request, contract_type)
+                html_content = template.render(context)
+
+                # Fayl nomi
+                safe_name = self.get_safe_filename(application.user)
+                filename = f"{safe_name}_{contract_type}.pdf"
+
+                # PDF yaratish
+                temp_dir = tempfile.mkdtemp()
+                temp_pdf_path = os.path.join(temp_dir, 'contract.pdf')
+
+                HTML(string=html_content, base_url=request.build_absolute_uri()).write_pdf(temp_pdf_path)
+
+                with open(temp_pdf_path, 'rb') as pdf_file:
+                    pdf_content = pdf_file.read()
+
+                # Saqlash
+                year = datetime.now().year
+                month = f"{datetime.now().month:02d}"
+                relative_path = f"contracts/{year}/{month}/{filename}"
+
+                application.contract_file.save(relative_path, ContentFile(pdf_content), save=False)
+
+                # Shartnoma muvaffaqiyatli yaratilgandan keyin statusni "qabul qilindi" ga o'zgartirish
+                application.status = ApplicationStatus.ACCEPTED
+                application.reviewed_by = request.user
+                application.save(update_fields=['contract_file', 'status', 'reviewed_by'])
+
+                success_count += 1
+
+                # Cleanup
+                os.remove(temp_pdf_path)
+                os.rmdir(temp_dir)
+
+            except Exception as e:
+                error_count += 1
+                print(f"Error generating uch tomonlama contract for {application.id}: {e}")
+
+        self.message_user(
+            request,
+            f"✅ {success_count} ta uch tomonlama shartnoma yaratildi va holati 'qabul qilindi' ga o'zgartirildi. ❌ {error_count} ta xatolik.",
+            messages.SUCCESS if success_count > 0 else messages.ERROR
+        )
+
+    generate_uch_tomonlama_bulk.short_description = "👨‍👩‍👧 Uch tomonlama shartnoma yaratish"
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}
