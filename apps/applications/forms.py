@@ -46,6 +46,11 @@ class ApplicationForm(forms.ModelForm):
         if self.user:
             self.fields['diplom'].queryset = Diplom.objects.filter(user=self.user)
             self.fields['transfer_diplom'].queryset = TransferDiplom.objects.filter(user=self.user)
+            
+            # Agar foydalanuvchida oddiy diplom bo'lsa, Sirtqi ta'lim shaklini chiqarib tashlash
+            if hasattr(self.user, 'diplom') and self.user.diplom:
+                # Education form querysetini filterlash - Sirtqi (id=2) ni chiqarib tashlash
+                self.fields['education_form'].queryset = EducationForm.objects.exclude(id=2)
 
         # Admission type ga qarab fieldlarni yashirish/ko'rsatish
         if self.instance and self.instance.pk:
@@ -65,6 +70,14 @@ class ApplicationForm(forms.ModelForm):
         diplom = cleaned_data.get('diplom')
         transfer_diplom = cleaned_data.get('transfer_diplom')
         course = cleaned_data.get('course')
+        education_form = cleaned_data.get('education_form')
+
+        # Oddiy diplom bo'lsa va Sirtqi ta'lim shakli tanlanmagan bo'lishi kerak
+        if self.user and hasattr(self.user, 'diplom') and self.user.diplom:
+            if education_form and education_form.id == 2:  # Sirtqi ta'lim shakli
+                raise ValidationError({
+                    'education_form': _('O\'rta maktab diplomi bilan sirtqi ta\'lim shaklini tanlay olmaysiz')
+                })
 
         # Admission type ga mos ravishda validatsiya
         if admission_type == AdmissionType.TRANSFER:
