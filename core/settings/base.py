@@ -192,15 +192,16 @@ CKEDITOR_UPLOAD_PATH = "uploads/"
 
 # JAZZMIN SETTINGS
 JAZZMIN_SETTINGS = {
-    "site_title": "Qabul Admin",
-    "site_header": "Qabul Admin",
-    "site_brand": "Qabul Admin",
+    "site_title": "XIU Admin Panel",
+    "site_header": "Xalqaro Innovatsion Universitet",
+    "site_brand": "XIU Admin",
+    "welcome_sign": "Xalqaro Innovatsion Universitet Admin Panelga Xush Kelibsiz",
+
     "site_logo": "/assets/images/new/logo-one.png",
     "login_logo": "/assets/images/new/logo-one.png",
     "login_logo_dark": "/assets/images/new/logo-one.png",
     "site_logo_classes": "img-circle",
     "site_icon": "/assets/images/new/logo-one.png",
-    "welcome_sign": "Qabul tizimiga xush kelibsiz!",
     "copyright": "Qabul | qabul.xiuedu.uz",
     "search_model": [],
     "user_avatar": None,
@@ -212,7 +213,51 @@ JAZZMIN_SETTINGS = {
     "navigation_expanded": True,
     "hide_apps": [],
     "hide_models": [],
-    "order_with_respect_to": [],
+    # Sidebar ordering va grouping
+    "order_with_respect_to": [
+        # 1. Asosiy arizalar moduli
+        "applications",
+        "applications.application",
+        
+        # 2. Foydalanuvchilar va profillar
+        "users", 
+        "users.user",
+        "users.abituriyentprofile",
+        "users.operatorprofile",
+        "users.marketingprofile",
+        "users.miniadminprofile", 
+        "users.adminprofile",
+        "users.phoneverification",
+        
+        # 3. Diplomlar va transfer
+        "diploms",
+        "diploms.diplom",
+        "diploms.transferdiplom",
+        "diploms.course",
+        "diploms.educationtype",
+        "diploms.institutiontype",
+        
+        # 4. Dasturlar va filiallar
+        "programs",
+        "programs.branch",
+        "programs.educationlevel", 
+        "programs.educationform",
+        "programs.program",
+        
+        # 5. Hududlar
+        "regions",
+        "regions.country",
+        "regions.region", 
+        "regions.district",
+        
+        # 6. Django asosiy modellar
+        "auth",
+        "auth.user",
+        "auth.group",
+        "admin",
+        "contenttypes",
+        "sessions",
+    ],
     # settings.py da JAZZMIN_SETTINGS ichida
 
     "icons": {
@@ -306,6 +351,102 @@ JAZZMIN_SETTINGS = {
     "changeform_format": "horizontal_tabs",
     "changeform_format_overrides": {"accounts.user": "collapsible", "auth.group": "vertical_tabs"},
     "language_chooser": False,
+
+    # Custom navigation grouping
+    "custom_links": {
+        "applications": [
+            {
+                "name": "✅ Qabul Qilinganlar", 
+                "url": "/admin/applications/application/?status=qabul_qilindi",
+                "icon": "fas fa-check-circle",
+                "permissions": ["applications.view_application"]
+            },
+            {
+                "name": "⏳ Kutilayotganlar",
+                "url": "/admin/applications/application/?status=topshirildi",
+                "icon": "fas fa-hourglass-half",
+                "permissions": ["applications.view_application"]
+            }
+        ],
+        "users": [
+            {
+                "name": "🎓 Abituriyentlar",
+                "url": "/admin/users/abituriyentprofile/",
+                "icon": "fas fa-user-graduate",
+                "permissions": ["users.view_abituriyentprofile"]
+            },
+            {
+                "name": "📱 SMS Kodlar",
+                "url": "/admin/users/phoneverification/",
+                "icon": "fas fa-mobile-alt",
+                "permissions": ["users.view_phoneverification"]
+            }
+        ],
+        "diploms": [
+            {
+                "name": "📜 O'rta Maktab Diplomlari",
+                "url": "/admin/diploms/diplom/",
+                "icon": "fas fa-scroll",
+                "permissions": ["diploms.view_diplom"]
+            },
+            {
+                "name": "🔄 Transfer Diplomlari", 
+                "url": "/admin/diploms/transferdiplom/",
+                "icon": "fas fa-exchange-alt",
+                "permissions": ["diploms.view_transferdiplom"]
+            }
+        ]
+    },
+
+    # App va model nomlarini o'zgartirish
+    "changeform_format": "horizontal_tabs",
+    "changeform_format_overrides": {
+        "applications.application": "collapsible",
+        "users.abituriyentprofile": "horizontal_tabs",
+    },
+    
+    # UI sozlamalar
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "hide_apps": [],
+    "hide_models": [],
+    "related_modal_active": False,
+    
+    # Ranglar va tema
+    "theme": "default",
+    "dark_mode_theme": None,
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary", 
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    },
+    
+    # Language va localization
+    "language_chooser": False,
+    "use_google_fonts_cdn": True,
+    "show_ui_builder": False,
+    
+    # Default iconlar
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+    
+    # Search va UI
+    "search_model": "applications.application",
+    "user_avatar": None,
+    
+    # Top menu
+    "topmenu_links": [
+        {"name": "🏠 Bosh Sahifa", "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"name": "📊 Statistika", "url": "/admin/applications/application/", "permissions": ["applications.view_application"]},
+        {"name": "⚙️ Sozlamalar", "url": "/admin/", "permissions": ["auth.change_user"]},
+        {"model": "applications.application"},
+    ],
+    
+    # Copyright
+    "copyright": "Xalqaro Innovatsion Universitet © 2025",
 }
 
 JAZZMIN_UI_TWEAKS = {
