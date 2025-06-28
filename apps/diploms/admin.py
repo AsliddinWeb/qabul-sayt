@@ -31,7 +31,7 @@ class CourseAdmin(admin.ModelAdmin):
 
 @admin.register(Diplom)
 class DiplomAdmin(admin.ModelAdmin):
-    list_display = ('id', 'serial_number', 'user', 'education_type', 'institution_type', 'graduation_year')
+    list_display = ('serial_number', 'id', 'user', 'education_type', 'institution_type', 'graduation_year')
     search_fields = ('serial_number', 'user__phone', 'university_name')
     list_filter = ('education_type', 'institution_type', 'region', 'district')
     ordering = ('-id',)
