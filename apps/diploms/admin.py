@@ -12,21 +12,21 @@ from .models import (
 class EducationTypeAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
     search_fields = ('name',)
-    ordering = ('name',)
+    ordering = ('-id',)
 
 
 @admin.register(InstitutionType)
 class InstitutionTypeAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
     search_fields = ('name',)
-    ordering = ('name',)
+    ordering = ('-id',)
 
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
     search_fields = ('name',)
-    ordering = ('name',)
+    ordering = ('-id',)
 
 
 @admin.register(Diplom)
@@ -34,7 +34,7 @@ class DiplomAdmin(admin.ModelAdmin):
     list_display = ('id', 'serial_number', 'user', 'education_type', 'institution_type', 'graduation_year')
     search_fields = ('serial_number', 'user__phone', 'university_name')
     list_filter = ('education_type', 'institution_type', 'region', 'district')
-    ordering = ('-graduation_year',)
+    ordering = ('-id',)
     readonly_fields = ('serial_number',)  # Foydalanuvchiga faqat ko‘rsatish uchun, agar kerak bo‘lsa
     fieldsets = (
         (None, {
