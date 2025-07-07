@@ -94,8 +94,7 @@ class ApplicationAdmin(admin.ModelAdmin):
                 '• Muassasa turi: {}'
                 '</div>',
                 user.diplom.serial_number,
-                user.diplom.university_name[:50] + '...' if len(
-                    user.diplom.university_name) > 50 else user.diplom.university_name,
+                user.diplom.university_name[:50] + '...' if len(user.diplom.university_name) > 50 else user.diplom.university_name,
                 user.diplom.graduation_year,
                 user.diplom.education_type.name,
                 user.diplom.institution_type.name
@@ -111,8 +110,7 @@ class ApplicationAdmin(admin.ModelAdmin):
                 '• Maqsadli kurs: {}'
                 '</div>',
                 user.transfer_diplom.country.name,
-                user.transfer_diplom.university_name[:50] + '...' if len(
-                    user.transfer_diplom.university_name) > 50 else user.transfer_diplom.university_name,
+                user.transfer_diplom.university_name[:50] + '...' if len(user.transfer_diplom.university_name) > 50 else user.transfer_diplom.university_name,
                 user.transfer_diplom.target_course.name
             ))
 
