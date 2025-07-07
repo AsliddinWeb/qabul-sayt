@@ -1,0 +1,163 @@
+<!-- templates/admin/import_export/import.html -->
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static %}
+
+{% block title %}
+    Arizalarni Import Qilish | {{ site_title|default:"XIU Admin" }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">🏠 Bosh sahifa</a>
+    &rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+    &rsaquo; <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+    &rsaquo; 📥 Import qilish
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="import-container" style="max-width: 800px;">
+    <h1 style="color: #2c3e50; margin-bottom: 20px;">
+        📥 Arizalarni Import Qilish
+    </h1>
+
+    <div class="alert" style="background: #e8f4fd; border: 1px solid #bee5eb; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+        <h4 style="color: #0c5460; margin-bottom: 10px;">
+            ℹ️ Muhim ma'lumotlar:
+        </h4>
+        <ul style="color: #0c5460; margin: 0; padding-left: 20px;">
+            <li>Faqat <strong>Excel (.xlsx)</strong> va <strong>CSV (.csv)</strong> formatlar qabul qilinadi</li>
+            <li>Import qilishdan oldin fayl formatini tekshiring</li>
+            <li>Xatolik bo'lsa, batafsil hisobot ko'rsatiladi</li>
+            <li>Mavjud arizalar yangilanadi, yangi arizalar qo'shiladi</li>
+            <li>Import jarayoni bir necha daqiqa davom etishi mumkin</li>
+        </ul>
+    </div>
+
+    {% if form.errors %}
+        <div class="alert" style="background: #f8d7da; border: 1px solid #f5c6cb; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+            <h4 style="color: #721c24; margin-bottom: 10px;">
+                ❌ Xatoliklar aniqlandi:
+            </h4>
+            <div style="color: #721c24;">
+                {{ form.errors }}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if result %}
+        {% if result.has_errors %}
+            <div class="alert" style="background: #f8d7da; border: 1px solid #f5c6cb; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                <h4 style="color: #721c24;">❌ Import xatoliklari:</h4>
+                {% for error in result.base_errors %}
+                    <p style="color: #721c24; margin: 5px 0;">{{ error.error }}</p>
+                {% endfor %}
+                {% for line_number, errors in result.row_errors %}
+                    <p style="color: #721c24; margin: 5px 0;">
+                        <strong>{{ line_number }}-qator:</strong>
+                        {% for error in errors %}
+                            {{ error.error }}
+                        {% endfor %}
+                    </p>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert" style="background: #d4edda; border: 1px solid #c3e6cb; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                <h4 style="color: #155724;">✅ Import muvaffaqiyatli yakunlandi!</h4>
+                <ul style="color: #155724; margin: 10px 0; padding-left: 20px;">
+                    <li><strong>Yangi qo'shildi:</strong> {{ result.totals.new }} ta ariza</li>
+                    <li><strong>Yangilandi:</strong> {{ result.totals.update }} ta ariza</li>
+                    <li><strong>O'tkazib yuborildi:</strong> {{ result.totals.skip }} ta ariza</li>
+                    {% if result.totals.delete %}<li><strong>O'chirildi:</strong> {{ result.totals.delete }} ta ariza</li>{% endif %}
+                </ul>
+            </div>
+        {% endif %}
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        {% csrf_token %}
+
+        <fieldset style="border: none; margin: 0; padding: 0;">
+            <div style="margin-bottom: 20px;">
+                <label for="{{ form.import_file.id_for_label }}" style="display: block; font-weight: bold; margin-bottom: 8px; color: #2c3e50;">
+                    📁 Import fayli:
+                </label>
+                {{ form.import_file }}
+                <p style="color: #6c757d; font-size: 14px; margin-top: 5px;">
+                    Excel (.xlsx) yoki CSV (.csv) formatidagi faylni tanlang. Maksimal hajm: 10MB
+                </p>
+            </div>
+
+            {% if form.input_format %}
+            <div style="margin-bottom: 20px;">
+                <label for="{{ form.input_format.id_for_label }}" style="display: block; font-weight: bold; margin-bottom: 8px; color: #2c3e50;">
+                    📄 Fayl formati:
+                </label>
+                {{ form.input_format }}
+                <p style="color: #6c757d; font-size: 14px; margin-top: 5px;">
+                    Fayl formatini avtomatik aniqlash yoki qo'lda tanlash
+                </p>
+            </div>
+            {% endif %}
+        </fieldset>
+
+        <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #dee2e6;">
+            <input type="submit" value="🚀 Import qilishni boshlash"
+                   style="background: #28a745; color: white; border: none; padding: 12px 25px; border-radius: 5px; font-size: 16px; cursor: pointer; margin-right: 10px;">
+            <a href="{% url opts|admin_urlname:'changelist' %}"
+               style="background: #6c757d; color: white; text-decoration: none; padding: 12px 25px; border-radius: 5px; font-size: 16px;">
+                ❌ Bekor qilish
+            </a>
+        </div>
+    </form>
+
+    <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+        <h3 style="color: #495057; margin-bottom: 15px;">📋 Yordam va namuna fayllar:</h3>
+
+        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+            <a href="#" onclick="downloadSampleExcel()"
+               style="background: #007bff; color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; display: inline-flex; align-items: center; gap: 8px;">
+                📊 Namuna Excel fayli
+            </a>
+
+            <a href="#" onclick="downloadSampleCSV()"
+               style="background: #17a2b8; color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; display: inline-flex; align-items: center; gap: 8px;">
+                📄 Namuna CSV fayli
+            </a>
+
+            <a href="#" onclick="showFormatHelp()"
+               style="background: #ffc107; color: #212529; text-decoration: none; padding: 10px 20px; border-radius: 5px; display: inline-flex; align-items: center; gap: 8px;">
+                📖 Format qo'llanmasi
+            </a>
+        </div>
+
+        <div id="formatHelp" style="display: none; margin-top: 15px; padding: 15px; background: white; border-radius: 5px; border-left: 4px solid #ffc107;">
+            <h4>📝 Fayl format talablari:</h4>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                <li><strong>Telefon raqami:</strong> +998901234567 formatida</li>
+                <li><strong>Passport seriya:</strong> AA1234567 formatida</li>
+                <li><strong>PINFL:</strong> 14 ta raqam</li>
+                <li><strong>Sana:</strong> dd.mm.yyyy formatida</li>
+                <li><strong>Status:</strong> topshirildi, korib_chiqilmoqda, qabul_qilindi, rad_etildi</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+function downloadSampleExcel() {
+    alert('Namuna Excel fayli yuklanmoqda...');
+    // Bu yerda sample file download logic qo'shiladi
+}
+
+function downloadSampleCSV() {
+    alert('Namuna CSV fayli yuklanmoqda...');
+    // Bu yerda sample file download logic qo'shiladi
+}
+
+function showFormatHelp() {
+    const helpDiv = document.getElementById('formatHelp');
+    helpDiv.style.display = helpDiv.style.display === 'none' ? 'block' : 'none';
+}
+</script>
+{% endblock %}

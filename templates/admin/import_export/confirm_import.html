@@ -1,0 +1,268 @@
+<!-- templates/admin/import_export/confirm_import.html -->
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static %}
+
+{% block title %}
+    Import Tasdiqlash | {{ site_title|default:"XIU Admin" }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">🏠 Bosh sahifa</a>
+    &rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+    &rsaquo; <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+    &rsaquo; <a href="{% url opts|admin_urlname:'import' %}">📥 Import</a>
+    &rsaquo; ✅ Tasdiqlash
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="confirm-import-container" style="max-width: 1000px;">
+    <h1 style="color: #2c3e50; margin-bottom: 20px;">
+        ✅ Import Ma'lumotlarini Tasdiqlash
+    </h1>
+
+    <!-- Import Statistika -->
+    <div class="import-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px;">
+        {% if result.totals.new %}
+        <div style="background: #d4edda; border: 1px solid #c3e6cb; padding: 15px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 24px; font-weight: bold; color: #155724;">{{ result.totals.new }}</div>
+            <div style="color: #155724;">🆕 Yangi arizalar</div>
+        </div>
+        {% endif %}
+
+        {% if result.totals.update %}
+        <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 24px; font-weight: bold; color: #856404;">{{ result.totals.update }}</div>
+            <div style="color: #856404;">🔄 Yangilanadi</div>
+        </div>
+        {% endif %}
+
+        {% if result.totals.skip %}
+        <div style="background: #e2e3e5; border: 1px solid #d6d8db; padding: 15px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 24px; font-weight: bold; color: #383d41;">{{ result.totals.skip }}</div>
+            <div style="color: #383d41;">⏭️ O'tkazib yuboriladi</div>
+        </div>
+        {% endif %}
+
+        {% if result.totals.delete %}
+        <div style="background: #f8d7da; border: 1px solid #f5c6cb; padding: 15px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 24px; font-weight: bold; color: #721c24;">{{ result.totals.delete }}</div>
+            <div style="color: #721c24;">🗑️ O'chiriladi</div>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if result.has_errors %}
+        <!-- Xatoliklar bo'limi -->
+        <div class="alert" style="background: #f8d7da; border: 1px solid #f5c6cb; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+            <h3 style="color: #721c24; margin-bottom: 15px;">
+                ❌ Import xatoliklari aniqlandi
+            </h3>
+
+            {% if result.base_errors %}
+                <div style="margin-bottom: 15px;">
+                    <h4 style="color: #721c24;">Umumiy xatoliklar:</h4>
+                    {% for error in result.base_errors %}
+                        <div style="background: rgba(114, 28, 36, 0.1); padding: 10px; border-radius: 5px; margin: 5px 0;">
+                            <strong>Xatolik:</strong> {{ error.error }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if result.row_errors %}
+                <div>
+                    <h4 style="color: #721c24;">Qator xatoliklari:</h4>
+                    <div style="max-height: 300px; overflow-y: auto; border: 1px solid #f5c6cb; border-radius: 5px;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead style="background: #721c24; color: white;">
+                                <tr>
+                                    <th style="padding: 10px; text-align: left;">Qator</th>
+                                    <th style="padding: 10px; text-align: left;">Xatolik</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for line_number, errors in result.row_errors %}
+                                <tr style="border-bottom: 1px solid #f5c6cb;">
+                                    <td style="padding: 10px; font-weight: bold;">{{ line_number }}</td>
+                                    <td style="padding: 10px;">
+                                        {% for error in errors %}
+                                            <div style="margin: 2px 0;">{{ error.error }}</div>
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 5px; margin-top: 15px;">
+                <strong>⚠️ Diqqat:</strong> Xatoliklar mavjud bo'lgani uchun import to'xtatildi.
+                Xatoliklarni tuzatib, faylni qaytadan yuklang.
+            </div>
+
+            <div style="margin-top: 20px;">
+                <a href="{% url opts|admin_urlname:'import' %}"
+                   style="background: #dc3545; color: white; text-decoration: none; padding: 12px 25px; border-radius: 5px; font-size: 16px;">
+                    ↩️ Faylni qaytadan yuklash
+                </a>
+            </div>
+        </div>
+    {% else %}
+        <!-- Muvaffaqiyatli preview -->
+        <div class="alert" style="background: #d4edda; border: 1px solid #c3e6cb; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+            <h3 style="color: #155724; margin-bottom: 15px;">
+                ✅ Import tayyor - xatoliklar yo'q!
+            </h3>
+            <p style="color: #155724; margin: 0;">
+                Barcha ma'lumotlar to'g'ri formatda. Quyidagi o'zgarishlar amalga oshiriladi:
+            </p>
+        </div>
+
+        <!-- O'zgarishlar preview jadvali -->
+        {% if result.valid_rows %}
+            <div style="margin-bottom: 25px;">
+                <h3 style="color: #495057; margin-bottom: 15px;">📋 Import qilinadigan ma'lumotlar preview:</h3>
+
+                <div style="background: white; border: 1px solid #dee2e6; border-radius: 8px; overflow: hidden;">
+                    <div style="max-height: 400px; overflow: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                            <thead style="background: #f8f9fa; border-bottom: 2px solid #dee2e6; position: sticky; top: 0;">
+                                <tr>
+                                    <th style="padding: 12px 8px; text-align: left; border-right: 1px solid #dee2e6;">Action</th>
+                                    <th style="padding: 12px 8px; text-align: left; border-right: 1px solid #dee2e6;">Telefon</th>
+                                    <th style="padding: 12px 8px; text-align: left; border-right: 1px solid #dee2e6;">F.I.Sh</th>
+                                    <th style="padding: 12px 8px; text-align: left; border-right: 1px solid #dee2e6;">Yo'nalish</th>
+                                    <th style="padding: 12px 8px; text-align: left; border-right: 1px solid #dee2e6;">Filial</th>
+                                    <th style="padding: 12px 8px; text-align: left;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in result.valid_rows|slice:":50" %}
+                                <tr style="border-bottom: 1px solid #f1f3f4;">
+                                    <td style="padding: 10px 8px; border-right: 1px solid #f1f3f4;">
+                                        {% if row.import_type == 'new' %}
+                                            <span style="background: #d4edda; color: #155724; padding: 4px 8px; border-radius: 4px; font-size: 12px;">🆕 YANGI</span>
+                                        {% elif row.import_type == 'update' %}
+                                            <span style="background: #fff3cd; color: #856404; padding: 4px 8px; border-radius: 4px; font-size: 12px;">🔄 YANGILASH</span>
+                                        {% elif row.import_type == 'skip' %}
+                                            <span style="background: #e2e3e5; color: #383d41; padding: 4px 8px; border-radius: 4px; font-size: 12px;">⏭️ O'TKAZISH</span>
+                                        {% endif %}
+                                    </td>
+                                    <td style="padding: 10px 8px; border-right: 1px solid #f1f3f4;">{{ row.object.user.phone|default:"-" }}</td>
+                                    <td style="padding: 10px 8px; border-right: 1px solid #f1f3f4;">
+                                        {% if row.object.user.abituriyent_profile %}
+                                            {{ row.object.user.abituriyent_profile.last_name }} {{ row.object.user.abituriyent_profile.first_name }}
+                                        {% else %}
+                                            {{ row.object.user.full_name|default:"-" }}
+                                        {% endif %}
+                                    </td>
+                                    <td style="padding: 10px 8px; border-right: 1px solid #f1f3f4;">{{ row.object.program.name|default:"-" }}</td>
+                                    <td style="padding: 10px 8px; border-right: 1px solid #f1f3f4;">{{ row.object.branch.name|default:"-" }}</td>
+                                    <td style="padding: 10px 8px;">{{ row.object.get_status_display|default:"-" }}</td>
+                                </tr>
+                                {% endfor %}
+
+                                {% if result.valid_rows|length > 50 %}
+                                <tr>
+                                    <td colspan="6" style="padding: 15px; text-align: center; background: #f8f9fa; color: #6c757d; font-style: italic;">
+                                        ... va yana {{ result.valid_rows|length|add:"-50" }} ta qator
+                                    </td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Tasdiqlash forma -->
+        <form method="post" style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            {% csrf_token %}
+            <input type="hidden" name="confirm" value="1">
+
+            <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                <h4 style="color: #856404; margin-bottom: 10px;">⚠️ Muhim eslatma:</h4>
+                <ul style="color: #856404; margin: 0; padding-left: 20px;">
+                    <li>Import jarayoni bekor qilib bo'lmaydi</li>
+                    <li>Ma'lumotlar bazasiga darhol ta'sir qiladi</li>
+                    <li>Mavjud arizalar yangilanishi mumkin</li>
+                    <li>Backup olish tavsiya etiladi</li>
+                </ul>
+            </div>
+
+            <div style="display: flex; align-items: center; margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+                <input type="checkbox" id="confirm_import" required
+                       style="margin-right: 10px; transform: scale(1.2);">
+                <label for="confirm_import" style="color: #495057; font-weight: bold; cursor: pointer;">
+                    ✅ Men import natijalarini ko'rib chiqdim va tasdiqlash uchun roziman
+                </label>
+            </div>
+
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <input type="submit" value="🚀 Import ni boshlash"
+                       style="background: #28a745; color: white; border: none; padding: 15px 30px; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer;">
+
+                <a href="{% url opts|admin_urlname:'import' %}"
+                   style="background: #6c757d; color: white; text-decoration: none; padding: 15px 30px; border-radius: 5px; font-size: 16px; display: inline-flex; align-items: center;">
+                    ↩️ Orqaga qaytish
+                </a>
+
+                <a href="{% url opts|admin_urlname:'changelist' %}"
+                   style="background: #dc3545; color: white; text-decoration: none; padding: 15px 30px; border-radius: 5px; font-size: 16px; display: inline-flex; align-items: center;">
+                    ❌ Bekor qilish
+                </a>
+            </div>
+        </form>
+    {% endif %}
+
+    <!-- Qo'shimcha ma'lumot -->
+    <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+        <h4 style="color: #495057; margin-bottom: 15px;">ℹ️ Import jarayoni haqida:</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+            <div style="background: white; padding: 15px; border-radius: 5px; border-left: 4px solid #007bff;">
+                <h5 style="color: #007bff; margin-bottom: 8px;">🆕 Yangi arizalar</h5>
+                <p style="font-size: 14px; margin: 0; color: #6c757d;">
+                    Telefon raqami mavjud bo'lmagan yangi foydalanuvchilar va arizalar yaratiladi
+                </p>
+            </div>
+
+            <div style="background: white; padding: 15px; border-radius: 5px; border-left: 4px solid #ffc107;">
+                <h5 style="color: #856404; margin-bottom: 8px;">🔄 Yangilanishlar</h5>
+                <p style="font-size: 14px; margin: 0; color: #6c757d;">
+                    Mavjud arizalar yangi ma'lumotlar bilan yangilanadi
+                </p>
+            </div>
+
+            <div style="background: white; padding: 15px; border-radius: 5px; border-left: 4px solid #6c757d;">
+                <h5 style="color: #383d41; margin-bottom: 8px;">⏭️ O'tkazish</h5>
+                <p style="font-size: 14px; margin: 0; color: #6c757d;">
+                    O'zgarish bo'lmagan yoki dublikat ma'lumotlar o'tkazib yuboriladi
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Confirm checkbox validation
+document.querySelector('form').addEventListener('submit', function(e) {
+    const checkbox = document.getElementById('confirm_import');
+    if (!checkbox.checked) {
+        e.preventDefault();
+        alert('⚠️ Davom etish uchun tasdiqlash checkboxini belgilang!');
+        checkbox.focus();
+    }
+});
+
+// Add loading state to submit button
+document.querySelector('input[type="submit"]').addEventListener('click', function() {
+    this.value = '⏳ Import qilinmoqda...';
+    this.disabled = true;
+});
+</script>
+{% endblock %}

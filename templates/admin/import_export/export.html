@@ -1,0 +1,225 @@
+<!-- templates/admin/import_export/export.html -->
+{% extends "admin/base.html" %}
+{% load i18n admin_urls static %}
+
+{% block title %}
+    {{ title }} | {{ site_title|default:"XIU Admin" }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">🏠 Bosh sahifa</a>
+    &rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+    &rsaquo; <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+    &rsaquo; 📤 Export qilish
+</div>
+{% endblock %}
+
+{% block nav-sidebar %}
+<nav class="sticky" id="nav-sidebar">
+    <div class="app-{{ opts.app_label }} module">
+        <table>
+            <caption>
+                <a href="{% url 'admin:app_list' opts.app_label %}" class="section" title="{% blocktrans with name=opts.app_config.verbose_name %}Models in the {{ name }} application{% endblocktrans %}">{{ opts.app_config.verbose_name }}</a>
+            </caption>
+            <tr class="model-{{ opts.model_name }}">
+                <th scope="row">
+                    <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+                </th>
+                {% if has_add_permission %}
+                <td><a href="{% url opts|admin_urlname:'add' %}" class="addlink">{% trans 'Add' %}</a></td>
+                {% endif %}
+                {% if has_change_permission %}
+                <td><a href="{% url opts|admin_urlname:'changelist' %}" class="changelink">{% trans 'Change' %}</a></td>
+                {% endif %}
+                {% if has_export_permission %}
+                <td><a href="{% url opts|admin_urlname:'export' %}" class="viewlink">📤 Export</a></td>
+                {% endif %}
+            </tr>
+        </table>
+    </div>
+
+    <div class="module" id="recent-actions-module">
+        <h2>{% trans 'Recent actions' %}</h2>
+        <h3>{% trans 'My actions' %}</h3>
+        <ul class="actionlist">
+            <li class="addlink">
+                <a href="{% url opts|admin_urlname:'add' %}">Yangi ariza qo'shish</a>
+                <br>
+                <span class="mini quiet">Arizalar</span>
+            </li>
+            <li class="changelink">
+                <a href="{% url opts|admin_urlname:'changelist' %}">Arizalarni ko'rish</a>
+                <br>
+                <span class="mini quiet">Arizalar</span>
+            </li>
+            <li class="viewlink">
+                <a href="{% url opts|admin_urlname:'export' %}">Export qilish</a>
+                <br>
+                <span class="mini quiet">Arizalar</span>
+            </li>
+        </ul>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="export-container" style="max-width: 700px;">
+    <h1 style="color: #2c3e50; margin-bottom: 20px;">
+        📤 Arizalarni Export Qilish
+    </h1>
+
+    <div class="alert" style="background: #e8f4fd; border: 1px solid #bee5eb; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+        <h4 style="color: #0c5460; margin-bottom: 10px;">
+            ℹ️ Export haqida ma'lumot:
+        </h4>
+        <ul style="color: #0c5460; margin: 0; padding-left: 20px;">
+            <li><strong>Excel (.xlsx)</strong> - tavsiya etiladi, barcha formatlar saqlanadi</li>
+            <li><strong>CSV (.csv)</strong> - oddiy matn, Excel/Google Sheets'da ochish mumkin</li>
+            <li>Export jarayoni bir necha daqiqa davom etishi mumkin</li>
+        </ul>
+    </div>
+
+    <!-- Export Form -->
+    <form method="post" action="">
+        {% csrf_token %}
+
+        <div style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="margin-bottom: 25px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 15px; color: #2c3e50; font-size: 18px;">
+                    📄 Export formatini tanlang:
+                </label>
+
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <!-- Manual format options -->
+                    <label style="display: flex; align-items: center; padding: 15px; border: 2px solid #e9ecef; border-radius: 8px; cursor: pointer; transition: all 0.3s;"
+                           onclick="selectFormat(this, '#007bff')">
+                        <input type="radio" name="file_format" value="0" checked style="margin-right: 12px; transform: scale(1.2);">
+                        <div>
+                            <div style="font-weight: bold; color: #007bff; font-size: 16px;">
+                                📊 Excel (.xlsx) - Tavsiya etiladi
+                            </div>
+                            <div style="color: #6c757d; font-size: 14px; margin-top: 5px;">
+                                Eng ko'p ishlatiladigan format. Barcha ma'lumotlar to'liq saqlanadi.
+                            </div>
+                        </div>
+                    </label>
+
+                    <label style="display: flex; align-items: center; padding: 15px; border: 2px solid #e9ecef; border-radius: 8px; cursor: pointer; transition: all 0.3s;"
+                           onclick="selectFormat(this, '#28a745')">
+                        <input type="radio" name="file_format" value="1" style="margin-right: 12px; transform: scale(1.2);">
+                        <div>
+                            <div style="font-weight: bold; color: #28a745; font-size: 16px;">
+                                📄 CSV (.csv) - Universal format
+                            </div>
+                            <div style="color: #6c757d; font-size: 14px; margin-top: 5px;">
+                                Oddiy matn format. Google Sheets, Excel va boshqa dasturlarda ochiladi.
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Submit buttons -->
+            <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #dee2e6; text-align: center;">
+                <button type="submit" id="exportBtn"
+                        style="background: #28a745; color: white; border: none; padding: 12px 25px; border-radius: 5px; font-size: 16px; cursor: pointer; margin-right: 10px;">
+                    🚀 Export qilishni boshlash
+                </button>
+                <a href="{% url opts|admin_urlname:'changelist' %}"
+                   style="background: #6c757d; color: white; text-decoration: none; padding: 12px 25px; border-radius: 5px; font-size: 16px;">
+                    ❌ Bekor qilish
+                </a>
+            </div>
+        </div>
+    </form>
+
+    <!-- Export ma'lumotlar ro'yxati -->
+    <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+        <h3 style="color: #495057; margin-bottom: 15px;">📋 Export qilinadigan ma'lumotlar:</h3>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+            <div style="background: white; padding: 15px; border-radius: 5px; border-left: 4px solid #007bff;">
+                <h5 style="color: #007bff; margin-bottom: 8px;">👤 Shaxsiy ma'lumotlar</h5>
+                <ul style="font-size: 14px; margin: 0; padding-left: 15px; color: #6c757d;">
+                    <li>FIO, Telefon raqami</li>
+                    <li>Passport, PINFL</li>
+                    <li>Manzil ma'lumotlari</li>
+                </ul>
+            </div>
+
+            <div style="background: white; padding: 15px; border-radius: 5px; border-left: 4px solid #28a745;">
+                <h5 style="color: #28a745; margin-bottom: 8px;">📚 Ta'lim ma'lumotlari</h5>
+                <ul style="font-size: 14px; margin: 0; padding-left: 15px; color: #6c757d;">
+                    <li>Yo'nalish, Filial</li>
+                    <li>Ta'lim darajasi, shakli</li>
+                    <li>Kontrakt summasi</li>
+                </ul>
+            </div>
+
+            <div style="background: white; padding: 15px; border-radius: 5px; border-left: 4px solid #ffc107;">
+                <h5 style="color: #e83e8c; margin-bottom: 8px;">📜 Diplom ma'lumotlari</h5>
+                <ul style="font-size: 14px; margin: 0; padding-left: 15px; color: #6c757d;">
+                    <li>Diplom seriya, raqami</li>
+                    <li>Ta'lim muassasasi</li>
+                    <li>Transfer ma'lumotlari</li>
+                </ul>
+            </div>
+
+            <div style="background: white; padding: 15px; border-radius: 5px; border-left: 4px solid #dc3545;">
+                <h5 style="color: #dc3545; margin-bottom: 8px;">📊 Status va vaqt</h5>
+                <ul style="font-size: 14px; margin: 0; padding-left: 15px; color: #6c757d;">
+                    <li>Ariza holati</li>
+                    <li>Yaratilgan sana</li>
+                    <li>Shartnoma mavjudligi</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Format selection functionality
+function selectFormat(element, color) {
+    // Reset all labels
+    document.querySelectorAll('label').forEach(label => {
+        if (label.querySelector('input[name="file_format"]')) {
+            label.style.borderColor = '#e9ecef';
+            label.style.backgroundColor = 'white';
+        }
+    });
+
+    // Highlight selected
+    element.style.borderColor = color;
+    element.style.backgroundColor = color + '15'; // Adding transparency
+}
+
+// Form submission handling
+document.querySelector('form').addEventListener('submit', function(e) {
+    const btn = document.getElementById('exportBtn');
+
+    // Check if format is selected
+    const selectedFormat = document.querySelector('input[name="file_format"]:checked');
+    if (!selectedFormat) {
+        e.preventDefault();
+        alert('⚠️ Iltimos, export formatini tanlang!');
+        return;
+    }
+
+    btn.innerHTML = '⏳ Export qilinmoqda...';
+    btn.disabled = true;
+
+    // Fallback to reset button
+    setTimeout(function() {
+        btn.innerHTML = '🚀 Export qilishni boshlash';
+        btn.disabled = false;
+    }, 15000);
+});
+
+// Initialize with Excel selected
+document.addEventListener('DOMContentLoaded', function() {
+    const excelLabel = document.querySelector('input[value="0"]').closest('label');
+    selectFormat(excelLabel, '#007bff');
+});
+</script>
+{% endblock %}

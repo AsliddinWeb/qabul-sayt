@@ -21,6 +21,7 @@ THIRD_PARTY_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'ckeditor',
+    'import_export',
 ]
 
 LOCAL_APPS = [
@@ -478,3 +479,12 @@ JAZZMIN_UI_TWEAKS = {
         "success": "btn-success"
     }
 }
+
+# Import/Export
+IMPORT_EXPORT_USE_TRANSACTIONS = True
+
+# Import/Export uchun vaqtincha fayl katalogi
+IMPORT_EXPORT_TMP_STORAGE_CLASS = 'import_export.tmp_storages.TempFolderStorage'
+
+# Import/Export uchun qo'shimcha sozlamalar
+IMPORT_EXPORT_CHUNK_SIZE = 100
