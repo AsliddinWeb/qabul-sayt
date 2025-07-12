@@ -44,7 +44,7 @@ class PhoneForm(forms.Form):
         if len(phone) != 13:
             raise ValidationError("Telefon raqam to'liq emas. Masalan: +998901234567")
 
-        operator_codes = ['90', '91', '93', '94', '95', '97', '98', '99', '33', '88', '20', '77']
+        operator_codes = ['90', '91', '93', '94', '95', '97', '98', '99', '33', '88', '20', '77', '50', '55']
         operator_code = phone[4:6]
 
         if operator_code not in operator_codes:
