@@ -57,6 +57,9 @@ def passport_view(request):
     # Get regions for select options
     regions = Region.objects.prefetch_related('districts').order_by('name')
 
+    # Initialize form variable
+    form = None
+
     if request.method == 'POST':
         # Handle form submission
         try:
@@ -83,10 +86,10 @@ def passport_view(request):
                     messages.success(request, 'Ma\'lumotlar muvaffaqiyatli yangilandi!')
                 else:
                     messages.success(request, 'Ma\'lumotlar muvaffaqiyatli saqlandi!')
-                    
+
                 return redirect('dashboard:abituriyent_diplom')
             else:
-                # Show form errors
+                # Show form errors - form ma'lumotlarini saqlash uchun redirect qilmaymiz
                 for field, errors in form.errors.items():
                     field_label = form.fields.get(field, {}).label or field
                     for error in errors:
@@ -94,11 +97,16 @@ def passport_view(request):
 
         except Exception as e:
             messages.error(request, f'Xatolik yuz berdi: {str(e)}')
+            # Exception holatida ham form ma'lumotlarini saqlash uchun
+            if not form:
+                if profile:
+                    form = AbituriyentProfileForm(request.POST, request.FILES, instance=profile)
+                else:
+                    form = AbituriyentProfileForm(request.POST, request.FILES)
 
-        return redirect('dashboard:abituriyent_passport')
-
-    # GET request - show form
-    form = AbituriyentProfileForm(instance=profile) if profile else AbituriyentProfileForm()
+    else:
+        # GET request - show form
+        form = AbituriyentProfileForm(instance=profile) if profile else AbituriyentProfileForm()
 
     context = {
         'user': user,
