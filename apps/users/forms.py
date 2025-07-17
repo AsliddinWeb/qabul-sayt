@@ -280,15 +280,15 @@ class AbituriyentProfileForm(forms.ModelForm):
         """Tug'ilgan sanani tekshirish"""
         birth_date = self.cleaned_data.get('birth_date')
 
-        if birth_date:
-            from datetime import date
-            today = date.today()
-            age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
+        # if birth_date:
+        #     from datetime import date
+        #     today = date.today()
+        #     age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
 
-            if age < 14:
-                raise ValidationError('Yoshingiz 14 dan kichik bo\'lmasligi kerak')
-            if age > 120:
-                raise ValidationError('Yoshingiz 120 dan katta bo\'lmasligi kerak')
+            # if age < 14:
+            #     raise ValidationError('Yoshingiz 14 dan kichik bo\'lmasligi kerak')
+            # if age > 120:
+            #     raise ValidationError('Yoshingiz 120 dan katta bo\'lmasligi kerak')
 
         return birth_date
 
