@@ -537,13 +537,13 @@ class AbituriyentProfile(BaseProfile):
                 (today.month, today.day) < (self.birth_date.month, self.birth_date.day)
             )
             
-            if age < 16:
+            if age < 14:
                 from django.core.exceptions import ValidationError
-                raise ValidationError({'birth_date': 'Yoshingiz 16 dan kichik bo\'lmasligi kerak'})
+                raise ValidationError({'birth_date': 'Yoshingiz 14 dan kichik bo\'lmasligi kerak'})
             
-            if age > 60:
+            if age > 120:
                 from django.core.exceptions import ValidationError
-                raise ValidationError({'birth_date': 'Yoshingiz 60 dan katta bo\'lmasligi kerak'})
+                raise ValidationError({'birth_date': 'Yoshingiz 120 dan katta bo\'lmasligi kerak'})
         
         # Region va district mos kelishini tekshirish
         if self.district and self.region:
