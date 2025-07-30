@@ -25,6 +25,9 @@ from import_export.formats import base_formats
 from .models import Application, ApplicationStatus, AdmissionType
 from .resources import ApplicationResource
 
+# Sms
+from .utils import send_success_application
+
 
 @admin.register(Application)
 class ApplicationAdmin(ImportExportModelAdmin):
@@ -340,7 +343,7 @@ class ApplicationAdmin(ImportExportModelAdmin):
     status_badge.short_description = 'Holat'
 
     def contract_actions(self, obj):
-        """Bootstrap bilan chiroyli shartnoma tugmalari"""
+        """Bootstrap shartnoma tugmalari"""
         if obj.contract_file:
             download_url = f"/media/{obj.contract_file.name}"
             return format_html(
@@ -495,6 +498,8 @@ class ApplicationAdmin(ImportExportModelAdmin):
                     month = f"{datetime.now().month:02d}"
                     relative_path = f"contracts/{year}/{month}/{filename}"
                     application.contract_file.save(relative_path, ContentFile(pdf_content), save=False)
+
+
                     success_message = f"✅ {contract_type.replace('_', ' ').title()} PDF shartnoma yaratildi"
                 else:
                     raise Exception("PDF fayl yaratilmadi")
@@ -520,6 +525,15 @@ class ApplicationAdmin(ImportExportModelAdmin):
             messages.error(request, f"❌ Template topilmadi: {template_name}")
         except Exception as e:
             messages.error(request, f"❌ Xatolik: {str(e)}")
+
+        # Sms
+        contract_url = request.build_absolute_uri(application.contract_file.url)
+        send_sms = send_success_application(
+            phone=application.user.phone,
+            full_name=application.user.full_name,
+            application_link=contract_url
+        )
+
 
         return HttpResponseRedirect(reverse('admin:applications_application_change', args=[application.id]))
 
