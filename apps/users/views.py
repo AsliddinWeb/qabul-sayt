@@ -28,18 +28,14 @@ class HomeView(TemplateView):
             return redirect('users:phone_auth')
 
         user = request.user
-        if user.is_admin_role:
-            return redirect('admin:index')
-        elif user.is_mini_admin:
-            return render(request, 'dashboard/mini_admin.html')
-        elif user.is_operator:
-            return render(request, 'dashboard/operator.html')
-        elif user.is_marketing:
-            return redirect('admin:index')
-        elif user.is_abituriyent:
-            return redirect('dashboard:abituriyent')
 
-        return super().get(request, *args, **kwargs)
+        # To'g'ridan-to'g'ri role asosida yo'naltirish
+        if user.is_abituriyent:
+            return redirect('dashboard:abituriyent')
+        elif user.is_admin_role or user.is_mini_admin or user.is_operator or user.is_marketing:
+            return redirect('admin:index')
+        else:
+            return redirect('dashboard:abituriyent')
 
 
 class PhoneAuthView(FormView):
@@ -173,21 +169,25 @@ class VerifyCodeView(FormView):
         if 'user_exists' in self.request.session:
             del self.request.session['user_exists']
 
+        # Redirect logic
         if created:
             messages.success(
                 self.request,
-                "Tabriklaymiz! Ro'yxatdan muvaffaqiyatli o'tdingiz. Profilingizni to'ldiring."
+                "Tabriklaymiz! Ro'yxatdan muvaffaqiyatli o'tdingiz."
             )
-            # Yangi foydalanuvchi - profil to'ldirish sahifasiga
-            if user.is_abituriyent:
-                return redirect('dashboard:abituriyent_passport')
+            # Yangi foydalanuvchi - to'g'ridan-to'g'ri passport sahifasiga
+            return redirect('dashboard:abituriyent_passport')
         else:
-            # Login haqida bildirishnoma
-            send_notification_sms(phone, 'login_alert')
+            # Mavjud foydalanuvchi - rolga qarab dashboard
+            messages.success(self.request, f"Xush kelibsiz!")
 
-            messages.success(self.request, f"Xush kelibsiz, {user.full_name or user.phone}!")
-
-        return redirect('dashboard:main')
+            # Rolga qarab to'g'ridan-to'g'ri yo'naltirish
+            if user.is_abituriyent:
+                return redirect('dashboard:abituriyent')
+            elif user.is_admin_role or user.is_mini_admin or user.is_operator or user.is_marketing:
+                return redirect('admin:index')
+            else:
+                return redirect('dashboard:abituriyent')
 
     def _mask_phone(self, phone):
         """Telefon raqamni maskalash: +998901234567 -> +998 90 *** ** 67"""

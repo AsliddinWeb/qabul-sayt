@@ -15,41 +15,39 @@ class PhoneVerificationMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        # Bu URL'larga kirish uchun tasdiqlash shart emas
+        # Exempt URLs
         exempt_urls = [
             reverse('users:phone_auth'),
             reverse('users:verify_code'),
             reverse('users:resend_code'),
             reverse('users:logout'),
-            reverse('users:home'),  # Home sahifa uchun ham ruxsat
+            reverse('home:home_page'),  # Home sahifa ham exempt
+            '/admin/',  # Admin panel ham exempt
         ]
 
-        # Static va media fayllar
+        # Prefix'lar
         exempt_prefixes = [
             '/static/',
             '/media/',
             '/admin/',
-            '/api/',  # API uchun agar kerak bo'lsa
         ]
 
-        # Foydalanuvchi login qilgan va tasdiqlanmagan bo'lsa
-        if request.user.is_authenticated and not request.user.is_verified:
+        # Agar user authenticated va verified emas
+        if (request.user.is_authenticated and
+                not request.user.is_verified and
+                request.path not in exempt_urls):
 
-            # Istisno URL'larni tekshirish
-            if request.path not in exempt_urls:
-                # Prefix'larni tekshirish
-                is_exempt = any(request.path.startswith(prefix) for prefix in exempt_prefixes)
+            # Prefix tekshirish
+            is_exempt = any(request.path.startswith(prefix) for prefix in exempt_prefixes)
 
-                if not is_exempt:
-                    # Telefon tasdiqlash sahifasiga yo'naltirish
-                    messages.warning(
-                        request,
-                        "Tizimdan to'liq foydalanish uchun telefon raqamingizni tasdiqlang!"
-                    )
-                    return redirect('users:phone_auth')
+            if not is_exempt:
+                messages.warning(
+                    request,
+                    "Tizimdan to'liq foydalanish uchun telefon raqamingizni tasdiqlang!"
+                )
+                return redirect('users:phone_auth')
 
-        response = self.get_response(request)
-        return response
+        return self.get_response(request)
 
 
 class RoleBasedAccessMiddleware:

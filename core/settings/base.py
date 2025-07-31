@@ -46,7 +46,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    # Custom middleware'lar (order muhim!)
+    # Custom middleware'lar
     'apps.users.middleware.SecurityMiddleware',
     'apps.users.middleware.PhoneVerificationMiddleware',
     'apps.users.middleware.RoleBasedAccessMiddleware',
@@ -116,9 +116,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-# Login URL ni o'zgartirish
+# Login URLs
 LOGIN_URL = 'users:phone_auth'
-LOGIN_REDIRECT_URL = 'users:home'
+LOGIN_REDIRECT_URL = 'dashboard:main'
 LOGOUT_REDIRECT_URL = 'users:phone_auth'
 
 # Messages framework sozlamalari
