@@ -1,3 +1,5 @@
+# apps/users/admin.py - UserAdmin klassini to'liq o'zgartirish
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
@@ -65,16 +67,14 @@ class UserChangeForm(forms.ModelForm):
         fields = ('phone', 'full_name', 'role', 'is_active', 'is_staff', 'is_verified', 'password')
 
     def clean_password(self):
-        # Password fieldini initial'dan olish, agar bo'lmasa hozirgi parolni qaytarish
         return self.initial.get("password", self.instance.password)
 
 
+# Profile Inline'lar
 class AbituriyentProfileInline(admin.StackedInline):
-    """Abituriyent profili inline"""
     model = AbituriyentProfile
     can_delete = False
     verbose_name_plural = 'Abituriyent ma\'lumotlari'
-
     fieldsets = (
         ('Shaxsiy ma\'lumotlar', {
             'fields': ('last_name', 'first_name', 'other_name', 'birth_date', 'gender', 'nationality')
@@ -90,46 +90,37 @@ class AbituriyentProfileInline(admin.StackedInline):
             'classes': ('collapse',)
         })
     )
-
     readonly_fields = ['created_at', 'updated_at']
 
 
 class OperatorProfileInline(admin.StackedInline):
-    """Operator profili inline"""
     model = OperatorProfile
     can_delete = False
     verbose_name_plural = 'Operator ma\'lumotlari'
-
     fields = ('shift', 'handled_applications', 'created_at', 'updated_at')
     readonly_fields = ['created_at', 'updated_at']
 
 
 class MarketingProfileInline(admin.StackedInline):
-    """Marketing profili inline"""
     model = MarketingProfile
     can_delete = False
     verbose_name_plural = 'Marketing ma\'lumotlari'
-
     fields = ('department', 'created_at', 'updated_at')
     readonly_fields = ['created_at', 'updated_at']
 
 
 class MiniAdminProfileInline(admin.StackedInline):
-    """Mini Admin profili inline"""
     model = MiniAdminProfile
     can_delete = False
     verbose_name_plural = 'Mini Admin ma\'lumotlari'
-
     fields = ('created_at', 'updated_at')
     readonly_fields = ['created_at', 'updated_at']
 
 
 class AdminProfileInline(admin.StackedInline):
-    """Admin profili inline"""
     model = AdminProfile
     can_delete = False
     verbose_name_plural = 'Admin ma\'lumotlari'
-
     fields = ('access_level', 'can_modify_users', 'can_access_reports', 'created_at', 'updated_at')
     readonly_fields = ['created_at', 'updated_at']
 
@@ -174,10 +165,10 @@ class UserAdmin(BaseUserAdmin):
     # Ordering
     ordering = ('-date_joined',)
 
-    # Filter horizontal
-    filter_horizontal = ()
+    # Filter horizontal - Groups va Permissions uchun
+    filter_horizontal = ('groups', 'user_permissions')
 
-    # Fieldsets for change form
+    # Fieldsets for change form - Groups va Permissions qo'shildi
     fieldsets = (
         ('Asosiy ma\'lumotlar', {
             'fields': ('phone', 'full_name', 'role')
@@ -185,6 +176,11 @@ class UserAdmin(BaseUserAdmin):
         ('Ruxsatlar', {
             'fields': ('is_active', 'is_staff', 'is_superuser', 'is_verified'),
             'classes': ('collapse',)
+        }),
+        ('Gruppalar va Ruxsatlar', {
+            'fields': ('groups', 'user_permissions'),
+            'classes': ('collapse',),
+            'description': 'Foydalanuvchiga maxsus gruppalar va ruxsatlar berish uchun'
         }),
         ('Xavfsizlik', {
             'fields': ('failed_login_attempts', 'is_blocked', 'blocked_until'),
@@ -196,14 +192,14 @@ class UserAdmin(BaseUserAdmin):
         }),
     )
 
-    # Fieldsets for add form
+    # Fieldsets for add form - Groups qo'shildi
     add_fieldsets = (
         ('Yangi foydalanuvchi yaratish', {
             'classes': ('wide',),
             'fields': ('phone', 'full_name', 'role', 'password1', 'password2'),
         }),
         ('Ruxsatlar', {
-            'fields': ('is_staff', 'is_active'),
+            'fields': ('is_staff', 'is_active', 'groups'),
             'classes': ('collapse',)
         }),
     )
@@ -217,7 +213,9 @@ class UserAdmin(BaseUserAdmin):
         'make_inactive',
         'verify_users',
         'unblock_users',
-        'reset_failed_attempts'
+        'reset_failed_attempts',
+        'add_to_operator_group',
+        'add_to_marketing_group',
     ]
 
     def get_inlines(self, request, obj):
@@ -243,7 +241,9 @@ class UserAdmin(BaseUserAdmin):
             'operator_profile',
             'marketing_profile',
             'mini_admin_profile',
-            'admin_profile'
+            'admin_profile',
+            'groups',  # Groups ham prefetch qilish
+            'user_permissions'  # Permissions ham prefetch qilish
         )
 
     # Custom methods for list_display
@@ -257,10 +257,15 @@ class UserAdmin(BaseUserAdmin):
             'admin': '#dc3545'  # red
         }
         color = colors.get(obj.role, '#6c757d')
+
+        # Groups count qo'shish
+        groups_count = obj.groups.count()
+        groups_text = f" ({groups_count} group)" if groups_count > 0 else ""
+
         return format_html(
             '<span style="background-color: {}; color: white; padding: 3px 8px; '
-            'border-radius: 3px; font-size: 11px;">{}</span>',
-            color, obj.get_role_display()
+            'border-radius: 3px; font-size: 11px;">{}{}</span>',
+            color, obj.get_role_display(), groups_text
         )
 
     role_badge.short_description = 'Rol'
@@ -268,41 +273,29 @@ class UserAdmin(BaseUserAdmin):
     def verification_status(self, obj):
         """Tasdiqlash holati"""
         if obj.is_verified:
-            return format_html(
-                '<span style="color: green;">✓ Tasdiqlangan</span>'
-            )
-        return format_html(
-            '<span style="color: red;">✗ Tasdiqlanmagan</span>'
-        )
+            return format_html('<span style="color: green;">✓ Tasdiqlangan</span>')
+        return format_html('<span style="color: red;">✗ Tasdiqlanmagan</span>')
 
     verification_status.short_description = 'Tasdiqlash'
 
     def activity_status(self, obj):
         """Faollik holati"""
         if obj.is_active:
-            return format_html(
-                '<span style="color: green;">● Faol</span>'
-            )
-        return format_html(
-            '<span style="color: red;">● Nofaol</span>'
-        )
+            return format_html('<span style="color: green;">● Faol</span>')
+        return format_html('<span style="color: red;">● Nofaol</span>')
 
     activity_status.short_description = 'Holat'
 
     def block_status(self, obj):
         """Blok holati"""
         if obj.is_account_blocked():
-            return format_html(
-                '<span style="color: red;">🔒 Bloklangan</span>'
-            )
+            return format_html('<span style="color: red;">🔒 Bloklangan</span>')
         elif obj.failed_login_attempts > 0:
             return format_html(
                 '<span style="color: orange;">⚠ {} ta urinish</span>',
                 obj.failed_login_attempts
             )
-        return format_html(
-            '<span style="color: green;">🔓 Ochiq</span>'
-        )
+        return format_html('<span style="color: green;">🔓 Ochiq</span>')
 
     block_status.short_description = 'Xavfsizlik'
 
@@ -354,11 +347,50 @@ class UserAdmin(BaseUserAdmin):
     def reset_failed_attempts(self, request, queryset):
         """Muvaffaqiyatsiz urinishlarni tiklash"""
         updated = queryset.update(failed_login_attempts=0)
-        self.message_user(request, f'{updated} ta foydalanuvchi uchun urinishlar tiклandi.')
+        self.message_user(request, f'{updated} ta foydalanuvchi uchun urinishlar tiklandi.')
 
     reset_failed_attempts.short_description = "Muvaffaqiyatsiz urinishlarni tiklash"
 
+    def add_to_operator_group(self, request, queryset):
+        """Operatorlar guruhiga qo'shish"""
+        from django.contrib.auth.models import Group
 
+        try:
+            operator_group, created = Group.objects.get_or_create(name='Operatorlar')
+            count = 0
+
+            for user in queryset:
+                if user.role in ['operator', 'admin', 'mini_admin']:
+                    user.groups.add(operator_group)
+                    count += 1
+
+            self.message_user(request, f'{count} ta foydalanuvchi Operatorlar guruhiga qo\'shildi.')
+        except Exception as e:
+            self.message_user(request, f'Xatolik: {str(e)}', level='ERROR')
+
+    add_to_operator_group.short_description = "Operatorlar guruhiga qo'shish"
+
+    def add_to_marketing_group(self, request, queryset):
+        """Marketing guruhiga qo'shish"""
+        from django.contrib.auth.models import Group
+
+        try:
+            marketing_group, created = Group.objects.get_or_create(name='Marketing')
+            count = 0
+
+            for user in queryset:
+                if user.role in ['marketing', 'admin', 'mini_admin']:
+                    user.groups.add(marketing_group)
+                    count += 1
+
+            self.message_user(request, f'{count} ta foydalanuvchi Marketing guruhiga qo\'shildi.')
+        except Exception as e:
+            self.message_user(request, f'Xatolik: {str(e)}', level='ERROR')
+
+    add_to_marketing_group.short_description = "Marketing guruhiga qo'shish"
+
+
+# Boshqa admin registration'lar o'zgartirilmagan...
 @admin.register(AbituriyentProfile)
 class AbituriyentProfileAdmin(admin.ModelAdmin):
     """Abituriyent profili admin"""
@@ -422,19 +454,16 @@ class AbituriyentProfileAdmin(admin.ModelAdmin):
         return super().get_queryset(request).select_related('user', 'region', 'district')
 
     def user_phone(self, obj):
-        """Foydalanuvchi telefoni"""
         return obj.user.phone
 
     user_phone.short_description = 'Telefon'
 
     def age(self, obj):
-        """Yosh"""
         return obj.get_age()
 
     age.short_description = 'Yosh'
 
     def profile_completion(self, obj):
-        """Profil to'liqligi"""
         is_complete = obj.check_profile_completion()
         if is_complete:
             return format_html('<span style="color: green;">✓ To\'liq</span>')
@@ -443,7 +472,6 @@ class AbituriyentProfileAdmin(admin.ModelAdmin):
     profile_completion.short_description = 'To\'liqlik'
 
     def created_at_short(self, obj):
-        """Qisqa yaratilgan sana"""
         return obj.created_at.strftime('%d.%m.%Y')
 
     created_at_short.short_description = 'Yaratilgan'
@@ -468,7 +496,6 @@ class PhoneVerificationAdmin(admin.ModelAdmin):
     )
 
     search_fields = ('phone', 'code')
-
     readonly_fields = ('created_at',)
 
     fieldsets = (
@@ -484,7 +511,6 @@ class PhoneVerificationAdmin(admin.ModelAdmin):
     )
 
     def status_badge(self, obj):
-        """Holat ko'rsatkichi"""
         if obj.is_used:
             return format_html('<span style="color: green;">✓ Ishlatilgan</span>')
         elif obj.is_expired():
@@ -495,13 +521,11 @@ class PhoneVerificationAdmin(admin.ModelAdmin):
     status_badge.short_description = 'Holat'
 
     def created_at_short(self, obj):
-        """Qisqa yaratilgan vaqt"""
         return obj.created_at.strftime('%d.%m.%Y %H:%M')
 
     created_at_short.short_description = 'Yaratilgan'
 
     def validity(self, obj):
-        """Kod haqiqiyligi"""
         if obj.is_valid():
             return format_html('<span style="color: green;">Haqiqiy</span>')
         return format_html('<span style="color: red;">Nohaqiqiy</span>')
@@ -509,11 +533,9 @@ class PhoneVerificationAdmin(admin.ModelAdmin):
     validity.short_description = 'Haqiqiylik'
 
 
-# Profile admin registrations
+# Boshqa profile admin'lar
 @admin.register(OperatorProfile)
 class OperatorProfileAdmin(admin.ModelAdmin):
-    """Operator profili admin"""
-
     list_display = ('user', 'shift', 'handled_applications', 'created_at')
     list_filter = ('shift', 'created_at')
     search_fields = ('user__phone', 'user__full_name')
@@ -522,8 +544,6 @@ class OperatorProfileAdmin(admin.ModelAdmin):
 
 @admin.register(MarketingProfile)
 class MarketingProfileAdmin(admin.ModelAdmin):
-    """Marketing profili admin"""
-
     list_display = ('user', 'department', 'created_at')
     list_filter = ('department', 'created_at')
     search_fields = ('user__phone', 'user__full_name', 'department')
@@ -532,8 +552,6 @@ class MarketingProfileAdmin(admin.ModelAdmin):
 
 @admin.register(MiniAdminProfile)
 class MiniAdminProfileAdmin(admin.ModelAdmin):
-    """Mini Admin profili admin"""
-
     list_display = ('user', 'created_at')
     list_filter = ('created_at',)
     search_fields = ('user__phone', 'user__full_name')
@@ -542,8 +560,6 @@ class MiniAdminProfileAdmin(admin.ModelAdmin):
 
 @admin.register(AdminProfile)
 class AdminProfileAdmin(admin.ModelAdmin):
-    """Admin profili admin"""
-
     list_display = ('user', 'access_level', 'can_modify_users', 'can_access_reports', 'created_at')
     list_filter = ('access_level', 'can_modify_users', 'can_access_reports', 'created_at')
     search_fields = ('user__phone', 'user__full_name')
