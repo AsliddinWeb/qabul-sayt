@@ -64,7 +64,8 @@ class RoleBasedAccessMiddleware:
 
             # Admin panel uchun faqat admin rollar
             if request.path.startswith('/admin/'):
-                if not (request.user.is_admin_role or request.user.is_superuser):
+                # is_staff=True bo'lsa yoki admin role bo'lsa kirishi mumkin
+                if not (request.user.is_staff or request.user.is_admin_role or request.user.is_superuser):
                     messages.error(request, "Bu sahifaga kirish huquqingiz yo'q!")
                     return redirect('users:home')
 

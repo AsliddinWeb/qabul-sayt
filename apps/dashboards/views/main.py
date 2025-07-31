@@ -9,10 +9,13 @@ def main_dashboard(request):
     user = request.user
 
     # Role-based routing
-    if user.is_abituriyent:
-        return redirect('dashboard:abituriyent')
-    elif user.is_admin_role or user.is_mini_admin or user.is_operator or user.is_marketing:
-        return redirect('admin:index')
-    else:
-        # Default: abituriyent dashboard
-        return redirect('dashboard:abituriyent')
+    role_urls = {
+        'abituriyent': 'dashboard:abituriyent',
+        'operator': 'admin:index',
+        'marketing': 'admin:index',
+        'mini_admin': 'admin:index',
+        'admin': 'admin:index'
+    }
+
+    target_url = role_urls.get(user.role, 'dashboard:abituriyent')
+    return redirect(target_url)
