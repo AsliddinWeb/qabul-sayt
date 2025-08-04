@@ -343,9 +343,10 @@ class ApplicationAdmin(ImportExportModelAdmin):
     status_badge.short_description = 'Holat'
 
     def contract_actions(self, obj):
-        """Bootstrap shartnoma tugmalari"""
+        """Bootstrap shartnoma tugmalari - yangi URL bilan"""
         if obj.contract_file:
-            download_url = f"/media/{obj.contract_file.name}"
+            # Smart download URL
+            download_url = f"/applications/contract/{obj.id}/"
             return format_html(
                 '<div class="btn-group" role="group">'
                 '<a href="{}" target="_blank" class="btn btn-success btn-sm">'
@@ -356,9 +357,9 @@ class ApplicationAdmin(ImportExportModelAdmin):
             )
         else:
             ikki_url = reverse('admin:applications_application_generate_contract',
-                               args=[obj.id, 'ikki_tomonlama'])
+                            args=[obj.id, 'ikki_tomonlama'])
             uch_url = reverse('admin:applications_application_generate_contract',
-                              args=[obj.id, 'uch_tomonlama'])
+                            args=[obj.id, 'uch_tomonlama'])
 
             return format_html(
                 '<div class="btn-group" role="group">'
@@ -428,8 +429,9 @@ class ApplicationAdmin(ImportExportModelAdmin):
 
         safe_name = self.get_safe_filename(application.user)
         filename = f"{safe_name}_{contract_type}.pdf"
-        download_url = request.build_absolute_uri(
-            f"/media/contracts/{datetime.now().year}/{datetime.now().month:02d}/{filename}")
+        
+        # YANGI: Application ID asosida URL yaratish (file path emas!)
+        download_url = request.build_absolute_uri(f"/applications/contract/{application.id}/")
         qr_code_data = self.generate_qr_code(download_url)
 
         # Xavfsiz ma'lumot olish
@@ -469,7 +471,7 @@ class ApplicationAdmin(ImportExportModelAdmin):
             'QABUL_TURI': application.get_admission_type_display(),
             'SANA': datetime.now().strftime('%d.%m.%Y'),
             'QR_CODE_DATA': qr_code_data,
-            'DOWNLOAD_URL': download_url,
+            'DOWNLOAD_URL': download_url,  # Yangi smart URL
         }
 
     def generate_contract_view(self, request, application_id, contract_type):
@@ -494,11 +496,10 @@ class ApplicationAdmin(ImportExportModelAdmin):
                     with open(temp_pdf_path, 'rb') as pdf_file:
                         pdf_content = pdf_file.read()
 
-                    year = datetime.now().year
-                    month = f"{datetime.now().month:02d}"
-                    relative_path = f"contracts/{year}/{month}/{filename}"
+                    # MUAMMO BU YERDA: contract_file.upload_to allaqachon 'contracts/%Y/%m/' formatida
+                    # Shuning uchun relative_path ni shunchaki filename qilish kerak
+                    relative_path = filename  # Bu yerda faqat filename
                     application.contract_file.save(relative_path, ContentFile(pdf_content), save=False)
-
 
                     success_message = f"✅ {contract_type.replace('_', ' ').title()} PDF shartnoma yaratildi"
                 else:
@@ -526,16 +527,16 @@ class ApplicationAdmin(ImportExportModelAdmin):
         except Exception as e:
             messages.error(request, f"❌ Xatolik: {str(e)}")
 
-        # Sms
-        contract_url = request.build_absolute_uri(application.contract_file.url)
+        # SMS - yangi smart URL bilan
+        contract_url = request.build_absolute_uri(f"/applications/contract/{application.id}/")
         send_sms = send_success_application(
             phone=application.user.phone,
             full_name=application.user.full_name,
             application_link=contract_url
         )
 
-
         return HttpResponseRedirect(reverse('admin:applications_application_change', args=[application.id]))
+
 
     def generate_ikki_tomonlama_bulk(self, request, queryset):
         """Ikki tomonlama shartnoma yaratish"""
@@ -559,9 +560,8 @@ class ApplicationAdmin(ImportExportModelAdmin):
                 with open(temp_pdf_path, 'rb') as pdf_file:
                     pdf_content = pdf_file.read()
 
-                year = datetime.now().year
-                month = f"{datetime.now().month:02d}"
-                relative_path = f"contracts/{year}/{month}/{filename}"
+                # Bu yerda ham faqat filename ishlatish
+                relative_path = filename
                 application.contract_file.save(relative_path, ContentFile(pdf_content), save=False)
                 application.status = ApplicationStatus.ACCEPTED
                 application.reviewed_by = request.user
@@ -579,7 +579,7 @@ class ApplicationAdmin(ImportExportModelAdmin):
             f"✅ {success_count} ta ikki tomonlama shartnoma yaratildi. ❌ {error_count} ta xatolik.",
             messages.SUCCESS if success_count > 0 else messages.ERROR
         )
-
+  
     generate_ikki_tomonlama_bulk.short_description = "📝 Ikki tomonlama shartnoma yaratish"
 
     def generate_uch_tomonlama_bulk(self, request, queryset):
@@ -602,11 +602,10 @@ class ApplicationAdmin(ImportExportModelAdmin):
                 HTML(string=html_content, base_url=request.build_absolute_uri()).write_pdf(temp_pdf_path)
 
                 with open(temp_pdf_path, 'rb') as pdf_file:
-                    pdf_content = pdf_file.read()
+                    pdf_content = pdf_content.read()
 
-                year = datetime.now().year
-                month = f"{datetime.now().month:02d}"
-                relative_path = f"contracts/{year}/{month}/{filename}"
+                # Bu yerda ham faqat filename ishlatish
+                relative_path = filename
                 application.contract_file.save(relative_path, ContentFile(pdf_content), save=False)
                 application.status = ApplicationStatus.ACCEPTED
                 application.reviewed_by = request.user
@@ -625,6 +624,7 @@ class ApplicationAdmin(ImportExportModelAdmin):
             messages.SUCCESS if success_count > 0 else messages.ERROR
         )
 
+  
     generate_uch_tomonlama_bulk.short_description = "👨‍👩‍👧 Uch tomonlama shartnoma yaratish"
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
