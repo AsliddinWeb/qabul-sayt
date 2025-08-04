@@ -527,13 +527,27 @@ class ApplicationAdmin(ImportExportModelAdmin):
         except Exception as e:
             messages.error(request, f"❌ Xatolik: {str(e)}")
 
-        # SMS - yangi smart URL bilan
-        contract_url = request.build_absolute_uri(f"/applications/contract/{application.id}/")
-        send_sms = send_success_application(
-            phone=application.user.phone,
-            full_name=application.user.full_name,
-            application_link=contract_url
-        )
+        # SMS yuborish - admin message bilan
+        try:
+            contract_url = request.build_absolute_uri(f"/applications/contract/{application.id}/")
+            
+            messages.info(request, f"📱 SMS yuborilmoqda: {application.user.phone}")
+            
+            send_sms_result = send_success_application(
+                phone=application.user.phone,
+                full_name=application.user.full_name or application.user.phone,
+                application_link=contract_url
+            )
+            
+            if send_sms_result:
+                messages.success(request, f"✅ SMS muvaffaqiyatli yuborildi: {application.user.phone}")
+            else:
+                messages.warning(request, f"⚠️ SMS yuborishda xatolik: {application.user.phone}")
+                messages.info(request, f"🔗 Shartnoma havolasi: {contract_url}")
+                
+        except Exception as sms_error:
+            messages.error(request, f"❌ SMS xatolik: {str(sms_error)}")
+            messages.info(request, f"🔗 Shartnoma manzili: {request.build_absolute_uri(f'/applications/contract/{application.id}/')}")
 
         return HttpResponseRedirect(reverse('admin:applications_application_change', args=[application.id]))
 
