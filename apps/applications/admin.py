@@ -198,6 +198,12 @@ class ApplicationAdmin(ImportExportModelAdmin):
                 self.admin_site.admin_view(self.generate_contract_view),
                 name='applications_application_generate_contract'
             ),
+            # YANGI: Download view uchun URL
+            path(
+                '<int:application_id>/download-contract/',
+                self.admin_site.admin_view(self.download_contract_view),
+                name='applications_application_download_contract'
+            ),
         ]
         return custom_urls + urls
 
@@ -343,13 +349,13 @@ class ApplicationAdmin(ImportExportModelAdmin):
     status_badge.short_description = 'Holat'
 
     def contract_actions(self, obj):
-        """Bootstrap shartnoma tugmalari - yangi URL bilan"""
+        """Bootstrap shartnoma tugmalari - to'g'ri fayl nomi bilan"""
         if obj.contract_file:
-            # Smart download URL
-            download_url = f"/applications/contract/{obj.id}/"
+            # Admin URL orqali download qilish
+            download_url = reverse('admin:applications_application_download_contract', args=[obj.id])
             return format_html(
                 '<div class="btn-group" role="group">'
-                '<a href="{}" target="_blank" class="btn btn-success btn-sm">'
+                '<a href="{}" class="btn btn-success btn-sm">'
                 '<i class="fas fa-download"></i> Yuklab olish'
                 '</a>'
                 '</div>',
@@ -374,6 +380,48 @@ class ApplicationAdmin(ImportExportModelAdmin):
             )
 
     contract_actions.short_description = 'Shartnoma Amallar'
+
+    def download_contract_view(self, request, application_id):
+        """Shartnomani to'g'ri nom bilan yuklab olish"""
+        application = get_object_or_404(Application, id=application_id)
+        
+        if not application.contract_file:
+            messages.error(request, "Shartnoma fayli topilmadi!")
+            return HttpResponseRedirect(reverse('admin:applications_application_change', args=[application_id]))
+        
+        try:
+            # Fayl nomini aniqlash
+            original_filename = os.path.basename(application.contract_file.name)
+            
+            # Contract turini aniqlash (fayl nomidan)
+            if 'ikki_tomonlama' in original_filename.lower():
+                contract_type = 'ikki_tomonlama'
+            elif 'uch_tomonlama' in original_filename.lower():
+                contract_type = 'uch_tomonlama'
+            else:
+                contract_type = 'shartnoma'
+            
+            # To'g'ri fayl nomini yaratish
+            safe_name = self.get_safe_filename(application.user)
+            proper_filename = f"{safe_name}_{contract_type}.pdf"
+            
+            # Faylni o'qish va yuborish
+            file_content = application.contract_file.read()
+            
+            # PDF yoki HTML ekanligini tekshirish
+            content_type = 'application/pdf'
+            if original_filename.endswith('.html'):
+                content_type = 'text/html'
+                proper_filename = proper_filename.replace('.pdf', '.html')
+            
+            response = HttpResponse(file_content, content_type=content_type)
+            response['Content-Disposition'] = f'attachment; filename="{proper_filename}"'
+            
+            return response
+            
+        except Exception as e:
+            messages.error(request, f"Faylni yuklab olishda xatolik: {str(e)}")
+            return HttpResponseRedirect(reverse('admin:applications_application_change', args=[application_id]))
 
     def generate_qr_code(self, url):
         """QR kod yaratish"""
@@ -430,7 +478,7 @@ class ApplicationAdmin(ImportExportModelAdmin):
         safe_name = self.get_safe_filename(application.user)
         filename = f"{safe_name}_{contract_type}.pdf"
         
-        # YANGI: Application ID asosida URL yaratish (file path emas!)
+        # SMS uchun URL - avvalgi holatda
         download_url = request.build_absolute_uri(f"/applications/contract/{application.id}/")
         qr_code_data = self.generate_qr_code(download_url)
 
@@ -471,7 +519,7 @@ class ApplicationAdmin(ImportExportModelAdmin):
             'QABUL_TURI': application.get_admission_type_display(),
             'SANA': datetime.now().strftime('%d.%m.%Y'),
             'QR_CODE_DATA': qr_code_data,
-            'DOWNLOAD_URL': download_url,  # Yangi smart URL
+            'DOWNLOAD_URL': download_url,
         }
 
     def generate_contract_view(self, request, application_id, contract_type):
@@ -496,9 +544,8 @@ class ApplicationAdmin(ImportExportModelAdmin):
                     with open(temp_pdf_path, 'rb') as pdf_file:
                         pdf_content = pdf_file.read()
 
-                    # MUAMMO BU YERDA: contract_file.upload_to allaqachon 'contracts/%Y/%m/' formatida
-                    # Shuning uchun relative_path ni shunchaki filename qilish kerak
-                    relative_path = filename  # Bu yerda faqat filename
+                    # Faqat filename, upload_to allaqachon 'contracts/%Y/%m/' formatida
+                    relative_path = filename
                     application.contract_file.save(relative_path, ContentFile(pdf_content), save=False)
 
                     success_message = f"✅ {contract_type.replace('_', ' ').title()} PDF shartnoma yaratildi"
@@ -527,11 +574,9 @@ class ApplicationAdmin(ImportExportModelAdmin):
         except Exception as e:
             messages.error(request, f"❌ Xatolik: {str(e)}")
 
-        # SMS yuborish - admin message bilan
+        # SMS yuborish - avvalgi URL bilan
         try:
             contract_url = request.build_absolute_uri(f"/applications/contract/{application.id}/")
-            
-            messages.info(request, f"📱 SMS yuborilmoqda: {application.user.phone}")
             
             send_sms_result = send_success_application(
                 phone=application.user.phone,
@@ -550,7 +595,6 @@ class ApplicationAdmin(ImportExportModelAdmin):
             messages.info(request, f"🔗 Shartnoma manzili: {request.build_absolute_uri(f'/applications/contract/{application.id}/')}")
 
         return HttpResponseRedirect(reverse('admin:applications_application_change', args=[application.id]))
-
 
     def generate_ikki_tomonlama_bulk(self, request, queryset):
         """Ikki tomonlama shartnoma yaratish"""
@@ -574,7 +618,7 @@ class ApplicationAdmin(ImportExportModelAdmin):
                 with open(temp_pdf_path, 'rb') as pdf_file:
                     pdf_content = pdf_file.read()
 
-                # Bu yerda ham faqat filename ishlatish
+                # Faqat filename
                 relative_path = filename
                 application.contract_file.save(relative_path, ContentFile(pdf_content), save=False)
                 application.status = ApplicationStatus.ACCEPTED
@@ -616,9 +660,9 @@ class ApplicationAdmin(ImportExportModelAdmin):
                 HTML(string=html_content, base_url=request.build_absolute_uri()).write_pdf(temp_pdf_path)
 
                 with open(temp_pdf_path, 'rb') as pdf_file:
-                    pdf_content = pdf_content.read()
+                    pdf_content = pdf_file.read()
 
-                # Bu yerda ham faqat filename ishlatish
+                # Faqat filename
                 relative_path = filename
                 application.contract_file.save(relative_path, ContentFile(pdf_content), save=False)
                 application.status = ApplicationStatus.ACCEPTED
@@ -638,7 +682,6 @@ class ApplicationAdmin(ImportExportModelAdmin):
             messages.SUCCESS if success_count > 0 else messages.ERROR
         )
 
-  
     generate_uch_tomonlama_bulk.short_description = "👨‍👩‍👧 Uch tomonlama shartnoma yaratish"
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
