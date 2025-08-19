@@ -514,6 +514,7 @@ class ApplicationAdmin(ImportExportModelAdmin):
             'TELEFON': application.user.phone,
             'FILIAL': application.branch.name if application.branch else '',
             'YONALISH': application.program.name if application.program else '',
+            'YONALISH_SERIYA': application.program.contract_series if application.program else '',
             'TALIM_DARAJASI': application.education_level.name if application.education_level else '',
             'TALIM_SHAKLI': application.education_form.name if application.education_form else '',
             'QABUL_TURI': application.get_admission_type_display(),

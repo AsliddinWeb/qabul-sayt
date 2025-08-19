@@ -107,7 +107,7 @@
 <body>
     <div class="contract-header">
         To'lov-kontrakt (Uch tomonlama) asosida mutaxassis tayyorlashga<br>
-        <span class="bold">KONTRAKT № BK{{ SANA|slice:":4" }}{{ SANA|slice:"5:7" }}{{ SANA|slice:"8:10" }}</span>
+        <span class="bold">KONTRAKT № {{ YONALISH_SERIYA }}-{{ ID }}</span>
     </div>
 
     <div class="date-location">
@@ -115,7 +115,7 @@
     </div>
 
     <div class="content-block">
-        O'zbekiston Respublikasi Prezidentining 2019 yil 17 iyundagi PQ-4359 son Qarori, Vazirlar Mahkamasining 2017 yil 20 iyundagi 393-son Qarori hamda unga 2019 yil 27 apreldagi 360-son Qaror bilan kiritilgan o'zgartirish va qo'shimchalarga, Oliy va o'rta maxsus ta'lim vazirligining 2012 yil 28 dekabrdagi 508-son buyrug'i bilan tasdiqlangan, Adliya vazirligida 2013 yil 26 fevralda 2431-son bilan davlat ro'yxatidan o'tkazilgan "Oliy va o'rta maxsus, kasb-hunar ta'limi muassasalarida o'qitishning to'lov-kontrakt shakli va undan tushgan mablag'larni taqsimlash tartibi to'g'risida"gi Nizomga muvofiq, <span class="bold">Xalqaro innovatsion universitet</span> nodavlat oliy ta'lim muassasasi (keyingi o'rinlarda – Universitet-deb yuritiladi) nomidan ishonchnoma va Ustavga asosan ish yurituvchi rektori <span class="bold">Mallayev Amin Sayfulloyevich</span> birinchi tomondan, <span class="bold">{{ TALABA_ISMI }}</span> (keyingi o'rinlarda – Talaba) ikkinchi tomondan va <span class="bold">Ota-ona/Vasiy</span> uchinchi tomondan, birgalikda – "Tomonlar" deb ataladigan shaxslar mazkur shartnomani quyidagi shartlar asosida tuzdilar:
+        O'zbekiston Respublikasi Prezidentining 2019 yil 17 iyundagi PQ-4359 son Qarori, Vazirlar Mahkamasining 2017 yil 20 iyundagi 393-son Qarori hamda unga 2019 yil 27 apreldagi 360-son Qaror bilan kiritilgan o'zgartirish va qo'shimchalarga, Oliy va o'rta maxsus ta'lim vazirligining 2012 yil 28 dekabrdagi 508-son buyrug'i bilan tasdiqlangan, Adliya vazirligida 2013 yil 26 fevralda 2431-son bilan davlat ro'yxatidan o'tkazilgan "Oliy va o'rta maxsus, kasb-hunar ta'limi muassasalarida o'qitishning to'lov-kontrakt shakli va undan tushgan mablag'larni taqsimlash tartibi to'g'risida"gi Nizomga muvofiq, <span class="bold">Xalqaro innovatsion universitet</span> nodavlat oliy ta'lim muassasasi (keyingi o'rinlarda – Universitet-deb yuritiladi) nomidan ishonchnoma va Ustavga asosan ish yurituvchi rektori <span class="bold">Mallayev Amin Sayfulloyevich</span> birinchi tomondan, <span class="bold">{{ PASSPORT_SERIYA }} – {{ TALABA_ISMI }}</span> (keyingi o'rinlarda – Talaba) ikkinchi tomondan va <span class="bold">Ota-ona/Vasiy</span> uchinchi tomondan, birgalikda – "Tomonlar" deb ataladigan shaxslar mazkur shartnomani quyidagi shartlar asosida tuzdilar:
     </div>
 
     <div class="section-title">I. SHARTNOMA PREDMETI</div>
@@ -127,8 +127,8 @@
     <div class="info-section">
         <span class="bold">Ta'lim bosqichi:</span> {{ TALIM_DARAJASI }}<br>
         <span class="bold">Ta'lim shakli:</span> {{ TALIM_SHAKLI }}<br>
-        <span class="bold">O'qish muddati:</span> 4 yil<br>
-        <span class="bold">O'quv kursi:</span> 1-kurs<br>
+        <span class="bold">O'qish muddati:</span> {{ OQISH_MUDDATI }} yil<br>
+        <span class="bold">O'quv kursi:</span> {{ OQUV_KURSI }}<br>
         <span class="bold">Ta'lim yo'nalishi:</span> {{ YONALISH }}
     </div>
 
@@ -139,13 +139,13 @@
     </div>
 
     <div class="content-block">
-        <span class="bold">2.2.</span> Ushbu shartnoma bo'yicha ta'lim oluvchini bir yillik o'qitish uchun to'lov <span class="bold">15,000,000.00</span> (o'n besh million) so'mni tashkil etadi va quyidagi muddatlarda amalga oshiriladi:
+        <span class="bold">2.2.</span> Ushbu shartnoma bo'yicha ta'lim oluvchini bir yillik o'qitish uchun to'lov <span class="bold">{{ KONTRAKT_SUMMASI }}</span> so'mni(Stipendiyasiz) tashkil etadi va quyidagi muddatlarda amalga oshiriladi:
     </div>
 
     <div class="content-block">
         <span class="bold">Semestrlarga bo'lib to'langanda quyidagi muddatlarda:</span><br>
         <div class="payment-details">
-            Kuzgi semestr (birinchi yarim yillik): talabalikka tavsiya etilgan abiturientlar uchun 1 oktabrgacha yoki universitet qabul komissiyasi tomonidan belgilangan muddatgacha;<br><br>
+            Kuzgi semestr (birinchi yarim yillik): talabalikka tavsiya etilgan abiturientlar uchun 1 oktabrgacha yoki universitet qabul komissiyasi tomonidan belgilangan muddatgacha, ikkinchi va undan yuqori kurs talabalari uchun 1 oktabrgacha;<br><br>
             Bahorgi semestr (ikkinchi yarim yillik): barcha talabalar uchun 1 martgacha (oyma-oy to'langan hollarda ham).
         </div>
     </div>
@@ -153,7 +153,7 @@
     <div class="content-block">
         <span class="bold">Choraklarga bo'lib to'langanda quyidagi muddatlarda:</span><br>
         <div class="payment-details">
-            Belgilangan to'lov miqdorining kamida 25 foizi talabalikka tavsiya etilgan abiturientlar uchun 1 oktabrgacha yoki Qabul komissiyasi tomonidan belgilangan muddatgacha;<br><br>
+            Belgilangan to'lov miqdorining kamida 25 foizi talabalikka tavsiya etilgan abiturientlar uchun 1 oktabrgacha yoki Qabul komissiyasi tomonidan belgilangan muddatgacha, ikkinchi va undan yuqori bosqich talabalar uchun 1 oktabrgacha:<br><br>
             Belgilangan to'lov miqdorining kamida 50 foizini 1 yanvargacha, 75 foizini 1 martgacha va 100 foizini 1 maygacha.
         </div>
     </div>
@@ -169,32 +169,37 @@
     </div>
     <ul class="obligations">
         <li>Imtihondan muvaffaqiyatli o'tgan yoki oshirilgan to'lov shartnomasi asosida talabalikka tavsiya etilgan abiturient o'quv yilining birinchi yarmi uchun yoki to'liq to'lovni amalga oshirganidan so'ng uni talabalar safiga qabul qilish.</li>
-        <li>O'qitish uchun O'zbekiston Respublikasining "Ta'lim to'g'risida"gi Qonuniga muvofiq universitet Ustavi va boshqa ichki hujjatlarida nazarda tutilgan zarur shart-sharoitlarni yaratish.</li>
-        <li>Talabalarning qonun hujjatlarida belgilangan huquqlarining bajarilishini ta'minlash.</li>
-        <li>Talabani ta'lim yo'nalishlari bo'yicha tasdiqlangan o'quv reja va dasturlarga muvofiq davlat ta'lim standarti talablari darajasida o'qitish.</li>
-        <li>Ota-ona/Vasiyga talabaning o'qishi haqida ma'lumot berish.</li>
+        <li>O'qitish uchun O'zbekiston Respublikasining "Ta'lim to'g'risida"gi Qonuniga muvofiq universitet Ustavi va boshqa ichki hujjatlarida nazarda tutilgan zarur shart-sharoitlarni yaratadi;</li>
+        <li>Talabalarning qonun hujjatlarida belgilangan huquqlarining bajarilishini ta'minlaydi;</li>
+        <li>Talabani ta'lim yo'nalishlari bo'yicha tasdiqlangan o'quv reja va dasturlarga muvofiq davlat ta'lim standarti talablari darajasida o'qitadi;</li>
+        <li>Talaba bakalavriat yo'nalishini muvaffaqiyatli tamomlaganda, belgilangan tartibda O'zbekiston Respublikasi davlat va nodavlat tashkilotlarida tan olinadigan davlat namunasidagi diplom beradi;</li>
+        <li>Ota-ona/Vasiyga talabaning o'qishi, o'zlashtirishi va xulq-atvori haqida ma'lumot berish;</li>
+        <li>Respublikada belgilangan Mehnatga haq to'lashning eng kam miqdori yoki tariflar o'zgarishi natijasida o'qitish uchun belgilangan to'lov miqdori o'zgargan taqdirda talaba va ota-ona/vasiyga ta'limning qolgan muddati uchun xabar berish.</li>
     </ul>
 
     <div class="content-block">
         <span class="bold">3.2. Talabaning majburiyatlari:</span>
     </div>
     <ul class="obligations">
-        <li>Universitet Ustavi va boshqa ichki hujjatlari talablariga qat'iy rioya qilish.</li>
-        <li>Talaba o'quv mashg'ulotlarida muntazam qatnashish.</li>
-        <li>Talaba universitetda belgilangan tartib va qoidalar asosida ta'lim olish.</li>
-        <li>Universitet va talabalar turar joyining ichki nizomlari va tartib qoidalariga rioya qilish, professor-o'qituvchi va xodimlarga xurmat bilan qarash.</li>
-        <li>Moddiy-texnik bazani asrash, ziyon keltirilganda o'rnini qoplash.</li>
-        <li>Ota-ona/Vasiy bilan hamkorlik qilish.</li>
+        <li>Universitet Ustavi va boshqa ichki hujjatlari talablariga qat'iy rioya qiladi;</li>
+        <li>Talaba o'quv mashg'ulotlarida muntazam qatnashadi;</li>
+        <li>Talaba universitetda belgilangan tartib va qoidalar asosida ta'lim oladi hamda ushbu jarayonda bilim darajasini oshirib boradi. Qoldirilgan darslar universitet tomonidan qoplab berilmaydi va ushbu darslar uchun qayta hisob-kitob qilinmaydi;</li>
+        <li>Universitet va talabalar turar joyining ichki nizomlari va tartib qoidalariga rioya qilish, professor-o'qituvchi va xodimlarga xurmat bilan qarash, "Universitet" obro'siga putur yetkazadigan harakatlar qilmaslik;</li>
+        <li>Moddiy-texnik bazani asrash, ziyon keltirilganda o'rnini qoplash;</li>
+        <li>Ota-ona/Vasiy bilan hamkorlik qilish va ularning qonuniy talablarini bajarish;</li>
+        <li>Talabalikka tavsiya etilgan abiturientlar bilan Shartnomani imzolaganidan keyin uning bir nusxasini va boshqa talab qilingan hujjatlarni universitetga taqdim etadi.</li>
     </ul>
 
     <div class="content-block">
         <span class="bold">3.3. Ota-ona/Vasiyning majburiyatlari:</span>
     </div>
     <ul class="obligations">
-        <li>Joriy o'quv yili uchun belgilangan o'qitish qiymatini Shartnomaning 2-bobida ko'rsatilgan tartib va miqdorda o'z vaqtida to'lash.</li>
-        <li>Talabaning ta'lim jarayonini nazorat qilish va yordam berish.</li>
-        <li>Universitet bilan hamkorlik qilish va zarur hujjatlarni taqdim etish.</li>
-        <li>Talabaning o'qishiga to'sqinlik qiluvchi omillarni bartaraf etish.</li>
+        <li>Talaba joriy o'quv yili uchun belgilangan o'qitish qiymatini Shartnomaning 2-bobida ko'rsatilgan tartib va miqdorda o'z vaqtida to'laydi;</li>
+        <li>Talabaning ta'lim jarayonini nazorat qilish va yordam berish;</li>
+        <li>Universitet bilan hamkorlik qilish va zarur hujjatlarni taqdim etish;</li>
+        <li>Talabaning o'qishiga to'sqinlik qiluvchi omillarni bartaraf etish;</li>
+        <li>Respublikada belgilangan Mehnatga haq to'lashning eng kam miqdori yoki tariflar o'zgarishi natijasida o'qitish uchun belgilangan to'lov miqdori o'zgargan taqdirda, o'qishning qolgan muddati uchun Universitetga haq to'lash bo'yicha bir oy muddat ichida shartnomaga qo'shimcha bitim rasmiylashtirish va to'lov farqini to'lash;</li>
+        <li>Talaba o'qitish uchun belgilangan to'lov miqdorini to'laganlik to'g'risidagi bank topshiriqnomasini taqdim etish.</li>
     </ul>
 
     <div class="section-title">IV. TOMONLARNING HUQUQLARI</div>
@@ -203,56 +208,137 @@
         <span class="bold">4.1. Universitetning huquqlari:</span>
     </div>
     <ul class="obligations">
-        <li>Talaba va Ota-ona/Vasiydan ushbu shartnoma majburiyatlarini bajarilishini talab qilish.</li>
-        <li>Talaba qoidalarga rioya qilmagan, darslarni uzrli sabablarsiz qoldirgan yoki to'lovni o'z vaqtida amalga oshirmagan bo'lsa, tegishli choralarni qo'llash.</li>
-        <li>Qoidalarni qo'pol buzgan, huquqbuzarlik yoki jinoyat sodir etgan hollarda shartnomani bir tomonlama bekor qilish.</li>
+        <li>Talaba va Ota-ona/Vasiydan ushbu shartnoma majburiyatlarini bajarilishini, shu jumladan universitetning ichki hujjatlarida belgilangan qoidalarga rioya qilishni, o'quv mashg'ulotlarida muntazam qatnashishni, shartnoma bo'yicha to'lovlarni o'z vaqtida amalga oshirishni talab qilish;</li>
+        <li>Talaba universitetning ichki hujjatlarida belgilangan qoidalarga rioya qilmagan, bir semestr davomida darslarni uzrli sabablarsiz 80 soatdan ortiq qoldirgan yoki o'qitish uchun belgilangan miqdordagi to'lovni o'z vaqtida amalga oshirmagan bo'lsa, universitet talabaga nisbatan belgilangan tartibda talabalar safidan chetlashtirish, tegishli kursda qoldirish yoki boshqa choralarni qo'llash;</li>
+        <li>Talaba universitetning ichki hujjatlarida belgilangan qoidalarni bir marta qo'pol yoki muntazam ravishda buzgan, huquqbuzarlik yoki jinoyat sodir etgan hollarda shartnomani bir tomonlama bekor qilish;</li>
+        <li>Istisno tariqasida shartnoma bo'yicha to'lov muddatlarini uzaytirish (universitetning rektor buyrug'i orqali) mumkin;</li>
+        <li>Shartnomaning 2-bobida ko'rsatilgan tartib va miqdorda o'z vaqtida to'lovni amalga oshirmaganida, talabani barcha imtihon(oraliq va yakuniy) jarayonlariga qo'ymaslik;</li>
+        <li>Talabaga nisbatan Kredit-modul tizimi to'g'risidagi Ustavga asosan semestr davomida o'zlashtirmagan fanlarning kreditlariga mos ravishda amaldagi to'lov shartnoma summasiga asosan fanlardan qayta topshirish o'tkazish uchun to'lovlar qabul qilish.</li>
     </ul>
 
     <div class="content-block">
         <span class="bold">4.2. Talabaning huquqlari:</span>
     </div>
     <ul class="obligations">
-        <li>Universitetdan shartnoma majburiyatlari bajarilishini talab qilish.</li>
-        <li>Universitetda tasdiqlangan o'quv reja va dasturlarga muvofiq ta'lim olish.</li>
-        <li>Universitetning ta'lim jarayonlariga takliflar berish.</li>
-        <li>O'qish uchun to'lov turini tanlash.</li>
+        <li>Universitetdan shartnoma majburiyatlari bajarilishini talab qilish;</li>
+        <li>Universitetda tasdiqlangan o'quv reja va dasturlarga muvofiq ta'lim olish;</li>
+        <li>Universitetning ta'lim jarayonlariga takliflar berish;</li>
+        <li>O'qish uchun to'lov turini mazkur shartnomaning 2-bobga asosan tanlash;</li>
+        <li>Universitet imkon berganda (agar tanlangan filialda belgilangan yo'nalish, ta'lim shakli, ta'lim tilida bo'sh o'rin bo'lsa) universitetning filiali yoki boshqa ta'lim tashkilotlariga o'qishni ko'chirish huquqiga ega;</li>
+        <li>Ota-ona/Vasiy bilan birgalikda ta'lim jarayoni haqida ma'lumot olish.</li>
     </ul>
 
     <div class="content-block">
         <span class="bold">4.3. Ota-ona/Vasiyning huquqlari:</span>
     </div>
     <ul class="obligations">
-        <li>Talabaning o'qishi, o'zlashtirishi va xulq-atvori haqida ma'lumot olish.</li>
-        <li>Ta'lim sifatini nazorat qilish va takliflar berish.</li>
-        <li>Universitet bilan to'g'ridan-to'g'ri muloqot qilish.</li>
+        <li>Talabaning o'qishi, o'zlashtirishi va xulq-atvori haqida ma'lumot olish;</li>
+        <li>Ta'lim sifatini nazorat qilish va takliflar berish;</li>
+        <li>Universitet bilan to'g'ridan-to'g'ri muloqot qilish;</li>
+        <li>Universitetdan shartnoma majburiyatlari bajarilishini talab qilish;</li>
+        <li>Talabaning ta'lim jarayonidagi muammolari haqida ma'lumot olish.</li>
     </ul>
 
-    <div class="section-title">V. JAVOBGARLIK VA NIZOLARNI HAL QILISH</div>
+    <div class="section-title">V. KONTRAKTNING AMAL QILISH MUDDATI, UNGA O'ZGARTIRISH VA QO'SHIMCHALAR KIRITISH HAMDA BEKOR QILISH TARTIBI</div>
 
     <div class="content-block">
-        <span class="bold">5.1.</span> Tomonlarning biri ushbu shartnoma majburiyatlarini bajarmagan yoki lozim darajada bajarmagan taqdirda boshqa tarafga yetkazilgan zararni qonunchilikda belgilangan tartibda to'laydi.
+        <span class="bold">5.1.</span> Ushbu shartnoma uch tomonlama imzolangandan so'ng kuchga kiradi hamda ta'lim xizmatlarini taqdim etish o'quv yili tugagunga qadar amalda bo'ladi.
     </div>
 
     <div class="content-block">
-        <span class="bold">5.2.</span> Tomonlar o'rtasidagi barcha nizolar oldindan muzokaralar yo'li bilan hal qilinadi. Agar rozilikka erishilmasa, nizolar O'zbekiston Respublikasi qonunchiligiga muvofiq sudlarda ko'rib chiqiladi.
-    </div>
-
-    <div class="section-title">VI. YAKUNIY QOIDALAR</div>
-
-    <div class="content-block">
-        <span class="bold">6.1.</span> Ushbu shartnoma uch tomonlama imzolangandan so'ng kuchga kiradi hamda ta'lim xizmatlarini taqdim etish tugagunga qadar amalda bo'ladi.
+        <span class="bold">5.2.</span> Ushbu shartnomaga uch tomon kelishuviga asosan tuzatish, o'zgartirish va qo'shimchalar kiritilishi mumkin.
     </div>
 
     <div class="content-block">
-        <span class="bold">6.2.</span> Shartnoma 3 (uch) nusxada, tomonlarning har biri uchun bir nusxadan tuzildi va barcha nusxalar bir xil huquqiy kuchga ega.
+        <span class="bold">5.3.</span> Shartnomaga tuzatish, o'zgartirish va qo'shimchalar faqat yozma ravishda "Shartnomaga qo'shimcha bitim" tarzida kiritiladi va imzolanadi.
     </div>
 
-    <div class="section-title">VII. TOMONLARNING REKVIZITLARI VA IMZOLARI</div>
+    <div class="content-block">
+        <span class="bold">5.4.</span> Shartnoma quyidagi hollarda universitet tomonidan bir tomonlama bekor qilinadi:<br>
+        • Ustavi va boshqa ichki hujjatlariga muvofiq Talaba talabalar safidan chiqarilganda;<br>
+        • Shartnoma to'lov miqdori belgilangan muddat ichida to'lanmasa;<br>
+        • Shartnomaning 4.1.-bandining 2 va 3 xatboshisida ko'rsatilgan hollarda;<br>
+        • Talaba tomonidan qabul imtihonlarida ayyorlik, tovlamachilik, firibgarlik va boshqa shunga o'xshash belgilangan tartibga zid hollar bilan o'qishga qabul qilinganligi aniqlanganida;
+    </div>
+
+    <div class="content-block">
+        <span class="bold">5.5.</span> Talaba o'qish davri (o'quv davri deganda joriy o'quv yili uchun tasdiqlangan yillik o'quv reja taqvimi nazarda tutiladi) davomida korrupsiya yoki korrupsiya holatlari bilan bog'liq huquqbuzarlikni amalga oshirganida yoki urunganida (o'qituvchi-pedagog, xodimlarga pul, qimmatbaho sovg'a (3 AQSh $ ko'p miqdorda) va boshqalar taklif qilish, berish yoki bunda vositachilik qilish);
+    </div>
+
+    <div class="content-block">
+        <span class="bold">5.6.</span> Talaba universitetning qonuniy talablarini bajarmaganida.
+    </div>
+
+    <div class="content-block">
+        <span class="bold">5.7.</span> Talaba darslarga qatnashgan yoki qatnashmaganligidan qat'iy nazar shartnoma universitet tomonidan bir tomonlama bekor qilingan barcha holatlarda Talaba va Ota-ona/Vasiy amalga oshirgan to'lov qaytarilmaydi. Agar Talaba ungacha muddatda ushbu shartnomada belgilangan (1-semestr to'lovi miqdorida; agar shartnoma 2-semestr davrida bekor qilinsa – 1-yillik to'lov miqdorida) to'lovni amalga oshirmagan bo'lgan taqdirda Talaba va Ota-ona/Vasiy ushbu qarzdorlikni to'lashni o'z mujburiyatlariga oladilar.
+    </div>
+
+    <div class="content-block">
+        <span class="bold">5.8.</span> Shartnoma Talaba tomonidan uning arizasiga muvofiq bir tomonlama bekor qilinishi mumkin. Bunda Talaba darslarga qatnashgan yoki qatnashmaganligidan qat'iy nazar shartnoma Talaba tomonidan bir tomonlama bekor qilingan barcha holatlarda Talaba va Ota-ona/Vasiy amalga oshirgan to'lov qaytarilmaydi.
+    </div>
+
+    <div class="content-block">
+        <span class="bold">5.9.</span> Shartnoma taraflar ixtiyoriga bog'liq bo'lmagan holatlarga ko'ra bekor qilinishi mumkin:<br>
+        • Talaba tomonidan tanlangan ta'lim shakli, yo'nalishi, tili bo'yicha qabul rejasida ko'rsatilgan miqdorda guruh shakllanmagan bo'lsa;<br>
+        • Talaba vafot etsa;
+    </div>
+
+    <div class="content-block">
+        <span class="bold">5.10.</span> Ushbu holatlarda universitet 10 ish kuni ichida Talaba va Ota-ona/Vasiyga agar imkoni bo'lsa universitetning boshqa filialida yoki boshqa ta'lim shaklida, tilida, yo'nalishida o'qishni davom ettirishni taklif qiladi. Talaba va Ota-ona/Vasiy ushbu taklifga 10 ish kuni ichida javob xati bilan murojat qilishi shart bo'ladi, aks holda ushbu shartnoma bekor qilingan hisoblanadi va Talaba talabalar safidan chiqariladi;
+    </div>
+
+    <div class="section-title">VI. FORS-MAJOR HOLATLAR</div>
+
+    <div class="content-block">
+        <span class="bold">6.1.</span> Ushbu Shartnomaga asosan majburiyatlarning bajarilmasligi holatlari yengib bo'lmaydigan kuchlar (fors-major) ta'siri natijasida vujudga kelganda, Tomonlar o'z majburiyatlarini bajarmaslikdan qisman yoki to'liq ozod bo'ladilar, agar fors-major hukumat tomonidan rasman e'lon qilinsa, masofaviy ta'lim shaklida o'qishni imkoni bo'lmasa va ular 3 oydan uzoq davom etsa.
+    </div>
+
+    <div class="content-block">
+        <span class="bold">6.2.</span> Yengib bo'lmaydigan kuchlar (fors-major) holatlariga Tomonlarning irodasi va faoliyatiga bog'liq bo'lmagan tabiat hodisalari (zilzila, ko'chki, bo'ron, qurg'oqchilik va boshqalar, agar ular 3 oydan uzoq davom etsa) yoki ijtimoiy-iqtisodiy holatlar (urush holati, qamal, davlat manfaatlarini ko'zlab, agar ular 3 oydan uzoq davom etsa) sababli yuzaga kelgan sharoitlarda Tomonlarga qabul qilingan majburiyatlarni bajarish imkonini bermaydigan favqulodda, oldini olib bo'lmaydigan va kutilmagan holatlar kiradi.
+    </div>
+
+    <div class="section-title">VII. TOMONLARNING JAVOBGARLIGI</div>
+
+    <div class="content-block">
+        <span class="bold">7.1.</span> Tomonlarning biri ushbu shartnoma majburiyatlarini bajarmagan yoki lozim darajada bajarmagan taqdirda boshqa tarafga yetkazilgan zararni ushbu shartnomada va amaldagi qonunchilikda belgilangan tartibda to'laydi.
+    </div>
+
+    <div class="content-block">
+        <span class="bold">7.2.</span> Talaba va Ota-ona/Vasiy tomonidan mazkur shartnoma shartlari tegishli tarzda bajarilmasligi natijasida universitetga yetkazilgan zararlarni, universitetga qoplab berishi shart.
+    </div>
+
+    <div class="content-block">
+        <span class="bold">7.3.</span> Tomonlar o'rtasidagi barcha nizolar oldindan muzokaralar yo'li bilan hal qilinadi. Agar o'zaro rozilikka erishilmasa, nizolar O'zbekiston Respublikasi qonunchiligiga va tomonlar kelishuviga asosan sudlarda ko'rib chiqiladi.
+    </div>
+
+    <div class="section-title">VIII. YAKUNIY QOIDALAR VA NIZOLARNI HAL QILISH TARTIBI</div>
+
+    <div class="content-block">
+        <span class="bold">8.1.</span> Ushbu shartnomani bajarish jarayonida kelib chiqishi mumkin bo'lgan nizo va ziddiyatlar tomonlar o'rtasida muzokaralar olib borish yo'li bilan hal etiladi.
+    </div>
+
+    <div class="content-block">
+        <span class="bold">8.2.</span> Muzokaralar olib borish yo'li bilan nizoni hal etish imkoniyati bo'lmagan taqdirda, tomonlar nizolarni hal etish uchun amaldagi qonunchilikka muvofiq sudga murojaat etishlari mumkin.
+    </div>
+
+    <div class="content-block">
+        <span class="bold">8.3.</span> Universitet axborotlar va xabarnomalarni internetdagi veb-saytida, axborot tizimida yoki e'lonlar taxtasida e'lon joylashtirish orqali xabar berishi mumkin.
+    </div>
+
+    <div class="content-block">
+        <span class="bold">8.4.</span> Shartnoma 3 (uch) nusxada, tomonlarning har biri uchun bir nusxadan tuzildi va barcha nusxalar ham bir xil huquqiy kuchga ega.
+    </div>
+
+    <div class="content-block">
+        <span class="bold">8.5.</span> Ushbu shartnomaga qo'shimcha bitim kiritilgan taqdirda ushbu barcha kiritilgan qo'shimcha bitimlar shartnomaning ajralmas qismi hisoblanadi.
+    </div>
+
+    <div class="section-title">IX. TOMONLARNING REKVIZITLARI VA IMZOLARI</div>
 
     <div class="signature-section">
         <div class="signatures">
             <div class="signature-block">
-                <span class="bold">7.1. Ta'lim muassasasi:</span><br>
+                <span class="bold">9.1. Ta'lim muassasasi:</span><br>
                 <span class="bold">Xalqaro innovatsion universitet</span><br><br>
 
                 <div class="bank-details">
@@ -268,14 +354,14 @@
                     MFO: 00083
                 </div>
 
-                <span class="bold">Rektor:</span><br>
+                <span class="bold">Ta'lim muassasasi rahbari:</span><br>
                 <span class="signature-line"></span><br>
                 Mallayev Amin Sayfulloyevich
             </div>
 
             <div class="signature-block">
                 <span class="bold">9.2. Ta'lim oluvchi:</span><br><br>
-                <span class="bold">F.I.Sh.:</span> {{ PASSPORT_SERIYA }} – {{ TALABA_ISMI }}<br>
+                <span class="bold">F.I.Sh.:</span> {{ TALABA_ISMI }}<br>
                 <span class="bold">Yashash manzili:</span> {{ TALABA_MANZILI }}<br>
                 <span class="bold">Pasport ma'lumotlari:</span> {{ PASSPORT_SERIYA }}<br>
                 <span class="bold">Telefon raqami:</span> {{ TELEFON }}<br><br>
@@ -285,7 +371,7 @@
             </div>
 
             <div class="signature-block">
-                <span class="bold">7.3. Ota-ona/Vasiy:</span><br><br>
+                <span class="bold">9.3. Ota-ona/Vasiy:</span><br><br>
                 <span class="bold">F.I.Sh.:</span> _______________<br>
                 <span class="bold">Telefon:</span> _______________<br>
                 <span class="bold">Manzil:</span> _______________<br>
