@@ -46,12 +46,12 @@ class ApplicationAdmin(ImportExportModelAdmin):
 
     list_display = [
         'get_user_name', 'get_user_phone', 'program', 'branch',
-        'admission_type', 'status_badge', 'created_at', 'contract_actions'
+        'admission_type', 'status_badge', 'test_status_badge', 'created_at', 'contract_actions'
     ]
 
     list_filter = [
         'status', 'admission_type', 'branch', 'education_level',
-        'education_form', 'created_at'
+        'education_form', 'test_completed', 'test_passed', 'created_at'
     ]
 
     search_fields = [
@@ -64,10 +64,15 @@ class ApplicationAdmin(ImportExportModelAdmin):
     readonly_fields = ['created_at', 'updated_at', 'reviewed_by', 'get_user_diplom_info']
 
     actions = [
-        'generate_ikki_tomonlama_bulk',
-        'generate_uch_tomonlama_bulk',
-        'export_admin_action'
+        'export_admin_action',
     ]
+
+    def get_actions(self, request):
+        """Default delete actionni olib tashlash"""
+        actions = super().get_actions(request)
+        if 'delete_selected' in actions:
+            del actions['delete_selected']
+        return actions
 
     # EXPORT FUNKSIYALARINI TO'LIQ OVERRIDE QILISH
     def export_action(self, request, *args, **kwargs):
@@ -219,6 +224,11 @@ class ApplicationAdmin(ImportExportModelAdmin):
             ('Ariza holati', {
                 'fields': ('status', 'reviewed_by', 'contract_file')
             }),
+            # ✅ YANGI: Test ma'lumotlari fieldset
+            ('Test ma\'lumotlari', {
+                'fields': ('test_completed', 'test_score', 'test_passed', 'test_date'),
+                'description': 'Abituriyent test natijalari haqida ma\'lumot'
+            }),
         ]
 
         if obj:
@@ -347,6 +357,35 @@ class ApplicationAdmin(ImportExportModelAdmin):
         )
 
     status_badge.short_description = 'Holat'
+
+    # ✅ YANGI: Test holati badge
+    def test_status_badge(self, obj):
+        """Test holati badge"""
+        if obj.test_completed is None:
+            return format_html(
+                '<span class="badge badge-secondary px-2 py-1" style="font-size: 11px;">➖ Test topshirmagan</span>'
+            )
+        elif obj.test_completed and obj.test_passed:
+            return format_html(
+                '<span class="badge badge-success px-2 py-1" style="font-size: 11px;">✅ O\'tdi ({} ball)</span>',
+                obj.test_score or 0
+            )
+        elif obj.test_completed and not obj.test_passed:
+            return format_html(
+                '<span class="badge badge-danger px-2 py-1" style="font-size: 11px;">❌ O\'tmadi ({} ball)</span>',
+                obj.test_score or 0
+            )
+        elif obj.test_completed:
+            return format_html(
+                '<span class="badge badge-info px-2 py-1" style="font-size: 11px;">📝 Topshirdi ({} ball)</span>',
+                obj.test_score or 0
+            )
+        else:
+            return format_html(
+                '<span class="badge badge-warning px-2 py-1" style="font-size: 11px;">⏳ Kutilmoqda</span>'
+            )
+
+    test_status_badge.short_description = 'Test holati'
 
     def contract_actions(self, obj):
         """Bootstrap shartnoma tugmalari - to'g'ri fayl nomi bilan"""
@@ -596,94 +635,6 @@ class ApplicationAdmin(ImportExportModelAdmin):
             messages.info(request, f"🔗 Shartnoma manzili: {request.build_absolute_uri(f'/applications/contract/{application.id}/')}")
 
         return HttpResponseRedirect(reverse('admin:applications_application_change', args=[application.id]))
-
-    def generate_ikki_tomonlama_bulk(self, request, queryset):
-        """Ikki tomonlama shartnoma yaratish"""
-        success_count = 0
-        error_count = 0
-
-        for application in queryset:
-            try:
-                contract_type = 'ikki_tomonlama'
-                template_name = f'contracts/{contract_type}.html'
-                template = get_template(template_name)
-                context = self.get_replacement_data(application, request, contract_type)
-                html_content = template.render(context)
-                safe_name = self.get_safe_filename(application.user)
-                filename = f"{safe_name}_{contract_type}.pdf"
-
-                temp_dir = tempfile.mkdtemp()
-                temp_pdf_path = os.path.join(temp_dir, 'contract.pdf')
-                HTML(string=html_content, base_url=request.build_absolute_uri()).write_pdf(temp_pdf_path)
-
-                with open(temp_pdf_path, 'rb') as pdf_file:
-                    pdf_content = pdf_file.read()
-
-                # Faqat filename
-                relative_path = filename
-                application.contract_file.save(relative_path, ContentFile(pdf_content), save=False)
-                application.status = ApplicationStatus.ACCEPTED
-                application.reviewed_by = request.user
-                application.save(update_fields=['contract_file', 'status', 'reviewed_by'])
-                success_count += 1
-
-                os.remove(temp_pdf_path)
-                os.rmdir(temp_dir)
-
-            except Exception:
-                error_count += 1
-
-        self.message_user(
-            request,
-            f"✅ {success_count} ta ikki tomonlama shartnoma yaratildi. ❌ {error_count} ta xatolik.",
-            messages.SUCCESS if success_count > 0 else messages.ERROR
-        )
-  
-    generate_ikki_tomonlama_bulk.short_description = "📝 Ikki tomonlama shartnoma yaratish"
-
-    def generate_uch_tomonlama_bulk(self, request, queryset):
-        """Uch tomonlama shartnoma yaratish"""
-        success_count = 0
-        error_count = 0
-
-        for application in queryset:
-            try:
-                contract_type = 'uch_tomonlama'
-                template_name = f'contracts/{contract_type}.html'
-                template = get_template(template_name)
-                context = self.get_replacement_data(application, request, contract_type)
-                html_content = template.render(context)
-                safe_name = self.get_safe_filename(application.user)
-                filename = f"{safe_name}_{contract_type}.pdf"
-
-                temp_dir = tempfile.mkdtemp()
-                temp_pdf_path = os.path.join(temp_dir, 'contract.pdf')
-                HTML(string=html_content, base_url=request.build_absolute_uri()).write_pdf(temp_pdf_path)
-
-                with open(temp_pdf_path, 'rb') as pdf_file:
-                    pdf_content = pdf_file.read()
-
-                # Faqat filename
-                relative_path = filename
-                application.contract_file.save(relative_path, ContentFile(pdf_content), save=False)
-                application.status = ApplicationStatus.ACCEPTED
-                application.reviewed_by = request.user
-                application.save(update_fields=['contract_file', 'status', 'reviewed_by'])
-                success_count += 1
-
-                os.remove(temp_pdf_path)
-                os.rmdir(temp_dir)
-
-            except Exception:
-                error_count += 1
-
-        self.message_user(
-            request,
-            f"✅ {success_count} ta uch tomonlama shartnoma yaratildi. ❌ {error_count} ta xatolik.",
-            messages.SUCCESS if success_count > 0 else messages.ERROR
-        )
-
-    generate_uch_tomonlama_bulk.short_description = "👨‍👩‍👧 Uch tomonlama shartnoma yaratish"
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}
