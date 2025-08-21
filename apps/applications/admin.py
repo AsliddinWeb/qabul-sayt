@@ -11,6 +11,7 @@ from django.template.loader import get_template
 from django.template import TemplateDoesNotExist
 from django.apps import apps
 from weasyprint import HTML
+
 import tempfile
 import os
 import qrcode
@@ -24,6 +25,13 @@ from import_export.formats import base_formats
 
 from .models import Application, ApplicationStatus, AdmissionType
 from .resources import ApplicationResource
+
+# Quizes
+from apps.quizes.models import TestResult, TestAttempt, ProgramTest
+import random
+from django.utils import timezone
+from datetime import timedelta
+from django.db import transaction
 
 # Sms
 from .utils import send_success_application
@@ -65,6 +73,7 @@ class ApplicationAdmin(ImportExportModelAdmin):
 
     actions = [
         'export_admin_action',
+        'pass_selected_through_test',  # YANGI ACTION
     ]
 
     def get_actions(self, request):
@@ -189,6 +198,149 @@ class ApplicationAdmin(ImportExportModelAdmin):
         """Export ruxsatini tekshirish"""
         return request.user.has_perm('applications.view_application')
 
+    def pass_selected_through_test(self, request, queryset):
+        """Tanlanganlarni testdan 55+ ball bilan o'tkazish"""
+        
+        # Faqat test ma'lumotlari yo'q applicationlarni filtrlash
+        applications_without_test = queryset.filter(test_completed__isnull=True)
+        
+        if not applications_without_test.exists():
+            self.message_user(
+                request,
+                "❌ Tanlangan applicationlarda test ma'lumotlari allaqachon mavjud!",
+                messages.WARNING
+            )
+            return
+        
+        success_count = 0
+        error_count = 0
+        
+        with transaction.atomic():
+            for application in applications_without_test:
+                try:
+                    # Test ma'lumotlarini yaratish
+                    test_data = self._generate_test_data(application)
+                    
+                    # Application yangilash
+                    Application.objects.filter(id=application.id).update(**test_data)
+                    
+                    # TestAttempt va TestResult yaratish (agar quizes app mavjud bo'lsa)
+                    self._create_test_records(application, test_data)
+                    
+                    success_count += 1
+                    
+                except Exception as e:
+                    error_count += 1
+                    # Log qilish (ixtiyoriy)
+                    print(f"Test yaratishda xatolik (Application {application.id}): {str(e)}")
+        
+        # Natija xabari
+        if success_count > 0:
+            self.message_user(
+                request,
+                f"✅ {success_count} ta application muvaffaqiyatli testdan o'tkazildi (55+ ball)!",
+                messages.SUCCESS
+            )
+        
+        if error_count > 0:
+            self.message_user(
+                request,
+                f"⚠️ {error_count} ta applicationda xatolik yuz berdi",
+                messages.WARNING
+            )
+
+    pass_selected_through_test.short_description = "🎯 Tanlanganlarni testdan o'tkazish (55+ ball)"
+
+    def _generate_test_data(self, application):
+        """Application uchun test ma'lumotlari yaratish"""
+        
+        # 55 dan 100 gacha ball (o'tish balli 55+)
+        base_score = random.randint(55, 100)
+        
+        # Agar application qabul qilingan bo'lsa, yuqori ball berish
+        if application.status == 'qabul_qilindi':
+            base_score = random.randint(75, 100)
+        elif application.status == 'korib_chiqilmoqda':
+            base_score = random.randint(65, 95)
+        else:
+            base_score = random.randint(55, 85)
+        
+        # Test sanasi (1-90 kun oldin)
+        days_ago = random.randint(1, 90)
+        test_date = timezone.now() - timedelta(days=days_ago)
+        
+        return {
+            'test_completed': True,
+            'test_score': base_score,
+            'test_passed': True,  # Har doim True (55+ ball)
+            'test_date': test_date
+        }
+
+    def _create_test_records(self, application, test_data):
+        """TestAttempt va TestResult yaratish (agar quizes app mavjud bo'lsa)"""
+        try:
+            # ProgramTest ni topish
+            if not hasattr(application.program, 'test_config'):
+                # Agar program test config yo'q bo'lsa, skip qilish
+                return
+            
+            program_test = application.program.test_config
+            
+            # Ballni 2 ta fanga taqsim qilish
+            total_score = test_data['test_score']
+            
+            # Har bir fan maksimal 50 ball
+            subject_1_score = random.randint(
+                max(20, total_score - 50),  # Minimal 20, maksimal (total_score - 50)
+                min(50, total_score - 5)    # Maksimal 50, minimal (total_score - 5)
+            )
+            subject_2_score = total_score - subject_1_score
+            
+            # subject_2_score ni ham cheklash
+            if subject_2_score > 50:
+                subject_2_score = 50
+                subject_1_score = total_score - 50
+            elif subject_2_score < 5:
+                subject_2_score = 5
+                subject_1_score = total_score - 5
+            
+            # Vaqt (30-90 daqiqa)
+            time_spent = random.randint(1800, 5400)  # 30-90 daqiqa (soniyalarda)
+            
+            # TestAttempt yaratish
+            attempt = TestAttempt.objects.create(
+                application=application,
+                program_test=program_test,
+                attempt_number=1,
+                status='completed',
+                started_at=test_data['test_date'],
+                completed_at=test_data['test_date'] + timezone.timedelta(seconds=time_spent),
+                time_spent=time_spent,
+                subject_1_score=subject_1_score,
+                subject_2_score=subject_2_score,
+                total_score=total_score,
+                percentage=(total_score / 100) * 100,
+                is_passed=True  # Har doim True (55+ ball)
+            )
+            
+            # TestResult yaratish
+            TestResult.objects.create(
+                application=application,
+                best_attempt=attempt,
+                best_total_score=total_score,
+                best_percentage=(total_score / 100) * 100,
+                is_test_passed=True,  # Har doim True
+                best_subject_1_score=subject_1_score,
+                best_subject_2_score=subject_2_score,
+                total_attempts=1,
+                last_attempt_date=test_data['test_date']
+            )
+            
+        except Exception as e:
+            # Agar quizes app yo'q bo'lsa yoki boshqa xatolik bo'lsa, 
+            # faqat Application test ma'lumotlarini saqlaymiz
+            pass
+    
     # URL PATTERNS QO'SHISH
     def get_urls(self):
         urls = super().get_urls()
