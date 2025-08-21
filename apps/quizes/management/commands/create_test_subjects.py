@@ -1,3 +1,5 @@
+# apps/quizes/management/commands/create_test_subjects.py
+
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from apps.quizes.models import Subject
@@ -11,86 +13,88 @@ class Command(BaseCommand):
         with transaction.atomic():
             subjects_data = [
                 # Umumiy fanlar
-                ("Matematika", "MATH", "Barcha yo'nalishlar uchun asosiy fan"),
-                ("O'zbek tili va adabiyoti", "UZB", "Ona tili va adabiyot"),
-                ("Ingliz tili", "ENG", "Chet tili"),
-                ("Tarix", "HIST", "O'zbekiston va jahon tarixi"),
-                ("Jismoniy tarbiya nazariyasi", "PE_THEORY", "Jismoniy tarbiya nazariy asoslari"),
+                ("Matematika", "MATH"),
+                ("O'zbek tili va adabiyoti", "UZB"),
+                ("Ingliz tili", "ENG"),
+                ("Tarix", "HIST"),
+                ("Jismoniy tarbiya nazariyasi", "PE_THEORY"),
                 
                 # Pedagogika fanlari
-                ("Pedagogika asoslari", "PED", "Pedagogik faoliyat asoslari"),
-                ("Psixologiya asoslari", "PSY", "Umumiy psixologiya"),
-                ("Maktabgacha pedagogika", "PRESCHOOL", "Maktabgacha ta'lim"),
-                ("Boshlang'ich ta'lim metodikasi", "PRIMARY", "Boshlang'ich sinf metodikasi"),
-                ("Maxsus pedagogika", "SPECIAL_PED", "Maxsus ehtiyojli bolalar pedagogikasi"),
+                ("Pedagogika asoslari", "PED"),
+                ("Psixologiya asoslari", "PSY"),
+                ("Maktabgacha pedagogika", "PRESCHOOL"),
+                ("Boshlang'ich ta'lim metodikasi", "PRIMARY"),
+                ("Maxsus pedagogika", "SPECIAL_PED"),
                 
                 # Filologiya fanlari
-                ("O'zbek tili grammatikasi", "UZB_GRAM", "O'zbek tilining grammatik qoidalari"),
-                ("Ingliz tili grammatikasi", "ENG_GRAM", "Ingliz tili grammatikasi"),
-                ("Rus tili grammatikasi", "RUS_GRAM", "Rus tili grammatikasi"),
-                ("Nemis tili grammatikasi", "GER_GRAM", "Nemis tili grammatikasi"),
-                ("Adabiyotshunoslik", "LIT", "Adabiyot nazariyasi"),
-                ("Tilshunoslik asoslari", "LING", "Umumiy tilshunoslik"),
+                ("O'zbek tili grammatikasi", "UZB_GRAM"),
+                ("Ingliz tili grammatikasi", "ENG_GRAM"),
+                ("Rus tili grammatikasi", "RUS_GRAM"),
+                ("Nemis tili grammatikasi", "GER_GRAM"),
+                ("Adabiyotshunoslik", "LIT"),
+                ("Tilshunoslik asoslari", "LING"),
                 
                 # Iqtisodiyot fanlari
-                ("Iqtisodiyot nazariyasi", "ECON_THEORY", "Mikro va makroiqtisodiyot"),
-                ("Buxgalteriya hisobi", "ACCOUNTING", "Buxgalteriya hisobi asoslari"),
-                ("Moliya", "FINANCE", "Moliya va kredit"),
-                ("Audit", "AUDIT", "Audit va nazorat"),
-                ("Soliq va soliqqa tortish", "TAX", "Soliq tizimi"),
+                ("Iqtisodiyot nazariyasi", "ECON_THEORY"),
+                ("Buxgalteriya hisobi", "ACCOUNTING"),
+                ("Moliya", "FINANCE"),
+                ("Audit", "AUDIT"),
+                ("Soliq va soliqqa tortish", "TAX"),
                 
                 # Axborot texnologiyalari
-                ("Dasturlash asoslari", "PROGRAMMING", "Dasturlash tillari"),
-                ("Ma'lumotlar bazasi", "DATABASE", "DBMS va SQL"),
-                ("Kompyuter tarmoqlari", "NETWORKS", "Tarmoq texnologiyalari"),
-                ("Axborot xavfsizligi", "INFO_SEC", "Kiberxavfsizlik"),
-                ("Web texnologiyalar", "WEB_TECH", "Internet texnologiyalari"),
+                ("Dasturlash asoslari", "PROGRAMMING"),
+                ("Ma'lumotlar bazasi", "DATABASE"),
+                ("Kompyuter tarmoqlari", "NETWORKS"),
+                ("Axborot xavfsizligi", "INFO_SEC"),
+                ("Web texnologiyalar", "WEB_TECH"),
                 
                 # Qurilish va arxitektura
-                ("Qurilish materiallari", "MATERIALS", "Qurilish materialshunoslik"),
-                ("Arxitektura asoslari", "ARCH", "Arxitektura va dizayn"),
-                ("Qurilish konstruksiyalari", "CONSTRUCTION", "Konstruksiyalar hisoblash"),
-                ("Geodeziya", "GEODESY", "Yer o'lchash"),
-                ("Shahar qurilishi", "URBAN", "Shaharsozlik"),
+                ("Qurilish materiallari", "MATERIALS"),
+                ("Arxitektura asoslari", "ARCH"),
+                ("Qurilish konstruksiyalari", "CONSTRUCTION"),
+                ("Geodeziya", "GEODESY"),
+                ("Shahar qurilishi", "URBAN"),
                 
                 # Musiqa va san'at
-                ("Musiqa nazariyasi", "MUSIC_THEORY", "Musiqa nazariyasi asoslari"),
-                ("Musiqa tarixi", "MUSIC_HIST", "Jahon musiqa tarixi"),
-                ("Vokal pedagogikasi", "VOCAL", "Vokal o'qitish"),
+                ("Musiqa nazariyasi", "MUSIC_THEORY"),
+                ("Musiqa tarixi", "MUSIC_HIST"),
+                ("Vokal pedagogikasi", "VOCAL"),
                 
                 # Ommaviy kommunikatsiya
-                ("Jurnalistika asoslari", "JOURNALISM", "OAV va jurnalistika"),
-                ("Reklama va PR", "PR", "Jamoatchilik bilan aloqalar"),
-                ("Media huquqi", "MEDIA_LAW", "OAV qonunchilik"),
+                ("Jurnalistika asoslari", "JOURNALISM"),
+                ("Reklama va PR", "PR"),
+                ("Media huquqi", "MEDIA_LAW"),
                 
                 # Kutubxona ishi
-                ("Kutubxonashunoslik", "LIBRARY", "Kutubxona ishi asoslari"),
-                ("Bibliografiya", "BIBLIOGRAPHY", "Bibliografik ma'lumotnoma"),
-                ("Arxivshunoslik", "ARCHIVE", "Arxiv ishi"),
+                ("Kutubxonashunoslik", "LIBRARY"),
+                ("Bibliografiya", "BIBLIOGRAPHY"),
+                ("Arxivshunoslik", "ARCHIVE"),
                 
                 # Fan fanlari
-                ("Fizika", "PHYSICS", "Umumiy fizika"),
-                ("Kimyo", "CHEMISTRY", "Umumiy kimyo"),
-                ("Biologiya", "BIOLOGY", "Umumiy biologiya"),
-                ("Geografiya", "GEOGRAPHY", "Fizik va iqtisodiy geografiya"),
+                ("Fizika", "PHYSICS"),
+                ("Kimyo", "CHEMISTRY"),
+                ("Biologiya", "BIOLOGY"),
+                ("Geografiya", "GEOGRAPHY"),
             ]
             
             created_count = 0
-            for name, code, description in subjects_data:
+            for name, code in subjects_data:
                 subject, created = Subject.objects.get_or_create(
                     code=code,
                     defaults={
                         'name': name,
-                        'description': description,
                         'is_active': True
                     }
                 )
                 if created:
                     created_count += 1
+                    self.stdout.write(f'✅ Yaratildi: {name} ({code})')
+                else:
+                    self.stdout.write(f'⏭️ Mavjud: {name} ({code})')
             
             self.stdout.write(
-                self.style.SUCCESS(f'{created_count} ta yangi fan yaratildi')
+                self.style.SUCCESS(f'\n🎉 {created_count} ta yangi fan yaratildi')
             )
             self.stdout.write(
-                self.style.SUCCESS(f'Jami {Subject.objects.count()} ta fan mavjud')
+                self.style.SUCCESS(f'📊 Jami {Subject.objects.count()} ta fan mavjud')
             )

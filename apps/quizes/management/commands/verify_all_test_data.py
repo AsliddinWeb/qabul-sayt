@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+from django.db import models  # Add this import
 from apps.applications.models import Application
 from apps.quizes.models import TestResult, TestAttempt, ProgramTest, Subject, Question
 
@@ -131,11 +132,14 @@ class Command(BaseCommand):
             errors.append(f'{missing_results} ta applicationda TestResult yo\'q')
         
         # 2. ProgramTest yo'q bo'lgan programlar
-        from apps.programs.models import Program
-        programs_without_test = Program.objects.filter(test_config__isnull=True).count()
-        
-        if programs_without_test > 0:
-            warnings.append(f'{programs_without_test} ta programmada test sozlamasi yo\'q')
+        try:
+            from apps.programs.models import Program
+            programs_without_test = Program.objects.filter(test_config__isnull=True).count()
+            
+            if programs_without_test > 0:
+                warnings.append(f'{programs_without_test} ta programmada test sozlamasi yo\'q')
+        except ImportError:
+            warnings.append('Program modeli topilmadi - tekshirib bo\'lmadi')
         
         # 3. Savollari yo'q ProgramTestlar
         tests_without_questions = ProgramTest.objects.filter(

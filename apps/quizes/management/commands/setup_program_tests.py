@@ -1,3 +1,5 @@
+# apps/quizes/management/commands/setup_program_tests.py
+
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from apps.quizes.models import Subject, ProgramTest
@@ -12,10 +14,16 @@ class Command(BaseCommand):
         with transaction.atomic():
             programs = Program.objects.all()
             created_count = 0
+            skipped_count = 0
+            error_count = 0
+            
+            self.stdout.write(f'Jami {programs.count()} ta yo\'nalish topildi\n')
             
             for program in programs:
                 if hasattr(program, 'test_config'):
-                    continue  # Allaqachon mavjud
+                    self.stdout.write(f'⏭️ {program.name}: Allaqachon mavjud')
+                    skipped_count += 1
+                    continue
                 
                 # Yo'nalishga qarab fanlarni tanlash
                 subject1, subject2 = self.select_subjects_for_program(program)
@@ -27,27 +35,29 @@ class Command(BaseCommand):
                         subject_2=subject2,
                         passing_score=55,
                         time_limit=90,  # 90 daqiqa
-                        max_attempts=3
                     )
                     created_count += 1
                     
                     self.stdout.write(f'✅ {program.name}: {subject1.name} + {subject2.name}')
                 else:
+                    error_count += 1
                     self.stdout.write(
-                        self.style.WARNING(f'⚠️ {program.name} uchun fan topilmadi')
+                        self.style.ERROR(f'❌ {program.name}: Fan topilmadi')
                     )
             
-            self.stdout.write(
-                self.style.SUCCESS(f'{created_count} ta test sozlamasi yaratildi')
-            )
+            self.stdout.write('\n' + '='*60)
+            self.stdout.write(f'📊 NATIJALAR:')
+            self.stdout.write(f'✅ Yaratildi: {created_count} ta')
+            self.stdout.write(f'⏭️ O\'tkazildi: {skipped_count} ta')
+            self.stdout.write(f'❌ Xatolik: {error_count} ta')
+            self.stdout.write('='*60)
 
     def select_subjects_for_program(self, program):
         """Yo'nalishga qarab 2 ta fan tanlash"""
         program_name = program.name.lower()
         
-        # Subject kodlarini olish
         try:
-            # Matematika va O'zbek tili - default
+            # Default fanlar
             math = Subject.objects.get(code='MATH')
             uzb = Subject.objects.get(code='UZB')
             eng = Subject.objects.get(code='ENG')
@@ -69,15 +79,15 @@ class Command(BaseCommand):
                 programming = Subject.objects.get(code='PROGRAMMING')
                 return math, programming
             
-            elif 'ingliz' in program_name:
+            elif 'ingliz' in program_name and 'til' in program_name:
                 eng_gram = Subject.objects.get(code='ENG_GRAM')
                 return eng, eng_gram
             
-            elif 'rus' in program_name:
+            elif 'rus' in program_name and 'til' in program_name:
                 rus_gram = Subject.objects.get(code='RUS_GRAM')
                 return uzb, rus_gram
             
-            elif 'nemis' in program_name:
+            elif 'nemis' in program_name and 'til' in program_name:
                 ger_gram = Subject.objects.get(code='GER_GRAM')
                 return eng, ger_gram
             
@@ -85,6 +95,34 @@ class Command(BaseCommand):
                 uzb_gram = Subject.objects.get(code='UZB_GRAM')
                 lit = Subject.objects.get(code='LIT')
                 return uzb_gram, lit
+            
+            elif 'filologiya' in program_name:
+                if 'ingliz' in program_name:
+                    eng_gram = Subject.objects.get(code='ENG_GRAM')
+                    return eng, eng_gram
+                elif 'rus' in program_name:
+                    rus_gram = Subject.objects.get(code='RUS_GRAM')
+                    return uzb, rus_gram
+                elif 'nemis' in program_name:
+                    ger_gram = Subject.objects.get(code='GER_GRAM')
+                    return eng, ger_gram
+                else:  # o'zbek tili
+                    uzb_gram = Subject.objects.get(code='UZB_GRAM')
+                    lit = Subject.objects.get(code='LIT')
+                    return uzb_gram, lit
+            
+            elif 'lingvistika' in program_name:
+                ling = Subject.objects.get(code='LING')
+                if 'ingliz' in program_name:
+                    return eng, ling
+                elif 'rus' in program_name:
+                    rus_gram = Subject.objects.get(code='RUS_GRAM')
+                    return rus_gram, ling
+                elif 'nemis' in program_name:
+                    ger_gram = Subject.objects.get(code='GER_GRAM')
+                    return ger_gram, ling
+                else:  # o'zbek
+                    return uzb, ling
             
             elif 'pedagogika' in program_name and 'maxsus' in program_name:
                 ped = Subject.objects.get(code='PED')
@@ -138,23 +176,11 @@ class Command(BaseCommand):
             
             elif 'qurilish' in program_name or 'shahar' in program_name:
                 materials = Subject.objects.get(code='MATERIALS')
-                construction = Subject.objects.get(code='CONSTRUCTION')
                 return math, materials
             
             elif 'yer kadastri' in program_name:
                 geodesy = Subject.objects.get(code='GEODESY')
                 return math, geodesy
-            
-            elif 'lingvistika' in program_name:
-                ling = Subject.objects.get(code='LING')
-                if 'ingliz' in program_name:
-                    return eng, ling
-                elif 'rus' in program_name:
-                    return Subject.objects.get(code='RUS_GRAM'), ling
-                elif 'nemis' in program_name:
-                    return Subject.objects.get(code='GER_GRAM'), ling
-                else:
-                    return uzb, ling
             
             else:
                 # Default: Matematika va O'zbek tili
@@ -162,6 +188,6 @@ class Command(BaseCommand):
                 
         except Subject.DoesNotExist as e:
             self.stdout.write(
-                self.style.ERROR(f'Fan topilmadi: {str(e)}')
+                self.style.ERROR(f'Fan topilmadi {program.name} uchun: {str(e)}')
             )
             return None, None
