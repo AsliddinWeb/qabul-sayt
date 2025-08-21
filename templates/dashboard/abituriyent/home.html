@@ -232,7 +232,7 @@
             {% if user.application and user.application.test_completed is not None %}
             <div class="bd-dashboard-review-item mb-30">
                 <h5 class="title underline">
-                    <a href="{% url 'dashboard:abituriyent_status' %}">Test natijalari</a>
+                    <a href="#">Test natijalari</a>
                 </h5>
                 <div class="course-info d-flex align-content-center justify-content-between flex-wrap gap-2 mb-10">
                     <div class="bd-course-rating-wrap d-flex align-items-center gap-10">
@@ -275,7 +275,7 @@
                         </div>
                     </div>
                     <div class="bd-button-action">
-                        <a class="bd-default-tooltip view" href="{% url 'dashboard:abituriyent_status' %}" 
+                        <a class="bd-default-tooltip view" href="#" 
                            title="Batafsil natijalarni ko'rish">
                             <span><i class="fas fa-arrow-right"></i></span>
                         </a>
@@ -340,7 +340,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Yopish</button>
-                <a href="{% url 'dashboard:abituriyent_status' %}" class="btn btn-primary">
+                <a href="#" class="btn btn-primary">
                     <i class="fas fa-eye me-1"></i>Batafsil ko'rish
                 </a>
             </div>
