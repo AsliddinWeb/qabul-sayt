@@ -107,6 +107,24 @@ class Application(models.Model):
         verbose_name=_("Holati")
     )
 
+    # ✅ Test uchun - Xavfsiz - nullable fieldlar
+    test_completed = models.BooleanField(
+        null=True, blank=True,  # NULL qiymat ruxsat
+        verbose_name="Test topshirdi"
+    )
+    test_score = models.IntegerField(
+        null=True, blank=True,
+        verbose_name="Test balli"
+    )
+    test_passed = models.BooleanField(
+        null=True, blank=True,
+        verbose_name="Test o'tdi"
+    )
+    test_date = models.DateTimeField(
+        null=True, blank=True,
+        verbose_name="Test sanasi"
+    )
+
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_("O'zgartirilgan sana"))
 
