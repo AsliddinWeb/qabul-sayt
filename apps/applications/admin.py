@@ -59,7 +59,7 @@ class ApplicationAdmin(ImportExportModelAdmin):
 
     list_filter = [
         'status', 'admission_type', 'branch', 'education_level',
-        'education_form', 'test_completed', 'test_passed', 'created_at'
+        'education_form', 'program', 'test_completed', 'test_passed', 'created_at'
     ]
 
     search_fields = [
