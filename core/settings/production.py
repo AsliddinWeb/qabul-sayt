@@ -19,7 +19,7 @@ SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 
-CSRF_TRUSTED_ORIGINS = ["https://qabul.xiuedu.uz", "https://www.qabul.xiuedu.uz"]
+CSRF_TRUSTED_ORIGINS = ["https://qabul2024.xiuedu.uz", "https://www.qabul2024.xiuedu.uz"]
 
 LOGGING = {
     'version': 1,
