@@ -1,7 +1,7 @@
 from .base import *
 
 DEBUG = False
-ALLOWED_HOSTS = ['qabul.xiuedu.uz', 'www.qabul.xiuedu.uz']
+ALLOWED_HOSTS = ['qabul2024.xiuedu.uz', 'www.qabul2024.xiuedu.uz']
 
 DATABASES = {
     'default': {
