@@ -21,7 +21,7 @@ urlpatterns = [
     path('regions/', include('apps.regions.urls')),
 
     # Application api
-    path('applications/', include('apps.applications.urls')),
+    # path('applications/', include('apps.applications.urls')),
 
 ]
 
